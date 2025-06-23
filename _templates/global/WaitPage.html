@@ -1,0 +1,18 @@
+{{ extends "otree/WaitPage.html" }}
+{{ load otree static }}
+
+{{ block title }}
+    One moment please...
+{{ endblock }}
+
+{{ block global_styles }}
+<link rel="stylesheet" href="{{ static 'global/theme.css' }}">
+<style>
+    body {
+        background-color: #eee;
+    }
+    .progress {
+        visibility: hidden;
+    }
+</style>
+{{ endblock }}
