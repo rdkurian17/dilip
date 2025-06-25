@@ -19,7 +19,7 @@ class Subsession(BaseSubsession):
     is_paid = models.BooleanField()
 
     def setup_round(self):
-        self.is_paid = True
+        self.is_paid = self.round_number % 2 == 1 # pay odd periods
         for group in self.get_groups():
             group.setup_round()
 
@@ -38,6 +38,10 @@ class Group(BaseGroup):
     def compute_outcome(self):
         total = sum (player.tickets_purchased for player in self.get_players() )
 
+
+
+if self.subsession.is_paid:
+    player.payoff = Player.payoff
 class Player(BasePlayer):
     endowment = models.CurrencyField()
     cost_per_ticket = models.CurrencyField()
