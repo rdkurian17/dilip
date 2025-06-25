@@ -55,6 +55,9 @@ class Player(BasePlayer):
     def coplayer(self):
         return self.group.get_player_by_id(3 - self.id_in_group)
 
+    @property
+    def max_tickets_affordable(self):
+        return int(self.endowment/self.cost_per_ticket)
 
 
 # PAGES
@@ -73,22 +76,36 @@ class Intro(Page):
     pass
 
 
-class Decision(WaitPage):
+
+class Decision(Page):
     form_model= "player"
     form_fields = ["tickets_purchased"]
+
+    @staticmethod
+    def error_message(player, values):
+        if values["tickets purchased"] < 0:
+            return " you cannot buy negative amount of tickets"
+        if values["tickets purchased"] > player.max_tickets_affordable:
+            return (
+                f" Buying {values ['tickets_purchased']} tickets would cost "
+                f"{player.cost_per_ticket * values['tickets purchased']}" 
+                f"which is more than your endowment {player.endowment}."
+        return None
+
+
 
 
 
 class DecisionWaitPage(WaitPage):
-    pass
+    @staticmethod
+        def after_all_players_arrive(group):
+            group.compute_outcome()
 
 
-class Results(WaitPage):
+class Results(Page):
     @staticmethod
     def vars_for_template(player):
-        return {
-            "tickets_purchased": player.tickets_purchased,
-        }
+        return ("tickets_purchased": player.tickets_purchased,)
 
 
 class Endblock(WaitPage):
