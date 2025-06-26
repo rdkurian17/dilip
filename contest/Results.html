@@ -1,12 +1,14 @@
 {{ block title }}
-    Page title
+    Results
 {{ endblock }}
 
 {{ block content }}
 
-you purchased {{ player.tickets_purchased}} tickets.
+You purchased {{ player.tickets_purchased }} tickets.
+The other player purchased {{ player.coplayer.tickets_purchased }} tickets.
+You won {{ player.prize_won }} of the prize.
+Your earnings are {{ player.earnings }}.
 
     {{ next_button }}
 {{ endblock }}
-
 

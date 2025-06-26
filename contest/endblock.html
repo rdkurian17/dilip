@@ -1,10 +1,20 @@
 {{ block title }}
-    Page title
+    End block
 {{ endblock }}
 
 {{ block content }}
 
+{{ for rd in player.in_paid_rounds }}
+
+    Round {{ rd.round_number }}:
+    Tickets {{ rd.tickets_purchased }},
+    Prize share {{ rd.prize_won }},
+    Earnings {{ rd.earnings }},
+    Paid {{ rd.subsession.is_paid }}.
+    <br/>
+
+{{ endfor }}
+
     {{ next_button }}
 {{ endblock }}
-
 
