@@ -3,32 +3,53 @@
 {{ block title }}Mandatory Expenditure - Round {{ round_num }}{{ endblock }}
 
 {{ block content }}
-<div class="row mb-4">
-    <div class="col-md-6">
-        <div class="card bg-light">
-            <div class="card-header bg-success text-white">
-                <h5>💰 Deposit Available</h5>
-            </div>
-            <div class="card-body text-center">
-                <h2>{{ deposit_balance }} ECU</h2>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="card bg-light">
-            <div class="card-header bg-warning text-white">
-                <h5>💵 Cash Available</h5>
-            </div>
-            <div class="card-body text-center">
-                <h2>{{ cash_balance }} ECU</h2>
-            </div>
+<div class="experiment-progress stagger-1">
+    <div class="progress-label">Round {{ round_num }} of {{ C.NUM_ROUNDS }}</div>
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: {{ progress_pct }}%"
+             aria-valuenow="{{ round_num }}" aria-valuemin="0" aria-valuemax="{{ C.NUM_ROUNDS }}">
         </div>
     </div>
 </div>
 
-<div class="card mb-4">
+<div class="row g-3 mb-4">
+    <div class="col-md-6 stagger-2">
+        <div class="account-card deposit-card">
+            <div class="account-card-header">
+                <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #fff; margin-right: 0.3rem;">
+                    <rect x="3" y="11" width="18" height="10" rx="2"/>
+                    <path d="M12 2L2 11h20L12 2z"/>
+                </svg>
+                Deposit Available
+            </div>
+            <div class="account-balance">{{ deposit_balance }} <span class="ecu-unit">ECU</span></div>
+            <div class="account-subtitle">Easy to spend</div>
+        </div>
+    </div>
+    <div class="col-md-6 stagger-2">
+        <div class="account-card cash-card">
+            <div class="account-card-header">
+                <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #fff; margin-right: 0.3rem;">
+                    <rect x="2" y="6" width="20" height="12" rx="2"/>
+                    <circle cx="12" cy="12" r="3"/>
+                </svg>
+                Cash Available
+            </div>
+            <div class="account-balance">{{ cash_balance }} <span class="ecu-unit">ECU</span></div>
+            <div class="account-subtitle">Requires verification</div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-4 stagger-3">
     <div class="card-header bg-danger text-white">
-        <h4>⚠️ Mandatory Expenditure: {{ C.MANDATORY_SPENDING }} ECU</h4>
+        <div class="icon-header">
+            <svg class="icon icon-md icon-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="1" x2="12" y2="23"/>
+                <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+            </svg>
+            <h4 class="mb-0" style="color: #fff;">Mandatory Expenditure: {{ C.MANDATORY_SPENDING }} ECU</h4>
+        </div>
     </div>
     <div class="card-body">
         <p>You must spend exactly <strong>{{ C.MANDATORY_SPENDING }} ECU</strong> this round.</p>
@@ -41,25 +62,37 @@
 
         <div class="alert alert-info mt-3">
             <p class="mb-0">
+                <svg class="icon icon-sm icon-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.3rem;">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 16v-4m0-4h.01"/>
+                </svg>
                 <strong>Example:</strong> If you spend 20 ECU from cash, then 20 ECU from deposit will be used automatically.
             </p>
         </div>
 
         <div id="cashFrictionSection" style="display: none;" class="mt-4">
             <div class="alert alert-warning">
-                <h5>💳 Cash Payment Verification Required</h5>
+                <div class="icon-header" style="margin-bottom: 0.5rem;">
+                    <svg class="icon icon-md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #92400E;">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0110 0v4"/>
+                    </svg>
+                    <h5 class="mb-0">Cash Payment Verification Required</h5>
+                </div>
                 <p>To complete your cash payment, please enter this verification code:</p>
 
-                <div class="card bg-light text-center mb-3" style="padding: 20px;">
-                    <h2 style="font-family: 'Courier New', monospace; letter-spacing: 3px; color: #d9534f;">
-                        <strong>{{ verification_code }}</strong>
-                    </h2>
+                <div class="verification-code-display"
+                     oncopy="return false"
+                     oncut="return false"
+                     ondragstart="return false"
+                     oncontextmenu="return false">
+                    <code>{{ verification_code }}</code>
                 </div>
 
                 {{ formfield 'cash_verification_entry' }}
 
                 <p class="text-muted mt-2 mb-0">
-                    <small>⚠️ Code is case-sensitive. Enter exactly as shown.<br>
+                    <small>Code is case-sensitive. Enter exactly as shown.<br>
                     This simulates the inconvenience of handling physical cash.</small>
                 </p>
             </div>
@@ -82,6 +115,13 @@
         cashInput.addEventListener('input', updateFrictionDisplay);
         cashInput.addEventListener('change', updateFrictionDisplay);
         updateFrictionDisplay();
+
+        // Prevent paste into verification code input
+        const verifyInput = document.querySelector('input[name="cash_verification_entry"]');
+        if (verifyInput) {
+            verifyInput.addEventListener('paste', function(e) { e.preventDefault(); });
+            verifyInput.addEventListener('drop', function(e) { e.preventDefault(); });
+        }
     });
 </script>
 {{ endblock }}

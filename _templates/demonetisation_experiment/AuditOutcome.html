@@ -3,42 +3,85 @@
 {{ block title }}Audit Result{{ endblock }}
 
 {{ block content }}
-<div class="card mb-4">
+<div class="experiment-progress stagger-1">
+    <div class="progress-label">Round {{ round_num }} of {{ C.NUM_ROUNDS }}</div>
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: {{ progress_pct }}%"
+             aria-valuenow="{{ round_num }}" aria-valuemin="0" aria-valuemax="{{ C.NUM_ROUNDS }}">
+        </div>
+    </div>
+</div>
+
+<div class="card mb-4 stagger-2">
     <div class="card-header bg-info text-white">
-        <h4>Random Audit Check</h4>
+        <div class="icon-header">
+            <svg class="icon icon-md icon-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            <h4 class="mb-0" style="color: #fff;">Random Audit Check</h4>
+        </div>
     </div>
     <div class="card-body">
         <p>A random number between 1 and 100 was drawn:</p>
-        <div class="text-center mb-3">
-            <h1 class="display-3" style="color: #0275d8;">{{ random_draw }}</h1>
+
+        <div class="audit-number-container">
+            <div class="audit-number">{{ random_draw }}</div>
+            <div class="audit-vs">vs</div>
+            <div style="font-size: 1.1rem; color: var(--color-text-secondary);">
+                Threshold: <strong>{{ audit_threshold }}</strong>
+            </div>
         </div>
 
-        <p>Audit threshold: <strong>{{ audit_threshold }}</strong></p>
-        <p class="text-muted">(If random number ≤ {{ audit_threshold }}, you are audited)</p>
+        <p class="text-center text-muted">
+            <small>If random number &le; {{ audit_threshold }}, you are audited</small>
+        </p>
 
-        <hr>
+        <div class="section-divider"><span>Result</span></div>
 
         {{ if was_audited }}
-        <div class="alert alert-danger">
-            <h3>🚨 YOU WERE AUDITED</h3>
-            <p><strong>{{ random_draw }}</strong> ≤ <strong>{{ audit_threshold }}</strong></p>
+        <div class="audit-result-audited">
+            <div class="alert alert-danger">
+                <div class="icon-header" style="margin-bottom: 0.5rem;">
+                    <svg class="icon icon-lg icon-danger" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="15" y1="9" x2="9" y2="15"/>
+                        <line x1="9" y1="9" x2="15" y2="15"/>
+                    </svg>
+                    <h4 class="mb-0">You Were Audited</h4>
+                </div>
+                <p><strong>{{ random_draw }}</strong> &le; <strong>{{ audit_threshold }}</strong></p>
 
-            <hr>
+                <div class="section-divider"><span>Penalty Details</span></div>
 
-            <p><strong>Your cash balance:</strong> {{ cash_balance }} ECU</p>
-            <p><strong>Tax owed on cash:</strong> {{ tax_evaded }} ECU</p>
-            <p><strong>Total penalty paid:</strong> {{ fine }} ECU</p>
+                <p><strong>Your cash balance:</strong> {{ cash_balance }} ECU</p>
+                <p><strong>Tax owed on cash:</strong> {{ tax_evaded }} ECU</p>
 
-            <div class="bg-white p-3 mt-3" style="border: 2px solid #d9534f;">
-                <h4 class="text-danger"><strong>Total penalty paid: {{ fine }} ECU</strong></h4>
-                <p class="mb-0 text-muted">This amount has been deducted from your deposit account (and cash if needed).</p>
+                <div class="card" style="border: 2px solid var(--color-danger); background: var(--color-danger-bg);">
+                    <div class="card-body text-center">
+                        <svg class="icon icon-lg icon-danger" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 0.3rem;">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                            <line x1="12" y1="9" x2="12" y2="13"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                        <h4 style="color: var(--color-danger);"><strong>Total penalty paid: {{ fine }} ECU</strong></h4>
+                        <p class="mb-0 text-muted">This amount has been deducted from your deposit account (and cash if needed).</p>
+                    </div>
+                </div>
             </div>
         </div>
         {{ else }}
-        <div class="alert alert-success">
-            <h3>✅ NO AUDIT</h3>
-            <p><strong>{{ random_draw }}</strong> > <strong>{{ audit_threshold }}</strong></p>
-            <p class="mb-0">You were not audited this round. No penalties applied.</p>
+        <div class="audit-result-safe">
+            <div class="alert alert-success">
+                <div class="icon-header" style="margin-bottom: 0.3rem;">
+                    <svg class="icon icon-lg icon-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    <h4 class="mb-0">No Audit</h4>
+                </div>
+                <p><strong>{{ random_draw }}</strong> > <strong>{{ audit_threshold }}</strong></p>
+                <p class="mb-0">You were not audited this round. No penalties applied.</p>
+            </div>
         </div>
         {{ endif }}
 

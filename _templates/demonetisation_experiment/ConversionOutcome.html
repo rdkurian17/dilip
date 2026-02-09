@@ -3,28 +3,79 @@
 {{ block title }}Conversion Complete{{ endblock }}
 
 {{ block content }}
-<div class="card mb-4">
-    <div class="card-header bg-success text-white">
-        <h4>Conversion Processed</h4>
+<div class="experiment-progress stagger-1">
+    <div class="progress-label">Round {{ C.SHOCK_ROUND }} of {{ C.NUM_ROUNDS }}
+        <span class="phase-badge elevated">Conversion Result</span>
+    </div>
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: {{ progress_pct }}%"
+             aria-valuenow="{{ C.SHOCK_ROUND }}" aria-valuemin="0" aria-valuemax="{{ C.NUM_ROUNDS }}">
+        </div>
+    </div>
+</div>
+
+<div class="card mb-4 stagger-2">
+    <div class="card-header bg-primary text-white">
+        <div class="icon-header">
+            <svg class="icon icon-md icon-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            <h4 class="mb-0" style="color: #fff;">Conversion Processed</h4>
+        </div>
     </div>
     <div class="card-body">
-        <h5>What Happened:</h5>
-        <ul>
-            <li><strong>Converted to deposit:</strong> {{ converted }} ECU (no tax on conversion)</li>
-            <li><strong>Lost (not converted):</strong> {{ lost }} ECU</li>
-        </ul>
-
-        <hr>
-
-        <div class="alert alert-info">
-            <h5>Your Audit Rate for Rounds 8-10:</h5>
-            <h3 class="mb-0">{{ new_audit_rate }}%</h3>
-            <p class="text-muted mt-2 mb-0">This elevated rate applies for the next 3 rounds only. After Round 10, it returns to 5%.</p>
+        <div class="row g-3 mb-4">
+            <div class="col-md-6 stagger-3">
+                <div class="summary-stat">
+                    <svg class="icon icon-md icon-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 0.3rem;">
+                        <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    <div class="stat-label">Converted to Deposit</div>
+                    <div class="stat-value">{{ converted }} ECU</div>
+                </div>
+            </div>
+            <div class="col-md-6 stagger-3">
+                <div class="summary-stat" style="border-color: var(--color-danger);">
+                    <svg class="icon icon-md icon-danger" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 0.3rem;">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="15" y1="9" x2="9" y2="15"/>
+                        <line x1="9" y1="9" x2="15" y2="15"/>
+                    </svg>
+                    <div class="stat-label">Lost (not converted)</div>
+                    <div class="stat-value" style="color: var(--color-danger);">{{ lost }} ECU</div>
+                </div>
+            </div>
         </div>
 
-        <div class="alert alert-success">
-            <h5>Your New Deposit Balance:</h5>
-            <h3 class="mb-0">{{ new_deposit }} ECU</h3>
+        <div class="section-divider"><span>Updated Status</span></div>
+
+        <div class="alert alert-info stagger-4">
+            <div class="icon-header" style="margin-bottom: 0.3rem;">
+                <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-primary); margin-right: 0.3rem;">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+                <h5 class="mb-0">Your Audit Rate for Rounds 8-10</h5>
+            </div>
+            <h3 class="mb-0">{{ new_audit_rate }}%</h3>
+            <p class="text-muted mt-2 mb-0"><small>This elevated rate applies for the next 3 rounds only. After Round 10, it returns to 5%.</small></p>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-6 mx-auto">
+                <div class="account-card deposit-card">
+                    <div class="account-card-header">
+                        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #fff; margin-right: 0.3rem;">
+                            <rect x="3" y="11" width="18" height="10" rx="2"/>
+                            <path d="M12 2L2 11h20L12 2z"/>
+                        </svg>
+                        New Deposit Balance
+                    </div>
+                    <div class="account-balance">{{ new_deposit }} <span class="ecu-unit">ECU</span></div>
+                    <div class="account-subtitle">Includes converted amount</div>
+                </div>
+            </div>
         </div>
 
         <p class="mt-4">You will now continue with Round 8, receiving 100 NEW ECU to allocate.</p>

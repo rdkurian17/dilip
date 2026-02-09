@@ -3,54 +3,86 @@
 {{ block title }}{{ phase }}{{ endblock }}
 
 {{ block content }}
-<div class="row mb-4">
-    <div class="col-md-6">
-        <div class="card bg-light">
-            <div class="card-header bg-success text-white">
-                <h5>💰 Bank Deposit</h5>
-            </div>
-            <div class="card-body text-center">
-                <h2>{{ current_deposit }} ECU</h2>
-                <p class="text-muted">Safe, taxed at 30%</p>
-            </div>
-        </div>
+<div class="experiment-progress stagger-1">
+    <div class="progress-label">Round {{ round_num }} of {{ C.NUM_ROUNDS }}
+        {{ if round_num < C.SHOCK_ROUND }}
+        <span class="phase-badge pre-shock">Pre-shock Phase</span>
+        {{ else }}
+            {{ if round_num <= C.ELEVATED_AUDIT_END }}
+            <span class="phase-badge elevated">Elevated Audit Phase</span>
+            {{ else }}
+            <span class="phase-badge normal">Normal Phase</span>
+            {{ endif }}
+        {{ endif }}
     </div>
-    <div class="col-md-6">
-        <div class="card bg-light">
-            <div class="card-header bg-warning text-white">
-                <h5>💵 Cash in Hand</h5>
-            </div>
-            <div class="card-body text-center">
-                <h2>{{ current_cash }} ECU</h2>
-                <p class="text-muted">Untaxed, {{ audit_prob }}% audit risk</p>
-            </div>
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: {{ progress_pct }}%"
+             aria-valuenow="{{ round_num }}" aria-valuemin="0" aria-valuemax="{{ C.NUM_ROUNDS }}">
         </div>
     </div>
 </div>
 
-<div class="card mb-4">
+<div class="row g-3 mb-4">
+    <div class="col-md-6 stagger-2">
+        <div class="account-card deposit-card">
+            <div class="account-card-header">
+                <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #fff; margin-right: 0.3rem;">
+                    <rect x="3" y="11" width="18" height="10" rx="2"/>
+                    <path d="M12 2L2 11h20L12 2z"/>
+                </svg>
+                Bank Deposit
+            </div>
+            <div class="account-balance">{{ current_deposit }} <span class="ecu-unit">ECU</span></div>
+            <div class="account-subtitle">Safe, taxed at 30%</div>
+        </div>
+    </div>
+    <div class="col-md-6 stagger-2">
+        <div class="account-card cash-card">
+            <div class="account-card-header">
+                <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #fff; margin-right: 0.3rem;">
+                    <rect x="2" y="6" width="20" height="12" rx="2"/>
+                    <circle cx="12" cy="12" r="3"/>
+                </svg>
+                Cash in Hand
+            </div>
+            <div class="account-balance">{{ current_cash }} <span class="ecu-unit">ECU</span></div>
+            <div class="account-subtitle">Untaxed, {{ audit_prob }}% audit risk</div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-4 stagger-3">
     <div class="card-header bg-primary text-white">
-        <h4>Round {{ round_num }}: You receive {{ C.ENDOWMENT }} ECU</h4>
+        <h4 class="mb-0" style="color: #fff;">Round {{ round_num }}: You receive {{ C.ENDOWMENT }} ECU</h4>
     </div>
     <div class="card-body">
-        <p>This income is given to you as <strong>cash</strong>. You must decide:</p>
+        <p>This income is given to you as <strong>cash</strong>. Decide how much to deposit.</p>
 
         {{ formfields }}
 
         <small class="form-text text-muted">
-            Remaining amount ({{ C.ENDOWMENT }} - your choice) will stay as cash.
+            The remaining amount ({{ C.ENDOWMENT }} minus your deposit) stays as cash.
         </small>
 
         <div class="alert alert-info mt-4">
-            <h6>💡 Remember:</h6>
+            <h6>
+                <svg class="icon icon-sm icon-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.3rem;">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 16v-4m0-4h.01"/>
+                </svg>
+                Remember:
+            </h6>
             <ul class="mb-0">
-                <li><strong>Deposit:</strong> Taxed 30% immediately, but safe</li>
+                <li><strong>Deposit:</strong> Taxed 30% immediately, but safe from audit</li>
                 <li><strong>Cash:</strong> Not taxed now, but {{ audit_prob }}% chance of audit this round</li>
-                <li><strong>If audited:</strong> Pay tax on ALL cash + 2× fine</li>
+                <li><strong>If audited:</strong> Pay tax on ALL cash + 2x fine</li>
             </ul>
         </div>
 
         <div class="alert alert-secondary">
+            <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.3rem; color: var(--color-text-secondary);">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
             <strong>Current audit probability: {{ audit_prob }}%</strong>
         </div>
 

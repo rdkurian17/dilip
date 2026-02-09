@@ -127,6 +127,12 @@ class Player(BasePlayer):
         blank=True
     )
 
+    # ---------- Helper properties ----------
+
+    @property
+    def progress_pct(self):
+        return int(self.round_number / C.NUM_ROUNDS * 100)
+
     # ---------- Helper methods ----------
 
     def generate_verification_code(self):
@@ -236,6 +242,7 @@ class ShockAnnouncement(Page):
             old_cash=prev.total_cash,
             current_deposit=prev.total_deposit,
             is_sudden=(player.treatment == 'sudden'),
+            progress_pct=player.progress_pct,
         )
 
 
@@ -255,7 +262,10 @@ class ConversionDecision(Page):
     @staticmethod
     def vars_for_template(player: Player):
         prev = player.in_round(C.SHOCK_ROUND - 1)
-        return dict(old_cash=prev.total_cash)
+        return dict(
+            old_cash=prev.total_cash,
+            progress_pct=player.progress_pct,
+        )
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
@@ -288,6 +298,7 @@ class ConversionOutcome(Page):
             lost=player.cash_lost,
             new_audit_rate=player.personal_audit_rate,
             new_deposit=player.total_deposit,
+            progress_pct=player.progress_pct,
         )
 
 
@@ -321,6 +332,7 @@ class AllocationDecision(Page):
             current_deposit=current_deposit,
             current_cash=current_cash,
             audit_prob=audit_prob,
+            progress_pct=player.progress_pct,
         )
 
     @staticmethod
@@ -355,6 +367,7 @@ class AllocationResult(Page):
             cash_kept=player.cash_kept,
             new_deposit=player.deposit_before_spending,
             new_cash=player.cash_before_spending,
+            progress_pct=player.progress_pct,
         )
 
 
@@ -372,6 +385,7 @@ class SpendingDecision(Page):
             deposit_balance=player.deposit_before_spending,
             cash_balance=player.cash_before_spending,
             verification_code=player.cash_verification_code,
+            progress_pct=player.progress_pct,
         )
 
     @staticmethod
@@ -443,6 +457,8 @@ class AuditOutcome(Page):
             tax_evaded=player.tax_evaded_found,
             fine=player.fine_paid,
             cash_balance=player.total_cash,
+            round_num=player.round_number,
+            progress_pct=player.progress_pct,
         )
 
 
@@ -462,6 +478,7 @@ class RoundSummary(Page):
             final_cash=player.total_cash,
             total_tax=player.total_tax_paid,
             total_fines=player.total_fines_paid,
+            progress_pct=player.progress_pct,
         )
 
 

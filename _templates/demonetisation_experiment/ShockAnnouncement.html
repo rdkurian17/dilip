@@ -1,15 +1,38 @@
 {{ extends 'global/Page.html' }}
 
-{{ block title }}⚠️ POLICY ANNOUNCEMENT{{ endblock }}
+{{ block title }}Policy Announcement{{ endblock }}
 
 {{ block content }}
-<div class="alert alert-danger">
-    <h2 class="text-center">🚨 DEMONETISATION SHOCK 🚨</h2>
+<div class="experiment-progress stagger-1">
+    <div class="progress-label">Round {{ C.SHOCK_ROUND }} of {{ C.NUM_ROUNDS }}
+        <span class="phase-badge elevated">Policy Shock</span>
+    </div>
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: {{ progress_pct }}%"
+             aria-valuenow="{{ C.SHOCK_ROUND }}" aria-valuemin="0" aria-valuemax="{{ C.NUM_ROUNDS }}">
+        </div>
+    </div>
 </div>
 
-<div class="card mb-4">
+<div class="shock-banner stagger-2">
+    <svg class="icon icon-xl icon-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 0.5rem;">
+        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/>
+        <line x1="12" y1="17" x2="12.01" y2="17"/>
+    </svg>
+    <h2>DEMONETISATION ANNOUNCEMENT</h2>
+</div>
+
+<div class="card mb-4 stagger-3">
     <div class="card-body">
-        <h3>Old Lab Currency Is No Longer Valid</h3>
+        <h3>
+            <svg class="icon icon-md icon-danger" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.4rem;">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="15" y1="9" x2="9" y2="15"/>
+                <line x1="9" y1="9" x2="15" y2="15"/>
+            </svg>
+            Old Lab Currency Is No Longer Valid
+        </h3>
 
         {{ if is_sudden }}
         <p class="lead">Without prior warning, all old lab currency notes have been declared <strong>invalid</strong>.</p>
@@ -18,22 +41,45 @@
         {{ endif }}
 
         <div class="alert alert-warning mt-4">
-            <h4>Your Old Cash Balance: {{ old_cash }} ECU</h4>
+            <div class="icon-header" style="margin-bottom: 0.5rem;">
+                <svg class="icon icon-md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #92400E;">
+                    <rect x="2" y="6" width="20" height="12" rx="2"/>
+                    <circle cx="12" cy="12" r="3"/>
+                </svg>
+                <h4 class="mb-0">Your Old Cash Balance: {{ old_cash }} ECU</h4>
+            </div>
             <p class="mb-0">This cash is currently <strong>worthless</strong> unless you convert it.</p>
         </div>
 
-        <h4 class="mt-4">How to Make Old Cash Valid:</h4>
+        <h4 class="mt-4">
+            <svg class="icon icon-sm icon-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.3rem;">
+                <polyline points="23 4 11.5 15.5 6.5 10.5"/>
+                <path d="M23 4l-9.5 9.5-5-5L1 16"/>
+            </svg>
+            How to Make Old Cash Valid:
+        </h4>
         <p>You must <strong>deposit</strong> your old cash into your bank account. This is the ONLY way to preserve its value.</p>
 
-        <p><strong>Good News:</strong> Your existing deposit balance ({{ current_deposit }} ECU) is safe and unaffected.</p>
+        <p>
+            <svg class="icon icon-sm icon-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.3rem;">
+                <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            <strong>Good News:</strong> Your existing deposit balance ({{ current_deposit }} ECU) is safe and unaffected.
+        </p>
 
-        <div class="card bg-light mt-4">
+        <div class="card bg-light mt-4 stagger-4">
             <div class="card-header">
-                <h5>⚠️ Audit Rate Changes (Rounds 8-10 ONLY)</h5>
+                <div class="icon-header">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-text-secondary); margin-right: 0.3rem;">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                    <h5 class="mb-0">Audit Rate Changes (Rounds 8-10 Only)</h5>
+                </div>
             </div>
             <div class="card-body">
                 <p>Based on how much old cash you convert, your audit rate will change for the next 3 rounds:</p>
-                <table class="table table-bordered">
+                <table class="table table-bordered mb-3">
                     <thead>
                         <tr>
                             <th>Amount Converted</th>
@@ -55,7 +101,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <p class="mb-0"><small>After Round 10, the audit rate returns to {{ C.TIER_1_AUDIT }}% for everyone.</small></p>
+                <p class="mb-0"><small class="text-muted">After Round 10, the audit rate returns to {{ C.TIER_1_AUDIT }}% for everyone.</small></p>
             </div>
         </div>
 

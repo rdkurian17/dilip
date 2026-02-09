@@ -3,32 +3,41 @@
 {{ block title }}Instructions{{ endblock }}
 
 {{ block content }}
-<div class="card mb-4">
+<div class="card mb-4 stagger-1">
     <div class="card-header bg-primary text-white">
-        <h3>Welcome to the Experiment</h3>
+        <div class="icon-header">
+            <svg class="icon icon-md icon-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 16v-4m0-4h.01"/>
+            </svg>
+            <h3 class="mb-0" style="color: #fff;">Welcome to the Experiment</h3>
+        </div>
     </div>
     <div class="card-body">
         <h4>Overview</h4>
         <p>You will make decisions over <strong>{{ C.NUM_ROUNDS }} rounds</strong>. Each round has these steps:</p>
 
-        <ol class="lead">
+        <ol class="steps-list">
             <li><strong>Allocation:</strong> Decide how to save your income</li>
             <li><strong>Spending:</strong> Make mandatory expenditure</li>
             <li><strong>Audit:</strong> Random audit check</li>
             <li><strong>Summary:</strong> See your new balances</li>
         </ol>
 
-        <hr>
+        <div class="section-divider"><span>Your Two Accounts</span></div>
 
-        <h4>Your Two Accounts</h4>
-        <div class="row">
+        <div class="row g-3 mb-4">
             <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header bg-success text-white">
-                        <strong>💰 Bank Deposit</strong>
+                <div class="account-card deposit-card">
+                    <div class="account-card-header">
+                        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #fff; margin-right: 0.3rem;">
+                            <rect x="3" y="11" width="18" height="10" rx="2"/>
+                            <path d="M12 2L2 11h20L12 2z"/>
+                        </svg>
+                        Bank Deposit
                     </div>
                     <div class="card-body">
-                        <ul>
+                        <ul class="text-start mb-0">
                             <li>Taxed at 30%</li>
                             <li>Safe and formal</li>
                             <li>Easy to spend from</li>
@@ -37,12 +46,17 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header bg-warning text-white">
-                        <strong>💵 Cash in Hand</strong>
+                <div class="account-card cash-card">
+                    <div class="account-card-header">
+                        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #fff; margin-right: 0.3rem;">
+                            <rect x="2" y="6" width="20" height="12" rx="2"/>
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M2 10h2m16 0h2M2 14h2m16 0h2"/>
+                        </svg>
+                        Cash in Hand
                     </div>
                     <div class="card-body">
-                        <ul>
+                        <ul class="text-start mb-0">
                             <li>Not taxed initially</li>
                             <li>Faces 5% audit risk</li>
                             <li>Inconvenient to spend</li>
@@ -52,9 +66,7 @@
             </div>
         </div>
 
-        <hr>
-
-        <h4>How Each Round Works</h4>
+        <div class="section-divider"><span>How Each Round Works</span></div>
 
         <h5>Step 1: Allocation Decision</h5>
         <p>You receive <strong>{{ C.ENDOWMENT }} ECU</strong> in cash. Decide:</p>
@@ -74,19 +86,19 @@
         <p>Random audit with 5% probability. If audited and you have cash:</p>
         <ul>
             <li>Pay tax on ALL cash holdings</li>
-            <li>Pay fine = 2× the unpaid tax</li>
+            <li>Pay fine = 2x the unpaid tax</li>
             <li>Deducted from deposit</li>
         </ul>
 
-        <hr>
+        <div class="section-divider"><span>Complete Example</span></div>
 
         <div class="alert alert-info">
-            <h5>📊 Complete Example</h5>
+            <h5>Worked Example</h5>
             <p><strong>Starting:</strong> Deposit = 70 ECU, Cash = 30 ECU</p>
 
-            <p><strong>1. Receive 100 ECU → Deposit 60:</strong></p>
+            <p><strong>1. Receive 100 ECU, deposit 60:</strong></p>
             <ul>
-                <li>Tax: 60 × 30% = 18 ECU</li>
+                <li>Tax: 60 x 30% = 18 ECU</li>
                 <li>Added: 60 - 18 = 42 ECU</li>
                 <li>Keep: 40 ECU cash</li>
                 <li>Result: Deposit = 112, Cash = 70</li>
@@ -100,7 +112,7 @@
             <p><strong>3. Audited (unlucky!):</strong></p>
             <ul>
                 <li>Tax on 50 cash: 15 ECU</li>
-                <li>Fine: 15 × 2 = 30 ECU</li>
+                <li>Fine: 15 x 2 = 30 ECU</li>
                 <li>Total: 45 ECU from deposit</li>
                 <li><strong>Final: Deposit = 47, Cash = 50</strong></li>
             </ul>
@@ -108,12 +120,20 @@
 
         {{ if show_shock_warning }}
         <div class="alert alert-warning">
-            <h5>⚠️ Important Policy Information</h5>
-            <p>In Round {{ C.SHOCK_ROUND }}, there will be a <strong>policy change</strong> affecting cash. Full details will be provided then.</p>
+            <div class="icon-header" style="margin-bottom: 0.5rem;">
+                <svg class="icon icon-md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #92400E;">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                    <line x1="12" y1="9" x2="12" y2="13"/>
+                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+                <h5 class="mb-0">Important Policy Information</h5>
+            </div>
+            <p class="mb-0">In Round {{ C.SHOCK_ROUND }}, there will be a <strong>policy change</strong> affecting cash. Full details will be provided then.</p>
         </div>
         {{ endif }}
 
-        <h4>Your Payment</h4>
+        <div class="section-divider"><span>Payment</span></div>
+
         <p>Final wealth (Deposit + Cash) will be converted to real money at the rate specified in your consent form.</p>
 
         {{ next_button }}

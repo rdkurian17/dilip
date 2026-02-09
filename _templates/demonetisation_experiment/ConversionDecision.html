@@ -3,27 +3,62 @@
 {{ block title }}Conversion Decision{{ endblock }}
 
 {{ block content }}
-<div class="card bg-warning mb-4">
-    <div class="card-body text-center">
-        <h3>Your Old Cash: {{ old_cash }} ECU</h3>
-        <p class="mb-0">Currently INVALID and worthless</p>
+<div class="experiment-progress stagger-1">
+    <div class="progress-label">Round {{ C.SHOCK_ROUND }} of {{ C.NUM_ROUNDS }}
+        <span class="phase-badge elevated">Conversion Phase</span>
+    </div>
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: {{ progress_pct }}%"
+             aria-valuenow="{{ C.SHOCK_ROUND }}" aria-valuemin="0" aria-valuemax="{{ C.NUM_ROUNDS }}">
+        </div>
     </div>
 </div>
 
-<div class="card mb-4">
+<div class="alert alert-warning text-center mb-4 stagger-2">
+    <svg class="icon icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #92400E; margin-bottom: 0.3rem;">
+        <rect x="2" y="6" width="20" height="12" rx="2"/>
+        <circle cx="12" cy="12" r="3"/>
+        <line x1="2" y1="6" x2="22" y2="18" stroke="#DC2626" stroke-width="2.5"/>
+    </svg>
+    <h3 class="mb-1">Your Old Cash: {{ old_cash }} ECU</h3>
+    <p class="mb-0">Currently <strong>invalid</strong> and worthless</p>
+</div>
+
+<div class="card mb-4 stagger-3">
     <div class="card-header bg-primary text-white">
-        <h4>How much do you want to convert?</h4>
+        <div class="icon-header">
+            <svg class="icon icon-md icon-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="17 1 21 5 17 9"/>
+                <path d="M3 11V9a4 4 0 014-4h14"/>
+                <polyline points="7 23 3 19 7 15"/>
+                <path d="M21 13v2a4 4 0 01-4 4H3"/>
+            </svg>
+            <h4 class="mb-0" style="color: #fff;">How much do you want to convert?</h4>
+        </div>
     </div>
     <div class="card-body">
         {{ formfield 'conversion_amount' }}
 
         <div class="alert alert-danger mt-4">
-            <h5>⚠️ WARNING</h5>
+            <div class="icon-header" style="margin-bottom: 0.3rem;">
+                <svg class="icon icon-sm icon-danger" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                    <line x1="12" y1="9" x2="12" y2="13"/>
+                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+                <h5 class="mb-0">Warning</h5>
+            </div>
             <p class="mb-0">Any old cash you do NOT convert will become <strong>permanently worthless</strong> and lost forever.</p>
         </div>
 
         <div class="alert alert-info mt-4">
-            <h5>🤔 Trade-off:</h5>
+            <div class="icon-header" style="margin-bottom: 0.3rem;">
+                <svg class="icon icon-sm icon-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 16v-4m0-4h.01"/>
+                </svg>
+                <h5 class="mb-0">Trade-off:</h5>
+            </div>
             <ul class="mb-0">
                 <li><strong>Convert MORE:</strong> Save your money, but higher audit risk (Rounds 8-10)</li>
                 <li><strong>Convert LESS:</strong> Lower audit risk, but lose unconverted cash permanently</li>
