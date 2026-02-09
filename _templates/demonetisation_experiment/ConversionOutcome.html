@@ -1,0 +1,35 @@
+{{ extends 'global/Page.html' }}
+
+{{ block title }}Conversion Complete{{ endblock }}
+
+{{ block content }}
+<div class="card mb-4">
+    <div class="card-header bg-success text-white">
+        <h4>Conversion Processed</h4>
+    </div>
+    <div class="card-body">
+        <h5>What Happened:</h5>
+        <ul>
+            <li><strong>Converted to deposit:</strong> {{ converted }} ECU (no tax on conversion)</li>
+            <li><strong>Lost (not converted):</strong> {{ lost }} ECU</li>
+        </ul>
+
+        <hr>
+
+        <div class="alert alert-info">
+            <h5>Your Audit Rate for Rounds 8-10:</h5>
+            <h3 class="mb-0">{{ new_audit_rate }}%</h3>
+            <p class="text-muted mt-2 mb-0">This elevated rate applies for the next 3 rounds only. After Round 10, it returns to 5%.</p>
+        </div>
+
+        <div class="alert alert-success">
+            <h5>Your New Deposit Balance:</h5>
+            <h3 class="mb-0">{{ new_deposit }} ECU</h3>
+        </div>
+
+        <p class="mt-4">You will now continue with Round 8, receiving 100 NEW ECU to allocate.</p>
+
+        {{ next_button }}
+    </div>
+</div>
+{{ endblock }}

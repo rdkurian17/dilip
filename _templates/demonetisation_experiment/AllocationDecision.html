@@ -1,0 +1,60 @@
+{{ extends 'global/Page.html' }}
+
+{{ block title }}{{ phase }}{{ endblock }}
+
+{{ block content }}
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card bg-light">
+            <div class="card-header bg-success text-white">
+                <h5>💰 Bank Deposit</h5>
+            </div>
+            <div class="card-body text-center">
+                <h2>{{ current_deposit }} ECU</h2>
+                <p class="text-muted">Safe, taxed at 30%</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card bg-light">
+            <div class="card-header bg-warning text-white">
+                <h5>💵 Cash in Hand</h5>
+            </div>
+            <div class="card-body text-center">
+                <h2>{{ current_cash }} ECU</h2>
+                <p class="text-muted">Untaxed, {{ audit_prob }}% audit risk</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h4>Round {{ round_num }}: You receive {{ C.ENDOWMENT }} ECU</h4>
+    </div>
+    <div class="card-body">
+        <p>This income is given to you as <strong>cash</strong>. You must decide:</p>
+
+        {{ formfields }}
+
+        <small class="form-text text-muted">
+            Remaining amount ({{ C.ENDOWMENT }} - your choice) will stay as cash.
+        </small>
+
+        <div class="alert alert-info mt-4">
+            <h6>💡 Remember:</h6>
+            <ul class="mb-0">
+                <li><strong>Deposit:</strong> Taxed 30% immediately, but safe</li>
+                <li><strong>Cash:</strong> Not taxed now, but {{ audit_prob }}% chance of audit this round</li>
+                <li><strong>If audited:</strong> Pay tax on ALL cash + 2× fine</li>
+            </ul>
+        </div>
+
+        <div class="alert alert-secondary">
+            <strong>Current audit probability: {{ audit_prob }}%</strong>
+        </div>
+
+        {{ next_button }}
+    </div>
+</div>
+{{ endblock }}

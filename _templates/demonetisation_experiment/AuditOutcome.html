@@ -1,0 +1,48 @@
+{{ extends 'global/Page.html' }}
+
+{{ block title }}Audit Result{{ endblock }}
+
+{{ block content }}
+<div class="card mb-4">
+    <div class="card-header bg-info text-white">
+        <h4>Random Audit Check</h4>
+    </div>
+    <div class="card-body">
+        <p>A random number between 1 and 100 was drawn:</p>
+        <div class="text-center mb-3">
+            <h1 class="display-3" style="color: #0275d8;">{{ random_draw }}</h1>
+        </div>
+
+        <p>Audit threshold: <strong>{{ audit_threshold }}</strong></p>
+        <p class="text-muted">(If random number ≤ {{ audit_threshold }}, you are audited)</p>
+
+        <hr>
+
+        {{ if was_audited }}
+        <div class="alert alert-danger">
+            <h3>🚨 YOU WERE AUDITED</h3>
+            <p><strong>{{ random_draw }}</strong> ≤ <strong>{{ audit_threshold }}</strong></p>
+
+            <hr>
+
+            <p><strong>Your cash balance:</strong> {{ cash_balance }} ECU</p>
+            <p><strong>Tax owed on cash:</strong> {{ tax_evaded }} ECU</p>
+            <p><strong>Total penalty paid:</strong> {{ fine }} ECU</p>
+
+            <div class="bg-white p-3 mt-3" style="border: 2px solid #d9534f;">
+                <h4 class="text-danger"><strong>Total penalty paid: {{ fine }} ECU</strong></h4>
+                <p class="mb-0 text-muted">This amount has been deducted from your deposit account (and cash if needed).</p>
+            </div>
+        </div>
+        {{ else }}
+        <div class="alert alert-success">
+            <h3>✅ NO AUDIT</h3>
+            <p><strong>{{ random_draw }}</strong> > <strong>{{ audit_threshold }}</strong></p>
+            <p class="mb-0">You were not audited this round. No penalties applied.</p>
+        </div>
+        {{ endif }}
+
+        {{ next_button }}
+    </div>
+</div>
+{{ endblock }}

@@ -1,0 +1,87 @@
+{{ extends 'global/Page.html' }}
+
+{{ block title }}Mandatory Expenditure - Round {{ round_num }}{{ endblock }}
+
+{{ block content }}
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card bg-light">
+            <div class="card-header bg-success text-white">
+                <h5>💰 Deposit Available</h5>
+            </div>
+            <div class="card-body text-center">
+                <h2>{{ deposit_balance }} ECU</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card bg-light">
+            <div class="card-header bg-warning text-white">
+                <h5>💵 Cash Available</h5>
+            </div>
+            <div class="card-body text-center">
+                <h2>{{ cash_balance }} ECU</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header bg-danger text-white">
+        <h4>⚠️ Mandatory Expenditure: {{ C.MANDATORY_SPENDING }} ECU</h4>
+    </div>
+    <div class="card-body">
+        <p>You must spend exactly <strong>{{ C.MANDATORY_SPENDING }} ECU</strong> this round.</p>
+
+        {{ formfield 'spend_from_cash' }}
+
+        <small class="form-text text-muted mb-3">
+            Remaining amount will automatically be paid from your deposit account.
+        </small>
+
+        <div class="alert alert-info mt-3">
+            <p class="mb-0">
+                <strong>Example:</strong> If you spend 20 ECU from cash, then 20 ECU from deposit will be used automatically.
+            </p>
+        </div>
+
+        <div id="cashFrictionSection" style="display: none;" class="mt-4">
+            <div class="alert alert-warning">
+                <h5>💳 Cash Payment Verification Required</h5>
+                <p>To complete your cash payment, please enter this verification code:</p>
+
+                <div class="card bg-light text-center mb-3" style="padding: 20px;">
+                    <h2 style="font-family: 'Courier New', monospace; letter-spacing: 3px; color: #d9534f;">
+                        <strong>{{ verification_code }}</strong>
+                    </h2>
+                </div>
+
+                {{ formfield 'cash_verification_entry' }}
+
+                <p class="text-muted mt-2 mb-0">
+                    <small>⚠️ Code is case-sensitive. Enter exactly as shown.<br>
+                    This simulates the inconvenience of handling physical cash.</small>
+                </p>
+            </div>
+        </div>
+
+        {{ next_button }}
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const cashInput = document.querySelector('input[name="spend_from_cash"]');
+        const frictionSection = document.getElementById('cashFrictionSection');
+
+        function updateFrictionDisplay() {
+            const cashAmount = parseFloat(cashInput.value) || 0;
+            frictionSection.style.display = (cashAmount > 0) ? 'block' : 'none';
+        }
+
+        cashInput.addEventListener('input', updateFrictionDisplay);
+        cashInput.addEventListener('change', updateFrictionDisplay);
+        updateFrictionDisplay();
+    });
+</script>
+{{ endblock }}

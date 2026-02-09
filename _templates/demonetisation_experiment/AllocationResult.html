@@ -1,0 +1,54 @@
+{{ extends 'global/Page.html' }}
+
+{{ block title }}Allocation Result - Round {{ round_num }}{{ endblock }}
+
+{{ block content }}
+<div class="card mb-4">
+    <div class="card-header bg-info text-white">
+        <h4>Your Allocation Has Been Processed</h4>
+    </div>
+    <div class="card-body">
+        <h5>What You Decided:</h5>
+        <ul>
+            <li><strong>Deposited:</strong> {{ deposited }} ECU</li>
+            <li><strong>Kept as Cash:</strong> {{ cash_kept }} ECU</li>
+        </ul>
+
+        <hr>
+
+        <h5>Tax Deduction:</h5>
+        <div class="alert alert-warning">
+            <p><strong>Tax on deposit (30%):</strong> {{ tax_paid }} ECU</p>
+            <p class="mb-0"><strong>Amount added to deposit:</strong> {{ deposit_added }} ECU</p>
+        </div>
+
+        <hr>
+
+        <h5>Your Balances (Before Spending):</h5>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card bg-success text-white">
+                    <div class="card-body text-center">
+                        <h6>💰 Deposit Account</h6>
+                        <h3>{{ new_deposit }} ECU</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card bg-warning text-white">
+                    <div class="card-body text-center">
+                        <h6>💵 Cash in Hand</h6>
+                        <h3>{{ new_cash }} ECU</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert alert-primary mt-4">
+            <p class="mb-0"><strong>Next:</strong> You must make a mandatory expenditure of {{ C.MANDATORY_SPENDING }} ECU</p>
+        </div>
+
+        {{ next_button }}
+    </div>
+</div>
+{{ endblock }}

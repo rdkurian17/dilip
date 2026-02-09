@@ -1,0 +1,78 @@
+{{ extends 'global/Page.html' }}
+
+{{ block title }}Round {{ round_num }} Summary{{ endblock }}
+
+{{ block content }}
+<div class="card mb-4">
+    <div class="card-header bg-secondary text-white">
+        <h4>📊 Round {{ round_num }} Complete</h4>
+    </div>
+    <div class="card-body">
+
+        <div class="row">
+            <div class="col-md-6">
+                <h5>💼 Allocation:</h5>
+                <ul>
+                    <li>Deposited: {{ deposited }} ECU</li>
+                    <li>Tax paid: {{ tax_paid }} ECU</li>
+                    <li>Kept as cash: {{ kept_cash }} ECU</li>
+                </ul>
+            </div>
+
+            <div class="col-md-6">
+                <h5>🛒 Spending:</h5>
+                <ul>
+                    <li>From cash: {{ spent_cash }} ECU</li>
+                    <li>From deposit: {{ spent_deposit }} ECU</li>
+                    <li><strong>Total: {{ C.MANDATORY_SPENDING }} ECU</strong></li>
+                </ul>
+            </div>
+        </div>
+
+        <hr>
+
+        <h5>🔍 Audit Result:</h5>
+        {{ if was_audited }}
+        <div class="alert alert-danger">
+            <p class="mb-0"><strong>✗ AUDITED</strong> — Fine paid: <strong>{{ fine_paid }} ECU</strong></p>
+        </div>
+        {{ else }}
+        <div class="alert alert-success">
+            <p class="mb-0"><strong>✓ NOT AUDITED</strong></p>
+        </div>
+        {{ endif }}
+
+        <hr>
+
+        <h5>💰 Your Final Balances After Round {{ round_num }}:</h5>
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card bg-success text-white">
+                    <div class="card-body text-center">
+                        <h6>Deposit Account</h6>
+                        <h2>{{ final_deposit }} ECU</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card bg-warning text-white">
+                    <div class="card-body text-center">
+                        <h6>Cash in Hand</h6>
+                        <h2>{{ final_cash }} ECU</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert alert-info">
+            <p class="mb-1"><strong>Cumulative Statistics:</strong></p>
+            <p class="mb-0">
+                Total tax paid so far: {{ total_tax }} ECU<br>
+                Total fines paid so far: {{ total_fines }} ECU
+            </p>
+        </div>
+
+        {{ next_button }}
+    </div>
+</div>
+{{ endblock }}

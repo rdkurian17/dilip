@@ -1,0 +1,59 @@
+{{ extends 'global/Page.html' }}
+
+{{ block title }}Experiment Complete{{ endblock }}
+
+{{ block content }}
+<div class="card mb-4">
+    <div class="card-header bg-success text-white">
+        <h3>🎉 Experiment Complete!</h3>
+    </div>
+    <div class="card-body">
+        <h4>Your Final Wealth:</h4>
+
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card bg-light">
+                    <div class="card-body text-center">
+                        <h6>Deposit</h6>
+                        <h3>{{ final_deposit }} ECU</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-light">
+                    <div class="card-body text-center">
+                        <h6>Cash</h6>
+                        <h3>{{ final_cash }} ECU</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-success text-white">
+                    <div class="card-body text-center">
+                        <h6>Total</h6>
+                        <h3>{{ total_wealth }} ECU</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <h4>Summary Statistics:</h4>
+        <ul>
+            <li>Total tax paid: {{ total_tax_paid }} ECU</li>
+            <li>Total fines paid: {{ total_fines_paid }} ECU</li>
+        </ul>
+
+        <hr>
+
+        <div class="alert alert-success">
+            <h4>Your Real Payment:</h4>
+            <h2>£{{ real_payment|c }}</h2>
+            <p class="mb-0">This will be paid to you privately in cash.</p>
+        </div>
+
+        <p class="mt-4">Thank you for participating! Please wait for the experimenter.</p>
+    </div>
+</div>
+{{ endblock }}

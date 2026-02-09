@@ -1,0 +1,122 @@
+{{ extends 'global/Page.html' }}
+
+{{ block title }}Instructions{{ endblock }}
+
+{{ block content }}
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h3>Welcome to the Experiment</h3>
+    </div>
+    <div class="card-body">
+        <h4>Overview</h4>
+        <p>You will make decisions over <strong>{{ C.NUM_ROUNDS }} rounds</strong>. Each round has these steps:</p>
+
+        <ol class="lead">
+            <li><strong>Allocation:</strong> Decide how to save your income</li>
+            <li><strong>Spending:</strong> Make mandatory expenditure</li>
+            <li><strong>Audit:</strong> Random audit check</li>
+            <li><strong>Summary:</strong> See your new balances</li>
+        </ol>
+
+        <hr>
+
+        <h4>Your Two Accounts</h4>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <strong>💰 Bank Deposit</strong>
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            <li>Taxed at 30%</li>
+                            <li>Safe and formal</li>
+                            <li>Easy to spend from</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-warning text-white">
+                        <strong>💵 Cash in Hand</strong>
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            <li>Not taxed initially</li>
+                            <li>Faces 5% audit risk</li>
+                            <li>Inconvenient to spend</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <h4>How Each Round Works</h4>
+
+        <h5>Step 1: Allocation Decision</h5>
+        <p>You receive <strong>{{ C.ENDOWMENT }} ECU</strong> in cash. Decide:</p>
+        <ul>
+            <li><strong>Deposit:</strong> Gets taxed 30%, but safe</li>
+            <li><strong>Keep as cash:</strong> No tax now, but audit risk</li>
+        </ul>
+
+        <h5>Step 2: Mandatory Expenditure</h5>
+        <p>You must spend exactly <strong>{{ C.MANDATORY_SPENDING }} ECU</strong>. Choose:</p>
+        <ul>
+            <li><strong>Cash:</strong> Requires verification code (inconvenient)</li>
+            <li><strong>Deposit:</strong> Easy, automatic</li>
+        </ul>
+
+        <h5>Step 3: Audit</h5>
+        <p>Random audit with 5% probability. If audited and you have cash:</p>
+        <ul>
+            <li>Pay tax on ALL cash holdings</li>
+            <li>Pay fine = 2× the unpaid tax</li>
+            <li>Deducted from deposit</li>
+        </ul>
+
+        <hr>
+
+        <div class="alert alert-info">
+            <h5>📊 Complete Example</h5>
+            <p><strong>Starting:</strong> Deposit = 70 ECU, Cash = 30 ECU</p>
+
+            <p><strong>1. Receive 100 ECU → Deposit 60:</strong></p>
+            <ul>
+                <li>Tax: 60 × 30% = 18 ECU</li>
+                <li>Added: 60 - 18 = 42 ECU</li>
+                <li>Keep: 40 ECU cash</li>
+                <li>Result: Deposit = 112, Cash = 70</li>
+            </ul>
+
+            <p><strong>2. Spend 40 ECU (20 cash + 20 deposit):</strong></p>
+            <ul>
+                <li>Result: Deposit = 92, Cash = 50</li>
+            </ul>
+
+            <p><strong>3. Audited (unlucky!):</strong></p>
+            <ul>
+                <li>Tax on 50 cash: 15 ECU</li>
+                <li>Fine: 15 × 2 = 30 ECU</li>
+                <li>Total: 45 ECU from deposit</li>
+                <li><strong>Final: Deposit = 47, Cash = 50</strong></li>
+            </ul>
+        </div>
+
+        {{ if show_shock_warning }}
+        <div class="alert alert-warning">
+            <h5>⚠️ Important Policy Information</h5>
+            <p>In Round {{ C.SHOCK_ROUND }}, there will be a <strong>policy change</strong> affecting cash. Full details will be provided then.</p>
+        </div>
+        {{ endif }}
+
+        <h4>Your Payment</h4>
+        <p>Final wealth (Deposit + Cash) will be converted to real money at the rate specified in your consent form.</p>
+
+        {{ next_button }}
+    </div>
+</div>
+{{ endblock }}

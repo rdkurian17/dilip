@@ -1,0 +1,65 @@
+{{ extends 'global/Page.html' }}
+
+{{ block title }}⚠️ POLICY ANNOUNCEMENT{{ endblock }}
+
+{{ block content }}
+<div class="alert alert-danger">
+    <h2 class="text-center">🚨 DEMONETISATION SHOCK 🚨</h2>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h3>Old Lab Currency Is No Longer Valid</h3>
+
+        {{ if is_sudden }}
+        <p class="lead">Without prior warning, all old lab currency notes have been declared <strong>invalid</strong>.</p>
+        {{ else }}
+        <p class="lead">As announced at the beginning, all old lab currency notes are now <strong>invalid</strong>.</p>
+        {{ endif }}
+
+        <div class="alert alert-warning mt-4">
+            <h4>Your Old Cash Balance: {{ old_cash }} ECU</h4>
+            <p class="mb-0">This cash is currently <strong>worthless</strong> unless you convert it.</p>
+        </div>
+
+        <h4 class="mt-4">How to Make Old Cash Valid:</h4>
+        <p>You must <strong>deposit</strong> your old cash into your bank account. This is the ONLY way to preserve its value.</p>
+
+        <p><strong>Good News:</strong> Your existing deposit balance ({{ current_deposit }} ECU) is safe and unaffected.</p>
+
+        <div class="card bg-light mt-4">
+            <div class="card-header">
+                <h5>⚠️ Audit Rate Changes (Rounds 8-10 ONLY)</h5>
+            </div>
+            <div class="card-body">
+                <p>Based on how much old cash you convert, your audit rate will change for the next 3 rounds:</p>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Amount Converted</th>
+                            <th>Audit Rate (Rounds 8-10)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>0 - {{ C.TIER_1_THRESHOLD }} ECU</td>
+                            <td><strong>{{ C.TIER_1_AUDIT }}%</strong></td>
+                        </tr>
+                        <tr class="table-warning">
+                            <td>{{ C.TIER_1_THRESHOLD }} - {{ C.TIER_2_THRESHOLD }} ECU</td>
+                            <td><strong>{{ C.TIER_2_AUDIT }}%</strong></td>
+                        </tr>
+                        <tr class="table-danger">
+                            <td>More than {{ C.TIER_2_THRESHOLD }} ECU</td>
+                            <td><strong>{{ C.TIER_3_AUDIT }}%</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="mb-0"><small>After Round 10, the audit rate returns to {{ C.TIER_1_AUDIT }}% for everyone.</small></p>
+            </div>
+        </div>
+
+        {{ next_button }}
+    </div>
+</div>
+{{ endblock }}

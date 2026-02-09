@@ -1,0 +1,24 @@
+{{ extends 'global/Page.html' }}
+
+{{ block title }}Consent Form{{ endblock }}
+
+{{ block content }}
+<div class="card">
+    <div class="card-body">
+        <h3>Participant Consent</h3>
+        <p>Please read and complete the consent form at the link below:</p>
+
+        <div class="text-center my-4">
+            <a href="{{ qualtrics_link }}" target="_blank" class="btn btn-primary btn-lg">
+                📋 Open Consent Form in New Tab
+            </a>
+        </div>
+
+        <p class="text-muted">
+            <small>After completing the consent form, please return to this page and click Next to continue.</small>
+        </p>
+
+        {{ next_button }}
+    </div>
+</div>
+{{ endblock }}

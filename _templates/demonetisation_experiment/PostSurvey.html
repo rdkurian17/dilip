@@ -1,0 +1,18 @@
+{{ extends 'global/Page.html' }}
+
+{{ block title }}Post-Experiment Survey{{ endblock }}
+
+{{ block content }}
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h4>Thank You! Please Answer a Few Final Questions</h4>
+    </div>
+    <div class="card-body">
+        <p>Your responses will help us understand decision-making patterns.</p>
+
+        {{ formfields }}
+
+        {{ next_button }}
+    </div>
+</div>
+{{ endblock }}

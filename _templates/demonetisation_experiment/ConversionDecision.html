@@ -1,0 +1,59 @@
+{{ extends 'global/Page.html' }}
+
+{{ block title }}Conversion Decision{{ endblock }}
+
+{{ block content }}
+<div class="card bg-warning mb-4">
+    <div class="card-body text-center">
+        <h3>Your Old Cash: {{ old_cash }} ECU</h3>
+        <p class="mb-0">Currently INVALID and worthless</p>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h4>How much do you want to convert?</h4>
+    </div>
+    <div class="card-body">
+        {{ formfield 'conversion_amount' }}
+
+        <div class="alert alert-danger mt-4">
+            <h5>⚠️ WARNING</h5>
+            <p class="mb-0">Any old cash you do NOT convert will become <strong>permanently worthless</strong> and lost forever.</p>
+        </div>
+
+        <div class="alert alert-info mt-4">
+            <h5>🤔 Trade-off:</h5>
+            <ul class="mb-0">
+                <li><strong>Convert MORE:</strong> Save your money, but higher audit risk (Rounds 8-10)</li>
+                <li><strong>Convert LESS:</strong> Lower audit risk, but lose unconverted cash permanently</li>
+            </ul>
+        </div>
+
+        <table class="table table-bordered mt-4">
+            <thead>
+                <tr>
+                    <th>If you convert...</th>
+                    <th>Your audit rate (R8-10)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>0 - {{ C.TIER_1_THRESHOLD }} ECU</td>
+                    <td>{{ C.TIER_1_AUDIT }}%</td>
+                </tr>
+                <tr class="table-warning">
+                    <td>{{ C.TIER_1_THRESHOLD }} - {{ C.TIER_2_THRESHOLD }} ECU</td>
+                    <td>{{ C.TIER_2_AUDIT }}%</td>
+                </tr>
+                <tr class="table-danger">
+                    <td>More than {{ C.TIER_2_THRESHOLD }} ECU</td>
+                    <td>{{ C.TIER_3_AUDIT }}%</td>
+                </tr>
+            </tbody>
+        </table>
+
+        {{ next_button }}
+    </div>
+</div>
+{{ endblock }}

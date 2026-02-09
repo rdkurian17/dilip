@@ -1,0 +1,45 @@
+{{ extends 'global/Page.html' }}
+
+{{ block title }}Comprehension Check{{ endblock }}
+
+{{ block content }}
+<div class="card">
+    <div class="card-header bg-info text-white">
+        <h4>Comprehension Check</h4>
+    </div>
+    <div class="card-body">
+        <p>Please read the questions below to ensure you understand the experiment:</p>
+
+        <div class="alert alert-warning">
+            <strong>Question 1:</strong> If you deposit 100 ECU in your bank account, how much will be added to your account after the 30% tax?
+            <ul class="mb-0">
+                <li>A) 100 ECU</li>
+                <li><strong>B) 70 ECU ✓</strong></li>
+                <li>C) 30 ECU</li>
+            </ul>
+        </div>
+
+        <div class="alert alert-warning">
+            <strong>Question 2:</strong> If you keep 50 ECU as cash and are audited, how much will you pay in total (tax + fine)?
+            <ul class="mb-0">
+                <li>A) 15 ECU (tax only)</li>
+                <li>B) 30 ECU (fine only)</li>
+                <li><strong>C) 45 ECU (tax + fine) ✓</strong></li>
+            </ul>
+        </div>
+
+        <div class="alert alert-warning">
+            <strong>Question 3:</strong> What is the audit probability in normal rounds?
+            <ul class="mb-0">
+                <li><strong>A) 5% ✓</strong></li>
+                <li>B) 15%</li>
+                <li>C) 30%</li>
+            </ul>
+        </div>
+
+        <p class="text-muted"><small>Click Next when ready.</small></p>
+
+        {{ next_button }}
+    </div>
+</div>
+{{ endblock }}
