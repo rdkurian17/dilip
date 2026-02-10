@@ -4,9 +4,7 @@
 
 {{ block content }}
 <div class="experiment-progress stagger-1">
-    <div class="progress-label">Round {{ C.SHOCK_ROUND }} of {{ C.NUM_ROUNDS }}
-        <span class="phase-badge elevated">Conversion Phase</span>
-    </div>
+    <div class="progress-label">Round {{ C.SHOCK_ROUND }} of {{ C.NUM_ROUNDS }}</div>
     <div class="progress">
         <div class="progress-bar" role="progressbar" style="width: {{ progress_pct }}%"
              aria-valuenow="{{ C.SHOCK_ROUND }}" aria-valuemin="0" aria-valuemax="{{ C.NUM_ROUNDS }}">

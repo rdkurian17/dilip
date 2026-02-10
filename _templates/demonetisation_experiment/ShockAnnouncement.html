@@ -4,9 +4,7 @@
 
 {{ block content }}
 <div class="experiment-progress stagger-1">
-    <div class="progress-label">Round {{ C.SHOCK_ROUND }} of {{ C.NUM_ROUNDS }}
-        <span class="phase-badge elevated">Policy Shock</span>
-    </div>
+    <div class="progress-label">Round {{ C.SHOCK_ROUND }} of {{ C.NUM_ROUNDS }}</div>
     <div class="progress">
         <div class="progress-bar" role="progressbar" style="width: {{ progress_pct }}%"
              aria-valuenow="{{ C.SHOCK_ROUND }}" aria-valuemin="0" aria-valuemax="{{ C.NUM_ROUNDS }}">
@@ -20,7 +18,7 @@
         <line x1="12" y1="9" x2="12" y2="13"/>
         <line x1="12" y1="17" x2="12.01" y2="17"/>
     </svg>
-    <h2>DEMONETISATION ANNOUNCEMENT</h2>
+    <h2>LIQUIDITY SHOCK</h2>
 </div>
 
 <div class="card mb-4 stagger-3">

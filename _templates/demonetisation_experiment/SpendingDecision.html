@@ -79,21 +79,12 @@
                     </svg>
                     <h5 class="mb-0">Cash Payment Verification Required</h5>
                 </div>
-                <p>To complete your cash payment, please enter this verification code:</p>
-
-                <div class="verification-code-display"
-                     oncopy="return false"
-                     oncut="return false"
-                     ondragstart="return false"
-                     oncontextmenu="return false">
-                    <code>{{ verification_code }}</code>
-                </div>
+                <p>To confirm your cash payment, type the word <strong>SPEND</strong> exactly (case-sensitive) in the box below.</p>
 
                 {{ formfield 'cash_verification_entry' }}
 
                 <p class="text-muted mt-2 mb-0">
-                    <small>Code is case-sensitive. Enter exactly as shown.<br>
-                    This simulates the inconvenience of handling physical cash.</small>
+                    <small>This simulates the inconvenience of handling physical cash.</small>
                 </p>
             </div>
         </div>
@@ -115,13 +106,6 @@
         cashInput.addEventListener('input', updateFrictionDisplay);
         cashInput.addEventListener('change', updateFrictionDisplay);
         updateFrictionDisplay();
-
-        // Prevent paste into verification code input
-        const verifyInput = document.querySelector('input[name="cash_verification_entry"]');
-        if (verifyInput) {
-            verifyInput.addEventListener('paste', function(e) { e.preventDefault(); });
-            verifyInput.addEventListener('drop', function(e) { e.preventDefault(); });
-        }
     });
 </script>
 {{ endblock }}

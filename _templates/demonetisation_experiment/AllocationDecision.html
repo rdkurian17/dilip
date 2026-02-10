@@ -1,20 +1,10 @@
 {{ extends 'global/Page.html' }}
 
-{{ block title }}{{ phase }}{{ endblock }}
+{{ block title }}Round {{ round_num }}{{ endblock }}
 
 {{ block content }}
 <div class="experiment-progress stagger-1">
-    <div class="progress-label">Round {{ round_num }} of {{ C.NUM_ROUNDS }}
-        {{ if round_num < C.SHOCK_ROUND }}
-        <span class="phase-badge pre-shock">Pre-shock Phase</span>
-        {{ else }}
-            {{ if round_num <= C.ELEVATED_AUDIT_END }}
-            <span class="phase-badge elevated">Elevated Audit Phase</span>
-            {{ else }}
-            <span class="phase-badge normal">Normal Phase</span>
-            {{ endif }}
-        {{ endif }}
-    </div>
+    <div class="progress-label">Round {{ round_num }} of {{ C.NUM_ROUNDS }}</div>
     <div class="progress">
         <div class="progress-bar" role="progressbar" style="width: {{ progress_pct }}%"
              aria-valuenow="{{ round_num }}" aria-valuemin="0" aria-valuemax="{{ C.NUM_ROUNDS }}">
@@ -53,7 +43,7 @@
 
 <div class="card mb-4 stagger-3">
     <div class="card-header bg-primary text-white">
-        <h4 class="mb-0" style="color: #fff;">Round {{ round_num }}: You receive {{ C.ENDOWMENT }} ECU</h4>
+        <h4 class="mb-0" style="color: #fff;">Round {{ round_num }}: You receive {{ C.ENDOWMENT }}</h4>
     </div>
     <div class="card-body">
         <p>This income is given to you as <strong>cash</strong>. Decide how much to deposit.</p>

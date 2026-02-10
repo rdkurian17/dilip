@@ -15,16 +15,23 @@
     </div>
     <div class="card-body">
         <h4>Overview</h4>
-        <p>You will make decisions over <strong>{{ C.NUM_ROUNDS }} rounds</strong>. Each round has these steps:</p>
+        <p>In this experiment, you will participate in <strong>{{ C.NUM_ROUNDS }} rounds</strong>. Each round, you receive income in a lab currency called <strong>ECU</strong> (Experimental Currency Units). Your goal is to manage your finances across rounds. At the end, your total wealth is converted to real money.</p>
+
+        <div class="section-divider"><span>How Each Round Works</span></div>
+
+        <p>Each round proceeds in the following order:</p>
 
         <ol class="steps-list">
-            <li><strong>Allocation:</strong> Decide how to save your income</li>
-            <li><strong>Spending:</strong> Make mandatory expenditure</li>
-            <li><strong>Audit:</strong> Random audit check</li>
-            <li><strong>Summary:</strong> See your new balances</li>
+            <li><strong>Receive Income:</strong> You receive {{ C.ENDOWMENT }} as cash income.</li>
+            <li><strong>Deposit Decision:</strong> You choose how much of your income to deposit into your bank account. The deposited amount is taxed at 30%. Whatever you do not deposit remains as cash in hand.</li>
+            <li><strong>Mandatory Spending:</strong> You must spend exactly {{ C.MANDATORY_SPENDING }}. You choose how much of this to pay from your cash in hand. The remainder is automatically taken from your deposit account.</li>
+            <li><strong>Random Audit:</strong> There is a 5% chance of a random audit. If you are audited, you pay tax on all your cash holdings (30%) plus a fine equal to 2 times the unpaid tax. The penalty is deducted from your deposit account.</li>
+            <li><strong>Round Summary:</strong> You see your updated balances. Then the next round begins.</li>
         </ol>
 
         <div class="section-divider"><span>Your Two Accounts</span></div>
+
+        <p>You have two places to hold your ECU:</p>
 
         <div class="row g-3 mb-4">
             <div class="col-md-6">
@@ -38,9 +45,9 @@
                     </div>
                     <div class="card-body">
                         <ul class="text-start mb-0">
-                            <li>Taxed at 30%</li>
-                            <li>Safe and formal</li>
-                            <li>Easy to spend from</li>
+                            <li>Taxed at 30% when deposited</li>
+                            <li>Protected from audits</li>
+                            <li>No additional cost when spending</li>
                         </ul>
                     </div>
                 </div>
@@ -57,63 +64,50 @@
                     </div>
                     <div class="card-body">
                         <ul class="text-start mb-0">
-                            <li>Not taxed initially</li>
-                            <li>Faces 5% audit risk</li>
-                            <li>Inconvenient to spend</li>
+                            <li>Not taxed when received</li>
+                            <li>5% chance of audit each round</li>
+                            <li>Requires typing SPEND to confirm payment</li>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="section-divider"><span>How Each Round Works</span></div>
+        <div class="section-divider"><span>Your Decisions</span></div>
 
-        <h5>Step 1: Allocation Decision</h5>
-        <p>You receive <strong>{{ C.ENDOWMENT }} ECU</strong> in cash. Decide:</p>
-        <ul>
-            <li><strong>Deposit:</strong> Gets taxed 30%, but safe</li>
-            <li><strong>Keep as cash:</strong> No tax now, but audit risk</li>
-        </ul>
+        <h5>Decision 1: Deposit Decision</h5>
+        <p>Each round, you receive {{ C.ENDOWMENT }} in cash. You choose how much of this income to deposit into your bank account. The deposited amount is taxed at 30%. Whatever you do not deposit remains as <strong>cash in hand</strong>.</p>
 
-        <h5>Step 2: Mandatory Expenditure</h5>
-        <p>You must spend exactly <strong>{{ C.MANDATORY_SPENDING }} ECU</strong>. Choose:</p>
-        <ul>
-            <li><strong>Cash:</strong> Requires verification code (inconvenient)</li>
-            <li><strong>Deposit:</strong> Easy, automatic</li>
-        </ul>
+        <h5>Decision 2: Expenditure Decision</h5>
+        <p>Each round, you must spend exactly {{ C.MANDATORY_SPENDING }}. You choose how much of this mandatory spending to pay from your <strong>cash in hand</strong>. Your spending from cash cannot exceed your current cash balance. Any remainder of the {{ C.MANDATORY_SPENDING }} is automatically deducted from your deposit account.</p>
+        <p>If you choose to spend any positive amount from cash, you must type the word <strong>SPEND</strong> exactly (case-sensitive) to confirm.</p>
 
-        <h5>Step 3: Audit</h5>
-        <p>Random audit with 5% probability. If audited and you have cash:</p>
-        <ul>
-            <li>Pay tax on ALL cash holdings</li>
-            <li>Pay fine = 2x the unpaid tax</li>
-            <li>Deducted from deposit</li>
-        </ul>
-
-        <div class="section-divider"><span>Complete Example</span></div>
+        <div class="section-divider"><span>Worked Example</span></div>
 
         <div class="alert alert-info">
-            <h5>Worked Example</h5>
-            <p><strong>Starting:</strong> Deposit = 70 ECU, Cash = 30 ECU</p>
+            <h5>Example Round</h5>
+            <p><strong>Starting balances:</strong> Deposit = 70 ECU, Cash = 30 ECU</p>
 
             <p><strong>1. Receive 100 ECU, deposit 60:</strong></p>
             <ul>
-                <li>Tax: 60 x 30% = 18 ECU</li>
-                <li>Added: 60 - 18 = 42 ECU</li>
-                <li>Keep: 40 ECU cash</li>
+                <li>Tax on deposit: 60 x 30% = 18 ECU</li>
+                <li>Added to deposit: 60 - 18 = 42 ECU</li>
+                <li>Kept as cash: 40 ECU</li>
                 <li>Result: Deposit = 112, Cash = 70</li>
             </ul>
 
-            <p><strong>2. Spend 40 ECU (20 cash + 20 deposit):</strong></p>
+            <p><strong>2. Mandatory spending of 40 ECU (choose to spend 20 from cash):</strong></p>
             <ul>
+                <li>20 ECU paid from cash (must type SPEND to confirm)</li>
+                <li>Remaining 20 ECU automatically taken from deposit</li>
                 <li>Result: Deposit = 92, Cash = 50</li>
             </ul>
 
-            <p><strong>3. Audited (unlucky!):</strong></p>
+            <p><strong>3. Audit check (audited!):</strong></p>
             <ul>
-                <li>Tax on 50 cash: 15 ECU</li>
+                <li>Tax on 50 ECU cash: 50 x 30% = 15 ECU</li>
                 <li>Fine: 15 x 2 = 30 ECU</li>
-                <li>Total: 45 ECU from deposit</li>
+                <li>Total penalty: 45 ECU deducted from deposit</li>
                 <li><strong>Final: Deposit = 47, Cash = 50</strong></li>
             </ul>
         </div>
@@ -126,15 +120,34 @@
                     <line x1="12" y1="9" x2="12" y2="13"/>
                     <line x1="12" y1="17" x2="12.01" y2="17"/>
                 </svg>
-                <h5 class="mb-0">Important Policy Information</h5>
+                <h5 class="mb-0">Important: Upcoming Policy Change</h5>
             </div>
-            <p class="mb-0">In Round {{ C.SHOCK_ROUND }}, there will be a <strong>policy change</strong> affecting cash. Full details will be provided then.</p>
+            <p>After Round 7, the current lab currency (old ECU notes) will become <strong>invalid</strong>. Old currency can no longer be used for spending.</p>
+            <p>The <strong>only</strong> way to preserve the value of old currency is to <strong>deposit it into your bank account</strong>. However, depositing old currency after Round 7 will subject you to a <strong>higher audit probability for the next 3 rounds</strong> (Rounds 8-10). The more old currency you deposit, the higher the audit probability.</p>
+            <p class="mb-0">You will receive new currency from Round 8 onwards, which works normally.</p>
+        </div>
+        {{ endif }}
+
+        {{ if show_may_shock }}
+        <div class="alert alert-info">
+            <div class="icon-header" style="margin-bottom: 0.5rem;">
+                <svg class="icon icon-md icon-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 16v-4m0-4h.01"/>
+                </svg>
+                <h5 class="mb-0">Note</h5>
+            </div>
+            <p class="mb-0">During the experiment, there may or may not be a change in policy that affects how the lab currency works. If such a change occurs, you will receive full details at that time. This change is not guaranteed to happen.</p>
         </div>
         {{ endif }}
 
         <div class="section-divider"><span>Payment</span></div>
 
-        <p>Final wealth (Deposit + Cash) will be converted to real money at the rate specified in your consent form.</p>
+        <p>At the end of the experiment, your final wealth (Deposit + Cash) will be converted to British Pounds at the following rate:</p>
+        <div class="alert alert-info">
+            <strong>1 ECU = &pound;0.01</strong>
+            <br><small>For example, if your final wealth is 500 ECU, you will receive &pound;5.00.</small>
+        </div>
 
         {{ next_button }}
     </div>

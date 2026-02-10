@@ -58,7 +58,7 @@ class Player(BasePlayer):
     deposit_decision = models.CurrencyField(
         min=0,
         max=C.ENDOWMENT,
-        label="How much do you want to deposit in your account?"
+        label="Amount to deposit:"
     )
 
     # Calculated amounts after allocation
@@ -74,7 +74,7 @@ class Player(BasePlayer):
     spend_from_cash = models.CurrencyField(
         min=0,
         initial=0,
-        label="How much do you want to spend from CASH?"
+        label="Amount to spend from cash:"
     )
     spend_from_deposit = models.CurrencyField(initial=0)
 
@@ -83,7 +83,7 @@ class Player(BasePlayer):
     cash_verification_entry = models.StringField(
         blank=True,
         initial='',
-        label="Enter the verification code exactly as shown:"
+        label="Type SPEND to confirm:"
     )
 
     # Cumulative balances (carried forward)
@@ -126,6 +126,11 @@ class Player(BasePlayer):
         widget=widgets.RadioSelect,
         blank=True
     )
+
+    # Comprehension quiz
+    quiz_q1 = models.StringField(blank=True, initial='', label="Your answer:")
+    quiz_q2 = models.StringField(blank=True, initial='', label="Your answer:")
+    quiz_q3 = models.StringField(blank=True, initial='', label="Your answer:")
 
     # ---------- Helper properties ----------
 
@@ -220,14 +225,25 @@ class Instructions(Page):
         return dict(
             treatment=player.treatment,
             show_shock_warning=(player.treatment == 'preannounced'),
+            show_may_shock=(player.treatment in ['baseline', 'sudden']),
         )
 
 
 class ComprehensionQuiz(Page):
+    form_model = 'player'
+    form_fields = ['quiz_q1', 'quiz_q2', 'quiz_q3']
+
     @staticmethod
     def is_displayed(player: Player):
         return player.round_number == 1
-    # Informational-only page in your HTML (no form fields).
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+            correct_q1='70',
+            correct_q2='45',
+            correct_q3='5',
+        )
 
 
 class ShockAnnouncement(Page):
@@ -317,18 +333,10 @@ class AllocationDecision(Page):
             current_deposit = prev.total_deposit if prev else 0
             current_cash = prev.total_cash if prev else 0
 
-        if player.round_number < C.SHOCK_ROUND:
-            phase = f"Pre-shock Phase: Round {player.round_number}/7"
-        elif player.round_number <= C.ELEVATED_AUDIT_END:
-            phase = f"Elevated Audit Phase: Round {player.round_number}/10"
-        else:
-            phase = f"Normal Phase: Round {player.round_number}/15"
-
         audit_prob = player.get_audit_probability() if player.round_number > 1 else C.BASE_AUDIT_PROB
 
         return dict(
             round_num=player.round_number,
-            phase=phase,
             current_deposit=current_deposit,
             current_cash=current_cash,
             audit_prob=audit_prob,
@@ -377,14 +385,10 @@ class SpendingDecision(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        if not player.cash_verification_code:
-            player.cash_verification_code = player.generate_verification_code()
-
         return dict(
             round_num=player.round_number,
             deposit_balance=player.deposit_before_spending,
             cash_balance=player.cash_before_spending,
-            verification_code=player.cash_verification_code,
             progress_pct=player.progress_pct,
         )
 
@@ -407,8 +411,8 @@ class SpendingDecision(Page):
 
         if spend_cash > 0:
             entered_code = (values.get('cash_verification_entry') or '').strip()
-            if entered_code != player.cash_verification_code:
-                return 'Verification code does not match. Please enter the code exactly as shown (case-sensitive).'
+            if entered_code != 'SPEND':
+                return 'You must type SPEND exactly (case-sensitive) to confirm your cash payment.'
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
