@@ -1,0 +1,44 @@
+{{ extends 'global/Page.html' }}
+
+{{ block title }}Risk Preference Task{{ endblock }}
+
+{{ block content }}
+<div class="card stagger-1">
+    <div class="card-header bg-primary text-white">
+        <div class="icon-header">
+            <svg class="icon icon-md icon-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            <h4 class="mb-0" style="color: #fff;">Risk Preference</h4>
+        </div>
+    </div>
+    <div class="card-body">
+        <p>Each option below gives a <strong>50% chance</strong> of the High outcome and <strong>50% chance</strong> of the Low outcome. Choose ONE option.</p>
+
+        <table class="table table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th>Option</th>
+                    <th>Low (50% chance)</th>
+                    <th>High (50% chance)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ for L in lotteries }}
+                <tr>
+                    <td><strong>{{ L.opt }}</strong></td>
+                    <td>{{ L.low }}</td>
+                    <td>{{ L.high }}</td>
+                </tr>
+                {{ endfor }}
+            </tbody>
+        </table>
+
+        {{ formfields }}
+
+        {{ next_button }}
+    </div>
+</div>
+{{ endblock }}

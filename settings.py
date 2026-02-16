@@ -8,7 +8,6 @@ SESSION_CONFIGS = [
         num_demo_participants=1,
         treatment='sudden',
         real_world_currency_per_point=0.01,
-        consent_link='https://your-qualtrics-link.com',
     ),
     dict(
         name='demonetisation_preannounced',
@@ -17,7 +16,6 @@ SESSION_CONFIGS = [
         num_demo_participants=1,
         treatment='preannounced',
         real_world_currency_per_point=0.01,
-        consent_link='https://your-qualtrics-link.com',
     ),
     dict(
         name='demonetisation_baseline',
@@ -26,7 +24,6 @@ SESSION_CONFIGS = [
         num_demo_participants=1,
         treatment='baseline',
         real_world_currency_per_point=0.01,
-        consent_link='https://your-qualtrics-link.com',
     ),
 ]
 

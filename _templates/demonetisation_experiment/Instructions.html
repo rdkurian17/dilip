@@ -14,101 +14,89 @@
         </div>
     </div>
     <div class="card-body">
-        <h4>Overview</h4>
-        <p>In this experiment, you will participate in <strong>{{ C.NUM_ROUNDS }} rounds</strong>. Each round, you receive income in a lab currency called <strong>ECU</strong> (Experimental Currency Units). Your goal is to manage your finances across rounds. At the end, your total wealth is converted to real money.</p>
+        <p>You will participate in <strong>{{ C.NUM_ROUNDS }} rounds</strong>. In each round, you receive income in a lab currency called <strong>ECU (Experimental Currency Unit)</strong>. Your objective is to manage your finances across rounds.</p>
 
-        <div class="section-divider"><span>How Each Round Works</span></div>
-
-        <p>Each round proceeds in the following order:</p>
-
-        <ol class="steps-list">
-            <li><strong>Receive Income:</strong> You receive {{ C.ENDOWMENT }} as cash income.</li>
-            <li><strong>Deposit Decision:</strong> You choose how much of your income to deposit into your bank account. The deposited amount is taxed at 30%. Whatever you do not deposit remains as cash in hand.</li>
-            <li><strong>Mandatory Spending:</strong> You must spend exactly {{ C.MANDATORY_SPENDING }}. You choose how much of this to pay from your cash in hand. The remainder is automatically taken from your deposit account.</li>
-            <li><strong>Random Audit:</strong> There is a 5% chance of a random audit. If you are audited, you pay tax on all your cash holdings (30%) plus a fine equal to 2 times the unpaid tax. The penalty is deducted from your deposit account.</li>
-            <li><strong>Round Summary:</strong> You see your updated balances. Then the next round begins.</li>
-        </ol>
-
-        <div class="section-divider"><span>Your Two Accounts</span></div>
-
-        <p>You have two places to hold your ECU:</p>
-
-        <div class="row g-3 mb-4">
-            <div class="col-md-6">
-                <div class="account-card deposit-card">
-                    <div class="account-card-header">
-                        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #fff; margin-right: 0.3rem;">
-                            <rect x="3" y="11" width="18" height="10" rx="2"/>
-                            <path d="M12 2L2 11h20L12 2z"/>
-                        </svg>
-                        Bank Deposit
-                    </div>
-                    <div class="card-body">
-                        <ul class="text-start mb-0">
-                            <li>Taxed at 30% when deposited</li>
-                            <li>Protected from audits</li>
-                            <li>No additional cost when spending</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="account-card cash-card">
-                    <div class="account-card-header">
-                        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #fff; margin-right: 0.3rem;">
-                            <rect x="2" y="6" width="20" height="12" rx="2"/>
-                            <circle cx="12" cy="12" r="3"/>
-                            <path d="M2 10h2m16 0h2M2 14h2m16 0h2"/>
-                        </svg>
-                        Cash in Hand
-                    </div>
-                    <div class="card-body">
-                        <ul class="text-start mb-0">
-                            <li>Not taxed when received</li>
-                            <li>5% chance of audit each round</li>
-                            <li>Requires typing SPEND to confirm payment</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+        <p>At the end of the experiment, your total wealth (Deposit + Cash) will be converted into British Pounds at the rate:</p>
+        <div class="alert alert-info">
+            <strong>1 ECU = £0.01</strong>
         </div>
 
-        <div class="section-divider"><span>Your Decisions</span></div>
+        <div class="section-divider"><span>Structure of Each Round</span></div>
 
-        <h5>Decision 1: Deposit Decision</h5>
-        <p>Each round, you receive {{ C.ENDOWMENT }} in cash. You choose how much of this income to deposit into your bank account. The deposited amount is taxed at 30%. Whatever you do not deposit remains as <strong>cash in hand</strong>.</p>
+        <p>Each round proceeds as follows:</p>
 
-        <h5>Decision 2: Expenditure Decision</h5>
-        <p>Each round, you must spend exactly {{ C.MANDATORY_SPENDING }}. You choose how much of this mandatory spending to pay from your <strong>cash in hand</strong>. Your spending from cash cannot exceed your current cash balance. Any remainder of the {{ C.MANDATORY_SPENDING }} is automatically deducted from your deposit account.</p>
-        <p>If you choose to spend any positive amount from cash, you must type the word <strong>SPEND</strong> exactly (case-sensitive) to confirm.</p>
+        <h5 class="mt-4">1. Income</h5>
+        <p>You receive <strong>{{ C.ENDOWMENT }} ECU</strong> as cash.</p>
 
-        <div class="section-divider"><span>Worked Example</span></div>
+        <h5 class="mt-4">2. Deposit Decision</h5>
+        <p>You decide how much of the {{ C.ENDOWMENT }} ECU to deposit into your bank account.</p>
+        <ul>
+            <li>The deposited amount is <strong>taxed at 30%</strong>.</li>
+            <li>Any amount not deposited remains as <strong>cash in hand</strong>.</li>
+            <li>Deposited funds are <strong>not subject to audit</strong>.</li>
+            <li>Cash holdings are <strong>subject to audit risk</strong>.</li>
+        </ul>
+
+        <h5 class="mt-4">3. Mandatory Spending</h5>
+        <p>In every round, you must spend exactly <strong>{{ C.MANDATORY_SPENDING }} ECU</strong>.</p>
+        <p>You must decide:</p>
+        <ul>
+            <li>How much to pay from your <strong>deposit account</strong>.</li>
+            <li>How much to pay from <strong>cash in hand</strong>.</li>
+        </ul>
+        <p><strong>The two amounts must sum exactly to {{ C.MANDATORY_SPENDING }} ECU.</strong></p>
+
+        <div class="alert alert-warning">
+            <p class="mb-0">
+                <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #92400E; margin-right: 0.3rem;">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                    <line x1="12" y1="9" x2="12" y2="13"/>
+                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+                <strong>Important:</strong> If you choose to pay any positive amount from cash, you will be required to type a randomly generated sequence of letters exactly as shown (case-sensitive). This additional typing requirement simulates the inconvenience of handling physical cash compared to digital or formal payments.
+            </p>
+        </div>
+
+        <h5 class="mt-4">4. Random Audit</h5>
+        <p>Each round, there is a <strong>{{ C.BASE_AUDIT_PROB }}% chance</strong> of an audit.</p>
+        <p>If audited:</p>
+        <ul>
+            <li>You must pay <strong>30% tax</strong> on all cash currently held.</li>
+            <li>You must also pay a <strong>fine equal to 2 times the unpaid tax</strong>.</li>
+            <li>The total penalty is deducted from your deposit account first.</li>
+            <li>If the deposit balance is insufficient, the remaining penalty is deducted from cash.</li>
+        </ul>
+
+        <h5 class="mt-4">5. Round Summary</h5>
+        <p>Your updated deposit and cash balances are displayed before the next round begins.</p>
+
+        <div class="section-divider"><span>Example</span></div>
 
         <div class="alert alert-info">
             <h5>Example Round</h5>
             <p><strong>Starting balances:</strong> Deposit = 70 ECU, Cash = 30 ECU</p>
 
-            <p><strong>1. Receive 100 ECU, deposit 60:</strong></p>
+            <p><strong>You deposit 60 ECU:</strong></p>
             <ul>
-                <li>Tax on deposit: 60 x 30% = 18 ECU</li>
-                <li>Added to deposit: 60 - 18 = 42 ECU</li>
-                <li>Kept as cash: 40 ECU</li>
-                <li>Result: Deposit = 112, Cash = 70</li>
+                <li>Tax = 18 ECU</li>
+                <li>42 ECU added to deposit</li>
+                <li>40 ECU remains as cash</li>
+                <li><strong>New balances:</strong> Deposit = 112, Cash = 70</li>
             </ul>
 
-            <p><strong>2. Mandatory spending of 40 ECU (choose to spend 20 from cash):</strong></p>
+            <p><strong>You choose to spend:</strong></p>
             <ul>
-                <li>20 ECU paid from cash (must type SPEND to confirm)</li>
-                <li>Remaining 20 ECU automatically taken from deposit</li>
-                <li>Result: Deposit = 92, Cash = 50</li>
+                <li>20 ECU from cash</li>
+                <li>20 ECU from deposit</li>
+                <li><strong>New balances:</strong> Deposit = 92, Cash = 50</li>
             </ul>
 
-            <p><strong>3. Audit check (audited!):</strong></p>
+            <p><strong>If audited:</strong></p>
             <ul>
-                <li>Tax on 50 ECU cash: 50 x 30% = 15 ECU</li>
-                <li>Fine: 15 x 2 = 30 ECU</li>
-                <li>Total penalty: 45 ECU deducted from deposit</li>
-                <li><strong>Final: Deposit = 47, Cash = 50</strong></li>
+                <li>Tax on 50 cash = 15 ECU</li>
+                <li>Fine = 30 ECU</li>
+                <li>Total penalty = 45 ECU</li>
+                <li>Penalty deducted from deposit first.</li>
             </ul>
         </div>
 
@@ -135,19 +123,11 @@
                     <circle cx="12" cy="12" r="10"/>
                     <path d="M12 16v-4m0-4h.01"/>
                 </svg>
-                <h5 class="mb-0">Note</h5>
+                <h5 class="mb-0">Policy Change</h5>
             </div>
-            <p class="mb-0">During the experiment, there may or may not be a change in policy that affects how the lab currency works. If such a change occurs, you will receive full details at that time. This change is not guaranteed to happen.</p>
+            <p class="mb-0">During the experiment, there may or may not be a policy change affecting cash holdings. If such a change occurs, full details will be provided at that time. The policy change is not guaranteed to occur.</p>
         </div>
         {{ endif }}
-
-        <div class="section-divider"><span>Payment</span></div>
-
-        <p>At the end of the experiment, your final wealth (Deposit + Cash) will be converted to British Pounds at the following rate:</p>
-        <div class="alert alert-info">
-            <strong>1 ECU = &pound;0.01</strong>
-            <br><small>For example, if your final wealth is 500 ECU, you will receive &pound;5.00.</small>
-        </div>
 
         {{ next_button }}
     </div>

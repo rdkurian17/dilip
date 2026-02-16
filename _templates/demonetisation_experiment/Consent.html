@@ -4,32 +4,107 @@
 
 {{ block content }}
 <div class="card stagger-1">
-    <div class="card-body text-center" style="padding: 2.5rem 2rem;">
-        <div class="consent-icon" style="margin-bottom: 1.25rem;">
-            <svg class="icon icon-2xl icon-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <div class="card-header bg-primary text-white">
+        <div class="icon-header">
+            <svg class="icon icon-md icon-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                 <path d="M13 3v5a2 2 0 002 2h5"/>
             </svg>
+            <h4 class="mb-0" style="color: #fff;">Participant Consent Form</h4>
         </div>
-        <h3>Participant Consent</h3>
-        <p class="text-muted">Please read and complete the consent form at the link below before proceeding.</p>
+    </div>
+    <div class="card-body">
+        <p><strong>Study Title:</strong> Liquidity under Constraint: Experimental Evidence on Behavioural Adaptation to Sudden Monetary Shocks</p>
+        <p><strong>Researcher:</strong> Richie Dilip Kurian</p>
+        <p><strong>Supervisor:</strong> Dennie Van Dolder, Department of Economics</p>
+        <p><strong>ERAMS Reference No:</strong> ETH2526-0742</p>
 
-        <div class="my-4">
-            <a href="{{ qualtrics_link }}" target="_blank" class="btn btn-primary btn-lg">
-                <svg class="icon icon-sm icon-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.4rem;">
-                    <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
-                    <polyline points="15 3 21 3 21 9"/>
-                    <line x1="10" y1="14" x2="21" y2="3"/>
+        <div class="alert alert-info mt-4">
+            <h5>
+                <svg class="icon icon-sm icon-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.3rem;">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 16v-4m0-4h.01"/>
                 </svg>
-                Open Consent Form
-            </a>
+                Please confirm the following statements:
+            </h5>
+
+            <div class="consent-checklist mt-3">
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="consent1" required>
+                    <label class="form-check-label" for="consent1">
+                        I confirm that I have read and understood the Participant Information Sheet and have had the opportunity to ask questions.
+                    </label>
+                </div>
+
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="consent2" required>
+                    <label class="form-check-label" for="consent2">
+                        I understand that my participation is voluntary and that I may withdraw at any time without penalty. I understand that once data has been anonymised it may not be possible to withdraw it.
+                    </label>
+                </div>
+
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="consent3" required>
+                    <label class="form-check-label" for="consent3">
+                        I confirm that I am 18 years or older and understand that there are no known physical risks associated with this study.
+                    </label>
+                </div>
+
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="consent4" required>
+                    <label class="form-check-label" for="consent4">
+                        I understand that my data will be kept confidential, stored securely, and processed in accordance with UK GDPR and the Data Protection Act 2018.
+                    </label>
+                </div>
+
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="consent5" required>
+                    <label class="form-check-label" for="consent5">
+                        I understand that anonymised data may be used for academic publications and future research.
+                    </label>
+                </div>
+
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="consent6" required>
+                    <label class="form-check-label" for="consent6">
+                        <strong>I agree to take part in this study.</strong>
+                    </label>
+                </div>
+            </div>
         </div>
 
-        <p class="text-muted">
-            <small>After completing the consent form, return to this page and click Next to continue.</small>
-        </p>
+        <div class="alert alert-success mt-4">
+            <p class="mb-0">
+                <svg class="icon icon-sm icon-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.3rem;">
+                    <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+                By clicking "Next", you confirm that you have read, understood, and agreed to all the statements above.
+            </p>
+        </div>
 
         {{ next_button }}
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const nextButton = document.querySelector('button[type="submit"]');
+
+        function checkAllBoxes() {
+            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+            if (nextButton) {
+                nextButton.disabled = !allChecked;
+            }
+        }
+
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', checkAllBoxes);
+        });
+
+        // Initial check
+        checkAllBoxes();
+    });
+</script>
 {{ endblock }}
