@@ -111,6 +111,7 @@ class Player(BasePlayer):
     total_fines_paid = models.CurrencyField(initial=0)
 
     # Post-survey (original fields)
+    participant_name = models.StringField(label="Your name:", blank=True)
     age = models.IntegerField(label="Your age:", min=18, max=100, blank=True)
     gender = models.StringField(
         label="Gender:",
@@ -126,8 +127,7 @@ class Player(BasePlayer):
     )
     trust_government = models.IntegerField(
         label="How much do you trust government institutions?",
-        choices=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-        widget=widgets.RadioSelect,
+        min=0, max=10,
         blank=True
     )
 
@@ -632,7 +632,7 @@ class RoundSummary(Page):
 
 class PostSurvey(Page):
     form_model = 'player'
-    form_fields = ['age', 'gender', 'risk_attitude', 'trust_government']
+    form_fields = ['participant_name', 'age', 'gender', 'trust_government']
 
     @staticmethod
     def is_displayed(player: Player):
@@ -715,7 +715,7 @@ class FinalResults(Page):
     def vars_for_template(player: Player):
         total_wealth = player.total_deposit + player.total_cash
         exchange_rate = player.session.config.get('real_world_currency_per_point', 0.01)
-        real_payment = total_wealth * exchange_rate
+        real_payment = float(total_wealth) * exchange_rate
 
         player.payoff = total_wealth
 
@@ -725,7 +725,7 @@ class FinalResults(Page):
             total_wealth=total_wealth,
             total_tax_paid=player.total_tax_paid,
             total_fines_paid=player.total_fines_paid,
-            real_payment=real_payment,
+            real_payment=f"{real_payment:.2f}",
         )
 
 

@@ -16,9 +16,36 @@
     <div class="card-body">
         <p>Your responses will help us understand decision-making patterns. All answers are optional.</p>
 
-        {{ formfields }}
+        {{ formfield 'participant_name' }}
+        {{ formfield 'age' }}
+        {{ formfield 'gender' }}
+
+        <div class="form-group mt-4">
+            <label><strong>How much do you trust government institutions?</strong></label>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.9em; color: #666;">
+                <span>0 — Do not trust at all</span>
+                <span>10 — Trust completely</span>
+            </div>
+            <input type="range" name="trust_government" id="id_trust_government"
+                   min="0" max="10" step="1" value="5"
+                   style="width: 100%; cursor: pointer;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.85em; color: #999; margin-top: 2px;">
+                <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+            </div>
+            <div style="text-align: center; margin-top: 8px;">
+                <span style="font-size: 1.1em; font-weight: bold; color: #333;">Selected: <span id="trust_value">5</span></span>
+            </div>
+        </div>
 
         {{ next_button }}
     </div>
 </div>
+
+<script>
+    const slider = document.getElementById('id_trust_government');
+    const display = document.getElementById('trust_value');
+    slider.addEventListener('input', function() {
+        display.textContent = this.value;
+    });
+</script>
 {{ endblock }}
