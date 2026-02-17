@@ -3,6 +3,147 @@
 {{ block title }}Policy Announcement{{ endblock }}
 
 {{ block content }}
+
+<!-- START: Instructions Button -->
+<style>
+.instructions-link {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: #0066cc;
+    color: white !important;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+.instructions-link:hover {
+    background: #0052a3;
+    color: white !important;
+}
+.instructions-modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.7);
+}
+.instructions-modal-content {
+    background-color: #fefefe;
+    margin: 2% auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 90%;
+    max-width: 900px;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 8px;
+}
+.instructions-modal-header {
+    padding: 20px;
+    background-color: #0066cc;
+    color: white;
+    border-radius: 8px 8px 0 0;
+}
+.instructions-modal-body {
+    padding: 20px;
+}
+.close-instructions {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 20px;
+}
+.close-instructions:hover {
+    color: #ddd;
+}
+</style>
+
+<button type="button" class="instructions-link" onclick="showInstructions()">
+    📋 View Instructions
+</button>
+
+<div id="instructionsModal" class="instructions-modal">
+    <div class="instructions-modal-content">
+        <div class="instructions-modal-header">
+            <span class="close-instructions" onclick="closeInstructions()">&times;</span>
+            <h3 style="margin: 0; color: white;">Instructions</h3>
+        </div>
+        <div class="instructions-modal-body">
+            <p>You will participate in <strong>15 rounds</strong>. In each round, you receive income in a lab currency called <strong>ECU (Experimental Currency Unit)</strong>.</p>
+
+            <p>At the end, your total wealth will be converted at: <strong>1 ECU = £0.01</strong></p>
+
+            <h5 class="mt-4">Each Round:</h5>
+
+            <p><strong>1. Income:</strong> You receive 100 ECU as cash.</p>
+
+            <p><strong>2. Deposit Decision:</strong> Decide how much to deposit.</p>
+            <ul>
+                <li>Deposited amount is taxed at 30%</li>
+                <li>Remaining stays as cash</li>
+                <li>Deposits are safe from audit</li>
+                <li>Cash has audit risk</li>
+            </ul>
+
+            <p><strong>3. Mandatory Spending:</strong> Spend exactly 40 ECU.</p>
+            <ul>
+                <li>Choose how much from deposit</li>
+                <li>Choose how much from cash</li>
+                <li>Must sum to 40 ECU</li>
+                <li>Cash payments require typing a verification code</li>
+            </ul>
+
+            <p><strong>4. Random Audit:</strong> 5% chance each round.</p>
+            <ul>
+                <li>Pay 30% tax on all cash</li>
+                <li>Pay fine = 2× the unpaid tax</li>
+                <li>Total penalty deducted from deposit first</li>
+            </ul>
+
+            <p><strong>5. Round Summary:</strong> See your updated balances.</p>
+
+            <div style="background: #e7f3ff; padding: 15px; border-radius: 5px; margin-top: 20px;">
+                <strong>Example:</strong><br>
+                Start: Deposit = 70, Cash = 30<br>
+                Deposit 60 → Tax 18 → Add 42<br>
+                New: Deposit = 112, Cash = 70<br>
+                Spend: 20 cash + 20 deposit<br>
+                Final: Deposit = 92, Cash = 50
+            </div>
+
+            <button type="button" class="btn btn-primary mt-3" onclick="closeInstructions()">Close</button>
+        </div>
+    </div>
+</div>
+
+<script>
+function showInstructions() {
+    document.getElementById('instructionsModal').style.display = 'block';
+}
+function closeInstructions() {
+    document.getElementById('instructionsModal').style.display = 'none';
+}
+window.onclick = function(event) {
+    var modal = document.getElementById('instructionsModal');
+    if (event.target == modal) {
+        closeInstructions();
+    }
+}
+</script>
+<!-- END: Instructions Button -->
+
 <div class="experiment-progress stagger-1">
     <div class="progress-label">Round {{ C.SHOCK_ROUND }} of {{ C.NUM_ROUNDS }}</div>
     <div class="progress">

@@ -344,6 +344,19 @@ class Instructions(Page):
         )
 
 
+class ViewInstructions(Page):
+    """Accessible at any time to review instructions"""
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+            treatment=player.treatment,
+            show_shock_warning=(player.treatment == 'preannounced'),
+            show_may_shock=(player.treatment in ['baseline', 'sudden']),
+            is_review=True,
+        )
+
+
 class ComprehensionQuiz(Page):
     form_model = 'player'
     form_fields = ['quiz_q1', 'quiz_q2', 'quiz_q3']
@@ -550,12 +563,15 @@ class SpendingDecision(Page):
 
         player.audit_probability = player.get_audit_probability()
 
+        # Generate random draw for audit HERE so it's available on AuditOutcome page
+        player.random_draw = random.randint(1, 100)
+
 
 class AuditOutcome(Page):
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
-        # UPDATED: random number is between 1 and 100 (inclusive)
-        player.random_draw = random.randint(1, 100)
+        # Random draw was already generated in SpendingDecision.before_next_page
+        # Now we just process the audit result
 
         # UPDATED: audit happens if random_draw <= audit_probability
         if player.random_draw <= (player.audit_probability or 0):

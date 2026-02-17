@@ -3,6 +3,27 @@
 {{ block title }}Instructions{{ endblock }}
 
 {{ block content }}
+
+<style>
+#instructions-tab-link {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    background: #0066cc;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+#instructions-tab-link:hover {
+    background: #0052a3;
+    color: white;
+}
+</style>
+
 <div class="card mb-4 stagger-1">
     <div class="card-header bg-primary text-white">
         <div class="icon-header">
@@ -10,7 +31,7 @@
                 <circle cx="12" cy="12" r="10"/>
                 <path d="M12 16v-4m0-4h.01"/>
             </svg>
-            <h3 class="mb-0" style="color: #fff;">Welcome to the Experiment</h3>
+            <h3 class="mb-0" style="color: #fff;">Instructions</h3>
         </div>
     </div>
     <div class="card-body">
@@ -123,11 +144,21 @@
                     <circle cx="12" cy="12" r="10"/>
                     <path d="M12 16v-4m0-4h.01"/>
                 </svg>
-                <h5 class="mb-0">Policy Change</h5>
+                <h5 class="mb-0">Note</h5>
             </div>
-            <p class="mb-0">During the experiment, there may or may not be a policy change affecting cash holdings. If such a change occurs, full details will be provided at that time. The policy change is not guaranteed to occur.</p>
+            <p class="mb-0">During the experiment, there may or may not be policy changes that affect how the lab currency works. If such changes occur, you will receive full details at that time. These changes are not guaranteed to happen.</p>
         </div>
         {{ endif }}
+
+        <div class="alert alert-success mt-4">
+            <p class="mb-0">
+                <svg class="icon icon-sm icon-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.3rem;">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 16v-4m0-4h.01"/>
+                </svg>
+                <strong>Note:</strong> You can view these instructions at any time during the experiment by clicking the "View Instructions" button that will appear in the top-right corner of your screen.
+            </p>
+        </div>
 
         {{ next_button }}
     </div>
