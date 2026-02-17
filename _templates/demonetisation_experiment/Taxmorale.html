@@ -1,21 +1,21 @@
 {{ extends 'global/Page.html' }}
 
-{{ block title }}Tax Attitudes{{ endblock }}
+{{ block title }}Survey{{ endblock }}
 
 {{ block content }}
 <div class="card stagger-1">
     <div class="card-header bg-primary text-white">
         <div class="icon-header">
             <svg class="icon icon-md icon-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="1" x2="12" y2="23"/>
-                <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
             </svg>
-            <h4 class="mb-0" style="color: #fff;">Your Attitudes Toward Taxes</h4>
+            <h4 class="mb-0" style="color: #fff;">Please answer the following statements</h4>
         </div>
     </div>
     <div class="card-body">
-        <p>Please indicate your level of agreement with each statement on a scale from 1 (Strongly Disagree) to 7 (Strongly Agree).</p>
-        
+        <p class="text-muted">For each statement below, please indicate how much you agree or disagree.</p>
+
         {{ formfields }}
 
         {{ next_button }}

@@ -8,6 +8,17 @@ doc = """
 Demonetisation Experiment: Tax compliance and liquidity shock
 """
 
+# Module-level constant — safe to reference inside Player field definitions
+LIKERT_CHOICES = [
+    [1, "Strongly Disagree"],
+    [2, "Disagree"],
+    [3, "Somewhat Disagree"],
+    [4, "Neither Agree nor Disagree"],
+    [5, "Somewhat Agree"],
+    [6, "Agree"],
+    [7, "Strongly Agree"],
+]
+
 
 class C(BaseConstants):
     NAME_IN_URL = 'demonetisation_experiment'
@@ -38,12 +49,17 @@ class Subsession(BaseSubsession):
 
 
 def creating_session(subsession: Subsession):
-    # Assign treatment at round 1 based on session config
-    if subsession.round_number == 1:
-        treatment = subsession.session.config.get('treatment', 'sudden')
-        for p in subsession.get_players():
+    # oTree calls creating_session for every round at session start.
+    # participant.vars persists across rounds, so we use it to carry treatment safely.
+    treatment = subsession.session.config.get('treatment', 'sudden')
+    for p in subsession.get_players():
+        if subsession.round_number == 1:
+            # Set treatment on round 1 and store in participant.vars for other rounds
             p.treatment = treatment
-            p.participant.treatment = treatment
+            p.participant.vars['treatment'] = treatment
+        else:
+            # Read from participant.vars — always available regardless of round order
+            p.treatment = p.participant.vars.get('treatment', treatment)
 
 
 class Group(BaseGroup):
@@ -111,11 +127,15 @@ class Player(BasePlayer):
     total_fines_paid = models.CurrencyField(initial=0)
 
     # Post-survey (original fields)
-    participant_name = models.StringField(label="Your name:", blank=True)
     age = models.IntegerField(label="Your age:", min=18, max=100, blank=True)
     gender = models.StringField(
         label="Gender:",
-        choices=['Male', 'Female', 'Non-binary', 'Prefer not to say'],
+        choices=[
+            ['Male', 'Male'],
+            ['Female', 'Female'],
+            ['Non-binary', 'Non-binary'],
+            ['Prefer not to say', 'Prefer not to say'],
+        ],
         widget=widgets.RadioSelect,
         blank=True
     )
@@ -127,7 +147,8 @@ class Player(BasePlayer):
     )
     trust_government = models.IntegerField(
         label="How much do you trust government institutions?",
-        min=0, max=10,
+        choices=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        widget=widgets.RadioSelect,
         blank=True
     )
 
@@ -151,19 +172,19 @@ class Player(BasePlayer):
     # Loss Aversion
     loss_1 = models.IntegerField(
         label="I am more sensitive to losses than to gains.",
-        choices=range(1, 8),
+        choices=LIKERT_CHOICES,
         widget=widgets.RadioSelect,
         blank=True
     )
     loss_2 = models.IntegerField(
         label="Avoiding losses is more important to me than achieving gains.",
-        choices=range(1, 8),
+        choices=LIKERT_CHOICES,
         widget=widgets.RadioSelect,
         blank=True
     )
     loss_3 = models.IntegerField(
         label="Losses affect me more strongly than equal-sized gains.",
-        choices=range(1, 8),
+        choices=LIKERT_CHOICES,
         widget=widgets.RadioSelect,
         blank=True
     )
@@ -171,19 +192,19 @@ class Player(BasePlayer):
     # Rule-Breaking Aversion
     rule_1 = models.IntegerField(
         label="Rules should be followed even when enforcement is weak.",
-        choices=range(1, 8),
+        choices=LIKERT_CHOICES,
         widget=widgets.RadioSelect,
         blank=True
     )
     rule_2 = models.IntegerField(
         label="It is acceptable to ignore rules if no one is harmed.",
-        choices=range(1, 8),
+        choices=LIKERT_CHOICES,
         widget=widgets.RadioSelect,
         blank=True
     )
     rule_3 = models.IntegerField(
         label="I feel guilty when I violate formal rules.",
-        choices=range(1, 8),
+        choices=LIKERT_CHOICES,
         widget=widgets.RadioSelect,
         blank=True
     )
@@ -191,19 +212,19 @@ class Player(BasePlayer):
     # Liquidity Preference
     liq_1 = models.IntegerField(
         label="I prefer keeping money in liquid form rather than locked away.",
-        choices=range(1, 8),
+        choices=LIKERT_CHOICES,
         widget=widgets.RadioSelect,
         blank=True
     )
     liq_2 = models.IntegerField(
         label="I feel safer when I have cash available.",
-        choices=range(1, 8),
+        choices=LIKERT_CHOICES,
         widget=widgets.RadioSelect,
         blank=True
     )
     liq_3 = models.IntegerField(
         label="Having immediate access to money is very important to me.",
-        choices=range(1, 8),
+        choices=LIKERT_CHOICES,
         widget=widgets.RadioSelect,
         blank=True
     )
@@ -211,25 +232,25 @@ class Player(BasePlayer):
     # Tax Morale
     tax_1 = models.IntegerField(
         label="Paying taxes is a civic duty.",
-        choices=range(1, 8),
+        choices=LIKERT_CHOICES,
         widget=widgets.RadioSelect,
         blank=True
     )
     tax_2 = models.IntegerField(
         label="Cheating on taxes is morally wrong even if the chance of being caught is small.",
-        choices=range(1, 8),
+        choices=LIKERT_CHOICES,
         widget=widgets.RadioSelect,
         blank=True
     )
     tax_3 = models.IntegerField(
         label="People should pay taxes even if enforcement is weak.",
-        choices=range(1, 8),
+        choices=LIKERT_CHOICES,
         widget=widgets.RadioSelect,
         blank=True
     )
     tax_4 = models.IntegerField(
         label="It is justifiable to cheat on taxes if you have the chance.",
-        choices=range(1, 8),
+        choices=LIKERT_CHOICES,
         widget=widgets.RadioSelect,
         blank=True
     )
@@ -290,10 +311,12 @@ class Player(BasePlayer):
             prev = self.in_round(self.round_number - 1)
             self.total_deposit = prev.total_deposit
             self.total_cash = prev.total_cash
-            self.treatment = prev.treatment
             self.personal_audit_rate = prev.personal_audit_rate
             self.total_tax_paid = prev.total_tax_paid
             self.total_fines_paid = prev.total_fines_paid
+
+        # Always keep treatment in sync with participant.vars (set by creating_session)
+        self.treatment = self.participant.vars.get('treatment', self.treatment or '')
 
         # ALWAYS set these safety defaults for every round
         self.was_audited = False
@@ -341,19 +364,6 @@ class Instructions(Page):
             treatment=player.treatment,
             show_shock_warning=(player.treatment == 'preannounced'),
             show_may_shock=(player.treatment in ['baseline', 'sudden']),
-        )
-
-
-class ViewInstructions(Page):
-    """Accessible at any time to review instructions"""
-
-    @staticmethod
-    def vars_for_template(player: Player):
-        return dict(
-            treatment=player.treatment,
-            show_shock_warning=(player.treatment == 'preannounced'),
-            show_may_shock=(player.treatment in ['baseline', 'sudden']),
-            is_review=True,
         )
 
 
@@ -538,14 +548,14 @@ class SpendingDecision(Page):
         # Check if sum equals mandatory spending
         total_spent = spend_cash + spend_deposit
         if total_spent != C.MANDATORY_SPENDING:
-            return f'The sum of cash and deposit spending must equal exactly {C.MANDATORY_SPENDING}. Currently you have {total_spent}.'
+            return f'The sum of cash and deposit spending must equal exactly {C.MANDATORY_SPENDING} ECU. Currently you have {total_spent} ECU.'
 
         # Check if sufficient balance in each account
         if spend_cash > player.cash_before_spending:
-            return f'Not enough cash. You only have {player.cash_before_spending} in cash but are trying to spend {spend_cash}.'
+            return f'Not enough cash. You only have {player.cash_before_spending} ECU in cash but are trying to spend {spend_cash} ECU.'
 
         if spend_deposit > player.deposit_before_spending:
-            return f'Not enough in deposit. You only have {player.deposit_before_spending} in deposit but are trying to spend {spend_deposit}.'
+            return f'Not enough in deposit. You only have {player.deposit_before_spending} ECU in deposit but are trying to spend {spend_deposit} ECU.'
 
         # If spending any cash, require verification code
         if spend_cash > 0:
@@ -632,7 +642,7 @@ class RoundSummary(Page):
 
 class PostSurvey(Page):
     form_model = 'player'
-    form_fields = ['participant_name', 'age', 'gender', 'trust_government']
+    form_fields = ['age', 'gender', 'risk_attitude', 'trust_government']
 
     @staticmethod
     def is_displayed(player: Player):
@@ -715,7 +725,7 @@ class FinalResults(Page):
     def vars_for_template(player: Player):
         total_wealth = player.total_deposit + player.total_cash
         exchange_rate = player.session.config.get('real_world_currency_per_point', 0.01)
-        real_payment = float(total_wealth) * exchange_rate
+        real_payment = total_wealth * exchange_rate
 
         player.payoff = total_wealth
 
@@ -725,7 +735,7 @@ class FinalResults(Page):
             total_wealth=total_wealth,
             total_tax_paid=player.total_tax_paid,
             total_fines_paid=player.total_fines_paid,
-            real_payment=f"{real_payment:.2f}",
+            real_payment=real_payment,
         )
 
 
