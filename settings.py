@@ -58,4 +58,6 @@ Tax Compliance and Liquidity Shock
 # Secret key (leave as any random string for local use)
 SECRET_KEY = 'change-this-to-any-random-string-for-production'
 
+DEBUG = False
+
 # IMPORTANT: Do NOT set INSTALLED_APPS manually in oTree 6
