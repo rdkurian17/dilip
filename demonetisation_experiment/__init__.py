@@ -538,14 +538,14 @@ class SpendingDecision(Page):
         # Check if sum equals mandatory spending
         total_spent = spend_cash + spend_deposit
         if total_spent != C.MANDATORY_SPENDING:
-            return f'The sum of cash and deposit spending must equal exactly {C.MANDATORY_SPENDING} ECU. Currently you have {total_spent} ECU.'
+            return f'The sum of cash and deposit spending must equal exactly {C.MANDATORY_SPENDING}. Currently you have {total_spent}.'
 
         # Check if sufficient balance in each account
         if spend_cash > player.cash_before_spending:
-            return f'Not enough cash. You only have {player.cash_before_spending} ECU in cash but are trying to spend {spend_cash} ECU.'
+            return f'Not enough cash. You only have {player.cash_before_spending} in cash but are trying to spend {spend_cash}.'
 
         if spend_deposit > player.deposit_before_spending:
-            return f'Not enough in deposit. You only have {player.deposit_before_spending} ECU in deposit but are trying to spend {spend_deposit} ECU.'
+            return f'Not enough in deposit. You only have {player.deposit_before_spending} in deposit but are trying to spend {spend_deposit}.'
 
         # If spending any cash, require verification code
         if spend_cash > 0:

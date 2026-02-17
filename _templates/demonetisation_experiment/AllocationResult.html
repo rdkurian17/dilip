@@ -169,15 +169,15 @@ window.onclick = function(event) {
     <div class="card-body">
         <h5>What You Decided:</h5>
         <ul>
-            <li><strong>Deposited:</strong> {{ deposited }} ECU</li>
-            <li><strong>Kept as Cash:</strong> {{ cash_kept }} ECU</li>
+            <li><strong>Deposited:</strong> {{ deposited }}</li>
+            <li><strong>Kept as Cash:</strong> {{ cash_kept }}</li>
         </ul>
 
         <div class="section-divider"><span>Tax Deduction</span></div>
 
         <div class="alert alert-warning">
-            <p><strong>Tax on deposit (30%):</strong> {{ tax_paid }} ECU</p>
-            <p class="mb-0"><strong>Amount added to deposit:</strong> {{ deposit_added }} ECU</p>
+            <p><strong>Tax on deposit (30%):</strong> {{ tax_paid }}</p>
+            <p class="mb-0"><strong>Amount added to deposit:</strong> {{ deposit_added }}</p>
         </div>
 
         <div class="section-divider"><span>Balances Before Spending</span></div>
@@ -192,7 +192,7 @@ window.onclick = function(event) {
                         </svg>
                         Deposit Account
                     </div>
-                    <div class="account-balance">{{ new_deposit }} <span class="ecu-unit">ECU</span></div>
+                    <div class="account-balance">{{ new_deposit }}</div>
                     <div class="account-subtitle">After tax deduction</div>
                 </div>
             </div>
@@ -205,14 +205,14 @@ window.onclick = function(event) {
                         </svg>
                         Cash in Hand
                     </div>
-                    <div class="account-balance">{{ new_cash }} <span class="ecu-unit">ECU</span></div>
+                    <div class="account-balance">{{ new_cash }}</div>
                     <div class="account-subtitle">Untaxed</div>
                 </div>
             </div>
         </div>
 
         <div class="alert alert-primary">
-            <p class="mb-0"><strong>Next:</strong> You must make a mandatory expenditure of {{ C.MANDATORY_SPENDING }} ECU</p>
+            <p class="mb-0"><strong>Next:</strong> You must make a mandatory expenditure of {{ C.MANDATORY_SPENDING }}</p>
         </div>
 
         {{ next_button }}

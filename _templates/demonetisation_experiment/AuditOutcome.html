@@ -196,8 +196,8 @@ window.onclick = function(event) {
 
                 <div class="section-divider"><span>Penalty Details</span></div>
 
-                <p><strong>Your cash balance:</strong> {{ cash_balance }} ECU</p>
-                <p><strong>Tax owed on cash:</strong> {{ tax_evaded }} ECU</p>
+                <p><strong>Your cash balance:</strong> {{ cash_balance }}</p>
+                <p><strong>Tax owed on cash:</strong> {{ tax_evaded }}</p>
 
                 <div class="card" style="border: 2px solid var(--color-danger); background: var(--color-danger-bg);">
                     <div class="card-body text-center">
@@ -206,7 +206,7 @@ window.onclick = function(event) {
                             <line x1="12" y1="9" x2="12" y2="13"/>
                             <line x1="12" y1="17" x2="12.01" y2="17"/>
                         </svg>
-                        <h4 style="color: var(--color-danger);"><strong>Total penalty paid: {{ fine }} ECU</strong></h4>
+                        <h4 style="color: var(--color-danger);"><strong>Total penalty paid: {{ fine }}</strong></h4>
                         <p class="mb-0 text-muted">This amount has been deducted from your deposit account (and cash if needed).</p>
                     </div>
                 </div>

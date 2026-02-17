@@ -160,11 +160,11 @@ window.onclick = function(event) {
                 <line x1="12" y1="1" x2="12" y2="23"/>
                 <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
             </svg>
-            <h4 class="mb-0" style="color: #fff;">Mandatory Expenditure: {{ C.MANDATORY_SPENDING }} ECU</h4>
+            <h4 class="mb-0" style="color: #fff;">Mandatory Expenditure: {{ C.MANDATORY_SPENDING }}</h4>
         </div>
     </div>
     <div class="card-body">
-        <p>You must spend exactly <strong>{{ C.MANDATORY_SPENDING }} ECU</strong> this round. Decide how much to pay from each account.</p>
+        <p>You must spend exactly <strong>{{ C.MANDATORY_SPENDING }}</strong> this round. Decide how much to pay from each account.</p>
 
         <div class="alert alert-info">
             <p class="mb-0">
@@ -172,7 +172,7 @@ window.onclick = function(event) {
                     <circle cx="12" cy="12" r="10"/>
                     <path d="M12 16v-4m0-4h.01"/>
                 </svg>
-                <strong>The sum of both amounts must equal exactly {{ C.MANDATORY_SPENDING }} ECU.</strong>
+                <strong>The sum of both amounts must equal exactly {{ C.MANDATORY_SPENDING }}.</strong>
             </p>
         </div>
 
@@ -186,7 +186,7 @@ window.onclick = function(event) {
                         </svg>
                         Deposit Balance
                     </div>
-                    <div class="account-balance">{{ deposit_balance }} <span class="ecu-unit">ECU</span></div>
+                    <div class="account-balance">{{ deposit_balance }}</div>
                     <div class="account-subtitle">Easy to spend</div>
 
                     <div class="mt-3">
@@ -207,7 +207,7 @@ window.onclick = function(event) {
                         </svg>
                         Cash Balance
                     </div>
-                    <div class="account-balance">{{ cash_balance }} <span class="ecu-unit">ECU</span></div>
+                    <div class="account-balance">{{ cash_balance }}</div>
                     <div class="account-subtitle">Requires verification</div>
 
                     <div class="mt-3">

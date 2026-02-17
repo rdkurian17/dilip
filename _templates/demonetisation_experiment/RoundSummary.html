@@ -178,9 +178,9 @@ window.onclick = function(event) {
                     Allocation:
                 </h5>
                 <ul>
-                    <li>Deposited: {{ deposited }} ECU</li>
-                    <li>Tax paid: {{ tax_paid }} ECU</li>
-                    <li>Kept as cash: {{ kept_cash }} ECU</li>
+                    <li>Deposited: {{ deposited }}</li>
+                    <li>Tax paid: {{ tax_paid }}</li>
+                    <li>Kept as cash: {{ kept_cash }}</li>
                 </ul>
             </div>
 
@@ -193,9 +193,9 @@ window.onclick = function(event) {
                     Spending:
                 </h5>
                 <ul>
-                    <li>From cash: {{ spent_cash }} ECU</li>
-                    <li>From deposit: {{ spent_deposit }} ECU</li>
-                    <li><strong>Total: {{ C.MANDATORY_SPENDING }} ECU</strong></li>
+                    <li>From cash: {{ spent_cash }}</li>
+                    <li>From deposit: {{ spent_deposit }}</li>
+                    <li><strong>Total: {{ C.MANDATORY_SPENDING }}</strong></li>
                 </ul>
             </div>
         </div>
@@ -210,7 +210,7 @@ window.onclick = function(event) {
                     <line x1="15" y1="9" x2="9" y2="15"/>
                     <line x1="9" y1="9" x2="15" y2="15"/>
                 </svg>
-                <strong>AUDITED</strong> &mdash; Fine paid: <strong>{{ fine_paid }} ECU</strong>
+                <strong>AUDITED</strong> &mdash; Fine paid: <strong>{{ fine_paid }}</strong>
             </p>
         </div>
         {{ else }}
@@ -237,7 +237,7 @@ window.onclick = function(event) {
                         </svg>
                         Deposit Account
                     </div>
-                    <div class="account-balance">{{ final_deposit }} <span class="ecu-unit">ECU</span></div>
+                    <div class="account-balance">{{ final_deposit }}</div>
                     <div class="account-subtitle">After round {{ round_num }}</div>
                 </div>
             </div>
@@ -250,7 +250,7 @@ window.onclick = function(event) {
                         </svg>
                         Cash in Hand
                     </div>
-                    <div class="account-balance">{{ final_cash }} <span class="ecu-unit">ECU</span></div>
+                    <div class="account-balance">{{ final_cash }}</div>
                     <div class="account-subtitle">After round {{ round_num }}</div>
                 </div>
             </div>
@@ -264,8 +264,8 @@ window.onclick = function(event) {
                 <strong>Cumulative Statistics:</strong>
             </p>
             <p class="mb-0">
-                Total tax paid so far: {{ total_tax }} ECU<br>
-                Total fines paid so far: {{ total_fines }} ECU
+                Total tax paid so far: {{ total_tax }}<br>
+                Total fines paid so far: {{ total_fines }}
             </p>
         </div>
 
