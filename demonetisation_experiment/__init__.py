@@ -286,7 +286,9 @@ class Player(BasePlayer):
     def calculate_personal_audit_rate(self):
         """Audit rate (rounds 8-10) based on how much old cash is converted in round 8. UPDATED."""
         amt = self.conversion_amount or 0
-        if amt <= C.TIER_1_THRESHOLD:  # 1-50
+        if amt == 0:
+            return C.BASE_AUDIT_PROB  # 0 ECU: 5%
+        elif amt <= C.TIER_1_THRESHOLD:  # 1-50
             return C.TIER_1_AUDIT  # 10%
         elif amt <= C.TIER_2_THRESHOLD:  # 51-100
             return C.TIER_2_AUDIT  # 15%
@@ -414,6 +416,18 @@ class ConversionDecision(Page):
         return prev.total_cash
 
     @staticmethod
+    def error_message(player: Player, values):
+        prev = player.in_round(C.SHOCK_ROUND - 1)
+        old_cash = prev.total_cash
+        conversion = values.get('conversion_amount') or 0
+
+        if conversion < 0:
+            return 'Cannot convert a negative amount.'
+
+        if conversion > old_cash:
+            return f'The entered amount ({conversion} ECU) is greater than your cash in hand ({old_cash} ECU). Please enter an amount less than or equal to {old_cash} ECU.'
+
+    @staticmethod
     def vars_for_template(player: Player):
         prev = player.in_round(C.SHOCK_ROUND - 1)
         return dict(
@@ -466,12 +480,21 @@ class AllocationDecision(Page):
         if player.round_number == C.SHOCK_ROUND and player.treatment != 'baseline':
             current_deposit = player.total_deposit
             current_cash = player.total_cash
+            audit_prob = player.get_audit_probability()  # Round 8: use current player's audit_prob
         else:
             prev = player.in_round(player.round_number - 1) if player.round_number > 1 else None
             current_deposit = prev.total_deposit if prev else 0
             current_cash = prev.total_cash if prev else 0
 
-        audit_prob = player.get_audit_probability() if player.round_number > 1 else C.BASE_AUDIT_PROB
+            # For rounds 9-10, get personal_audit_rate from previous round since carry_forward hasn't run yet
+            if player.round_number > 1:
+                if player.round_number <= C.ELEVATED_AUDIT_END and player.treatment != 'baseline' and player.round_number > C.SHOCK_ROUND:
+                    # Rounds 9-10: use previous round's personal_audit_rate for display
+                    audit_prob = prev.personal_audit_rate
+                else:
+                    audit_prob = player.get_audit_probability()
+            else:
+                audit_prob = C.BASE_AUDIT_PROB
 
         return dict(
             round_num=player.round_number,
