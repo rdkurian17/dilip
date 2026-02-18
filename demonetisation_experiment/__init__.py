@@ -1,5 +1,3 @@
-# demonetisation_experiment/__init__.py
-
 from otree.api import *
 import random
 import string
@@ -8,7 +6,7 @@ doc = """
 Demonetisation Experiment: Tax compliance and liquidity shock
 """
 
-# Module-level constant — safe to reference inside Player field definitions
+# Module-level constant --- safe to reference inside Player field definitions
 LIKERT_CHOICES = [
     [1, "Strongly Disagree"],
     [2, "Disagree"],
@@ -17,6 +15,15 @@ LIKERT_CHOICES = [
     [5, "Somewhat Agree"],
     [6, "Agree"],
     [7, "Strongly Agree"],
+]
+
+# HEXACO Honesty-Humility uses a 5-point scale
+HEXACO_CHOICES = [
+    [1, "Strongly Disagree"],
+    [2, "Disagree"],
+    [3, "Neutral"],
+    [4, "Agree"],
+    [5, "Strongly Agree"],
 ]
 
 
@@ -36,12 +43,12 @@ class C(BaseConstants):
     SHOCK_ROUND = 8
     ELEVATED_AUDIT_END = 10
 
-    # Audit probability tiers based on conversion amount (UPDATED)
-    TIER_1_THRESHOLD = 50  # 1-50 ECU
+    # Audit probability tiers based on conversion amount
+    TIER_1_THRESHOLD = 50   # 1-50 ECU
     TIER_2_THRESHOLD = 100  # 51-100 ECU
-    TIER_1_AUDIT = 10  # 1-50: 10%
-    TIER_2_AUDIT = 15  # 51-100: 15%
-    TIER_3_AUDIT = 20  # >100: 20%
+    TIER_1_AUDIT = 10       # 1-50: 10%
+    TIER_2_AUDIT = 15       # 51-100: 15%
+    TIER_3_AUDIT = 20       # >100: 20%
 
 
 class Subsession(BaseSubsession):
@@ -49,16 +56,12 @@ class Subsession(BaseSubsession):
 
 
 def creating_session(subsession: Subsession):
-    # oTree calls creating_session for every round at session start.
-    # participant.vars persists across rounds, so we use it to carry treatment safely.
     treatment = subsession.session.config.get('treatment', 'sudden')
     for p in subsession.get_players():
         if subsession.round_number == 1:
-            # Set treatment on round 1 and store in participant.vars for other rounds
             p.treatment = treatment
             p.participant.vars['treatment'] = treatment
         else:
-            # Read from participant.vars — always available regardless of round order
             p.treatment = p.participant.vars.get('treatment', treatment)
 
 
@@ -86,7 +89,7 @@ class Player(BasePlayer):
     deposit_before_spending = models.CurrencyField(initial=0)
     cash_before_spending = models.CurrencyField(initial=0)
 
-    # Spending decisions (UPDATED: two separate fields)
+    # Spending decisions
     spend_from_cash = models.CurrencyField(
         min=0,
         initial=0,
@@ -126,9 +129,11 @@ class Player(BasePlayer):
     total_tax_paid = models.CurrencyField(initial=0)
     total_fines_paid = models.CurrencyField(initial=0)
 
-    # Post-survey (original fields)
+    # -------------------------------------------------------
+    # Post-survey: Demographics & trust (PostSurvey page)
+    # -------------------------------------------------------
     participant_name = models.StringField(label="Your name:", blank=True)
-    age = models.IntegerField(label="Your age:", min=18, max=100, blank=True)
+    age = models.IntegerField(label="Your age:", min=18, max=100)
     gender = models.StringField(
         label="Gender:",
         choices=[
@@ -138,22 +143,29 @@ class Player(BasePlayer):
             ['Prefer not to say', 'Prefer not to say'],
         ],
         widget=widgets.RadioSelect,
-        blank=True
     )
     risk_attitude = models.IntegerField(
         label="How willing are you to take risks?",
         choices=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         widget=widgets.RadioSelect,
-        blank=True
     )
     trust_government = models.IntegerField(
         label="How much do you trust government institutions?",
         min=0, max=10,
-        blank=True
     )
 
-    # NEW POST-SURVEY FIELDS
-    # Risk preference (Eckel–Grossman task)
+    # -------------------------------------------------------
+    # Tax Morale - WVS single item (1-10 scale)
+    # On PostSurvey page, displayed as horizontal slider
+    # -------------------------------------------------------
+    tax_morale = models.IntegerField(
+        label="Cheating on taxes if you have a chance.",
+        min=1, max=10,
+    )
+
+    # -------------------------------------------------------
+    # Risk preference (Eckel-Grossman task) - RiskTaskEG page
+    # -------------------------------------------------------
     eg_choice = models.IntegerField(
         choices=[
             [1, "Option 1"],
@@ -165,94 +177,108 @@ class Player(BasePlayer):
         ],
         widget=widgets.RadioSelect,
         label="Please choose ONE option.",
-        blank=True
     )
     eg_risk_type = models.StringField(initial='')
 
-    # Loss Aversion
+    # -------------------------------------------------------
+    # Loss Aversion Scale - Li et al. (2021)
+    # 8 items, 7-point scale; items 5 & 8 are reverse coded
+    # -------------------------------------------------------
     loss_1 = models.IntegerField(
-        label="I am more sensitive to losses than to gains.",
+        label="When making a decision, I think much more about what might be lost than what might be gained.",
         choices=LIKERT_CHOICES,
         widget=widgets.RadioSelect,
-        blank=True
     )
     loss_2 = models.IntegerField(
-        label="Avoiding losses is more important to me than achieving gains.",
+        label="The pain of losing money matters more than the pleasure of gaining the same amount of money.",
         choices=LIKERT_CHOICES,
         widget=widgets.RadioSelect,
-        blank=True
     )
     loss_3 = models.IntegerField(
-        label="Losses affect me more strongly than equal-sized gains.",
+        label="I feel nervous when I have to make a decision that may lead to loss.",
         choices=LIKERT_CHOICES,
         widget=widgets.RadioSelect,
-        blank=True
+    )
+    loss_4 = models.IntegerField(
+        label="The pain from losing something matters much more to me than the pleasure from getting it.",
+        choices=LIKERT_CHOICES,
+        widget=widgets.RadioSelect,
+    )
+    loss_5 = models.IntegerField(
+        label="Avoiding failure is less important to me than seeking success.",
+        choices=LIKERT_CHOICES,
+        widget=widgets.RadioSelect,
+    )
+    loss_6 = models.IntegerField(
+        label="Experiencing a major loss stays in my mind longer than experiencing a major gain.",
+        choices=LIKERT_CHOICES,
+        widget=widgets.RadioSelect,
+    )
+    loss_7 = models.IntegerField(
+        label="A potential failure scares me more than a potential success encourages me.",
+        choices=LIKERT_CHOICES,
+        widget=widgets.RadioSelect,
+    )
+    loss_8 = models.IntegerField(
+        label="The suffering that comes with losses can be fully offset by the pleasure that comes from gains.",
+        choices=LIKERT_CHOICES,
+        widget=widgets.RadioSelect,
     )
 
-    # Rule-Breaking Aversion
-    rule_1 = models.IntegerField(
-        label="Rules should be followed even when enforcement is weak.",
-        choices=LIKERT_CHOICES,
+    # -------------------------------------------------------
+    # HEXACO-60 Honesty-Humility - 10 items, 5-point scale
+    # Items marked (R) are reverse scored
+    # Page class is named RuleBreaking; HTML file is RuleBreaking.html
+    # -------------------------------------------------------
+    hh_1 = models.IntegerField(
+        label="I wouldn't use flattery to get a raise or promotion at work.",
+        choices=HEXACO_CHOICES,
         widget=widgets.RadioSelect,
-        blank=True
     )
-    rule_2 = models.IntegerField(
-        label="It is acceptable to ignore rules if no one is harmed.",
-        choices=LIKERT_CHOICES,
+    hh_2 = models.IntegerField(
+        label="I'm interested in making money primarily to have a luxurious lifestyle.",
+        choices=HEXACO_CHOICES,
         widget=widgets.RadioSelect,
-        blank=True
     )
-    rule_3 = models.IntegerField(
-        label="I feel guilty when I violate formal rules.",
-        choices=LIKERT_CHOICES,
+    hh_3 = models.IntegerField(
+        label="I wouldn't pretend to like someone just to get that person to do favors for me.",
+        choices=HEXACO_CHOICES,
         widget=widgets.RadioSelect,
-        blank=True
     )
-
-    # Liquidity Preference
-    liq_1 = models.IntegerField(
-        label="I prefer keeping money in liquid form rather than locked away.",
-        choices=LIKERT_CHOICES,
+    hh_4 = models.IntegerField(
+        label="I'd get a lot of pleasure from owning expensive luxury goods.",
+        choices=HEXACO_CHOICES,
         widget=widgets.RadioSelect,
-        blank=True
     )
-    liq_2 = models.IntegerField(
-        label="I feel safer when I have cash available.",
-        choices=LIKERT_CHOICES,
+    hh_5 = models.IntegerField(
+        label="I wouldn't feel bad about taking a bribe if it was very large.",
+        choices=HEXACO_CHOICES,
         widget=widgets.RadioSelect,
-        blank=True
     )
-    liq_3 = models.IntegerField(
-        label="Having immediate access to money is very important to me.",
-        choices=LIKERT_CHOICES,
+    hh_6 = models.IntegerField(
+        label="I would be tempted to buy stolen property if I were financially tight.",
+        choices=HEXACO_CHOICES,
         widget=widgets.RadioSelect,
-        blank=True
     )
-
-    # Tax Morale
-    tax_1 = models.IntegerField(
-        label="Paying taxes is a civic duty.",
-        choices=LIKERT_CHOICES,
+    hh_7 = models.IntegerField(
+        label="I am an ordinary person who is no better than others.",
+        choices=HEXACO_CHOICES,
         widget=widgets.RadioSelect,
-        blank=True
     )
-    tax_2 = models.IntegerField(
-        label="Cheating on taxes is morally wrong even if the chance of being caught is small.",
-        choices=LIKERT_CHOICES,
+    hh_8 = models.IntegerField(
+        label="I think that I am entitled to more respect than the average person is.",
+        choices=HEXACO_CHOICES,
         widget=widgets.RadioSelect,
-        blank=True
     )
-    tax_3 = models.IntegerField(
-        label="People should pay taxes even if enforcement is weak.",
-        choices=LIKERT_CHOICES,
+    hh_9 = models.IntegerField(
+        label="I wouldn't want people to treat me as though I were superior to them.",
+        choices=HEXACO_CHOICES,
         widget=widgets.RadioSelect,
-        blank=True
     )
-    tax_4 = models.IntegerField(
-        label="It is justifiable to cheat on taxes if you have the chance.",
-        choices=LIKERT_CHOICES,
+    hh_10 = models.IntegerField(
+        label="I would like to know how to make lots of money in a dishonest manner.",
+        choices=HEXACO_CHOICES,
         widget=widgets.RadioSelect,
-        blank=True
     )
 
     # Comprehension quiz
@@ -269,9 +295,7 @@ class Player(BasePlayer):
     # ---------- Helper methods ----------
 
     def generate_verification_code(self):
-        """Generate a random code mixing letters and numbers (cannot be copy-pasted due to case sensitivity)."""
-        # Mix uppercase, lowercase, and digits to create a code that's harder to type
-        chars = string.ascii_letters + string.digits
+        """Generate a random code mixing letters and numbers."""
         code_parts = [
             random.choice(string.ascii_uppercase),
             random.choice(string.ascii_lowercase),
@@ -284,22 +308,21 @@ class Player(BasePlayer):
         return ''.join(code_parts)
 
     def calculate_personal_audit_rate(self):
-        """Audit rate (rounds 8-10) based on how much old cash is converted in round 8. UPDATED."""
+        """Audit rate (rounds 8-10) based on how much old cash is converted in round 8."""
         amt = self.conversion_amount or 0
         if amt == 0:
-            return C.BASE_AUDIT_PROB  # 0 ECU: 5%
-        elif amt <= C.TIER_1_THRESHOLD:  # 1-50
-            return C.TIER_1_AUDIT  # 10%
-        elif amt <= C.TIER_2_THRESHOLD:  # 51-100
-            return C.TIER_2_AUDIT  # 15%
-        else:  # >100
-            return C.TIER_3_AUDIT  # 20%
+            return C.BASE_AUDIT_PROB
+        elif amt <= C.TIER_1_THRESHOLD:
+            return C.TIER_1_AUDIT
+        elif amt <= C.TIER_2_THRESHOLD:
+            return C.TIER_2_AUDIT
+        else:
+            return C.TIER_3_AUDIT
 
     def get_audit_probability(self):
         """Audit probability for this round."""
         if self.treatment == 'baseline':
             return C.BASE_AUDIT_PROB
-
         if self.round_number < C.SHOCK_ROUND:
             return C.BASE_AUDIT_PROB
         elif self.round_number <= C.ELEVATED_AUDIT_END:
@@ -317,24 +340,20 @@ class Player(BasePlayer):
             self.total_tax_paid = prev.total_tax_paid
             self.total_fines_paid = prev.total_fines_paid
 
-        # Always keep treatment in sync with participant.vars (set by creating_session)
         self.treatment = self.participant.vars.get('treatment', self.treatment or '')
-
-        # ALWAYS set these safety defaults for every round
         self.was_audited = False
         self.fine_paid = cu(0)
         self.tax_evaded_found = cu(0)
         self.random_draw = 0
         self.audit_probability = 0
 
-        # Set personal_audit_rate for round 1
         if self.round_number == 1:
             self.personal_audit_rate = C.BASE_AUDIT_PROB
             self.total_tax_paid = cu(0)
             self.total_fines_paid = cu(0)
 
 
-# ---------------- PAGES ----------------
+# -------------- PAGES --------------
 
 class Welcome(Page):
     @staticmethod
@@ -361,7 +380,6 @@ class Instructions(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        # treatment will be assigned by creating_session in round 1
         return dict(
             treatment=player.treatment,
             show_shock_warning=(player.treatment == 'preannounced'),
@@ -420,10 +438,8 @@ class ConversionDecision(Page):
         prev = player.in_round(C.SHOCK_ROUND - 1)
         old_cash = prev.total_cash
         conversion = values.get('conversion_amount') or 0
-
         if conversion < 0:
             return 'Cannot convert a negative amount.'
-
         if conversion > old_cash:
             return f'The entered amount ({conversion} ECU) is greater than your cash in hand ({old_cash} ECU). Please enter an amount less than or equal to {old_cash} ECU.'
 
@@ -437,20 +453,13 @@ class ConversionDecision(Page):
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
-        # Load cumulative balances for this round
         player.carry_forward()
-
         prev = player.in_round(C.SHOCK_ROUND - 1)
         old_cash = prev.total_cash
-
         converted = min(player.conversion_amount or 0, old_cash)
         player.cash_lost = old_cash - converted
-
-        # Conversion moves old cash into deposit (no tax on conversion), and wipes cash
         player.total_deposit += converted
         player.total_cash = 0
-
-        # Set elevated audit rate for rounds 8-10
         player.personal_audit_rate = player.calculate_personal_audit_rate()
 
 
@@ -476,20 +485,16 @@ class AllocationDecision(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        # In round 8 (non-baseline), totals have already been updated by ConversionDecision.
         if player.round_number == C.SHOCK_ROUND and player.treatment != 'baseline':
             current_deposit = player.total_deposit
             current_cash = player.total_cash
-            audit_prob = player.get_audit_probability()  # Round 8: use current player's audit_prob
+            audit_prob = player.get_audit_probability()
         else:
             prev = player.in_round(player.round_number - 1) if player.round_number > 1 else None
             current_deposit = prev.total_deposit if prev else 0
             current_cash = prev.total_cash if prev else 0
-
-            # For rounds 9-10, get personal_audit_rate from previous round since carry_forward hasn't run yet
             if player.round_number > 1:
                 if player.round_number <= C.ELEVATED_AUDIT_END and player.treatment != 'baseline' and player.round_number > C.SHOCK_ROUND:
-                    # Rounds 9-10: use previous round's personal_audit_rate for display
                     audit_prob = prev.personal_audit_rate
                 else:
                     audit_prob = player.get_audit_probability()
@@ -506,21 +511,15 @@ class AllocationDecision(Page):
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
-        # For normal rounds carry-forward here.
-        # For round 8 non-baseline, carry-forward already happened in ConversionDecision.
         if not (player.round_number == C.SHOCK_ROUND and player.treatment != 'baseline'):
             player.carry_forward()
-
         deposited = player.deposit_decision or 0
-
         player.cash_kept = C.ENDOWMENT - deposited
         player.tax_paid_this_round = deposited * C.TAX_RATE
         player.deposit_after_tax = deposited - player.tax_paid_this_round
-
         player.total_deposit += player.deposit_after_tax
         player.total_cash += player.cash_kept
         player.total_tax_paid += player.tax_paid_this_round
-
         player.deposit_before_spending = player.total_deposit
         player.cash_before_spending = player.total_cash
 
@@ -546,9 +545,7 @@ class SpendingDecision(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        # Generate a fresh verification code each time the page loads
         player.cash_verification_code = player.generate_verification_code()
-
         return dict(
             round_num=player.round_number,
             deposit_balance=player.deposit_before_spending,
@@ -561,63 +558,43 @@ class SpendingDecision(Page):
     def error_message(player: Player, values):
         spend_cash = values.get('spend_from_cash') or 0
         spend_deposit = values.get('spend_from_deposit') or 0
-
-        # Check for negative amounts
         if spend_cash < 0:
             return 'Cannot spend a negative amount from cash.'
         if spend_deposit < 0:
             return 'Cannot spend a negative amount from deposit.'
-
-        # Check if sum equals mandatory spending
         total_spent = spend_cash + spend_deposit
         if total_spent != C.MANDATORY_SPENDING:
             return f'The sum of cash and deposit spending must equal exactly {C.MANDATORY_SPENDING} ECU. Currently you have {total_spent} ECU.'
-
-        # Check if sufficient balance in each account
         if spend_cash > player.cash_before_spending:
             return f'Not enough cash. You only have {player.cash_before_spending} ECU in cash but are trying to spend {spend_cash} ECU.'
-
         if spend_deposit > player.deposit_before_spending:
             return f'Not enough in deposit. You only have {player.deposit_before_spending} ECU in deposit but are trying to spend {spend_deposit} ECU.'
-
-        # If spending any cash, require verification code
         if spend_cash > 0:
             entered_code = (values.get('cash_verification_entry') or '').strip()
             if entered_code != player.cash_verification_code:
-                return f'You must type the verification code exactly as shown (case-sensitive) to confirm your cash payment.'
+                return 'You must type the verification code exactly as shown (case-sensitive) to confirm your cash payment.'
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
         spend_cash = player.spend_from_cash or 0
         spend_deposit = player.spend_from_deposit or 0
-
         player.total_deposit -= spend_deposit
         player.total_cash -= spend_cash
-
         player.audit_probability = player.get_audit_probability()
-
-        # Generate random draw for audit HERE so it's available on AuditOutcome page
         player.random_draw = random.randint(1, 100)
 
 
 class AuditOutcome(Page):
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
-        # Random draw was already generated in SpendingDecision.before_next_page
-        # Now we just process the audit result
-
-        # UPDATED: audit happens if random_draw <= audit_probability
         if player.random_draw <= (player.audit_probability or 0):
             player.was_audited = True
-
             evaded_tax = player.total_cash * C.TAX_RATE
             fine_only = evaded_tax * C.FINE_MULTIPLIER
             total_penalty = evaded_tax + fine_only
-
             player.tax_evaded_found = evaded_tax
             player.fine_paid = total_penalty
             player.total_fines_paid += total_penalty
-
             if player.total_deposit >= total_penalty:
                 player.total_deposit -= total_penalty
             else:
@@ -665,7 +642,7 @@ class RoundSummary(Page):
 
 class PostSurvey(Page):
     form_model = 'player'
-    form_fields = ['participant_name', 'age', 'gender', 'trust_government']
+    form_fields = ['participant_name', 'age', 'gender', 'trust_government', 'tax_morale']
 
     @staticmethod
     def is_displayed(player: Player):
@@ -704,8 +681,9 @@ class RiskTaskEG(Page):
 
 
 class LossAversion(Page):
+    """Loss Aversion Scale - Li et al. (2021), 8 items, 7-point scale."""
     form_model = 'player'
-    form_fields = ['loss_1', 'loss_2', 'loss_3']
+    form_fields = ['loss_1', 'loss_2', 'loss_3', 'loss_4', 'loss_5', 'loss_6', 'loss_7', 'loss_8']
 
     @staticmethod
     def is_displayed(player: Player):
@@ -713,26 +691,10 @@ class LossAversion(Page):
 
 
 class RuleBreaking(Page):
+    """HEXACO-60 Honesty-Humility subscale - 10 items, 5-point scale.
+    HTML file: RuleBreaking.html  |  Fields: hh_1 to hh_10"""
     form_model = 'player'
-    form_fields = ['rule_1', 'rule_2', 'rule_3']
-
-    @staticmethod
-    def is_displayed(player: Player):
-        return player.round_number == C.NUM_ROUNDS
-
-
-class LiquidityPreference(Page):
-    form_model = 'player'
-    form_fields = ['liq_1', 'liq_2', 'liq_3']
-
-    @staticmethod
-    def is_displayed(player: Player):
-        return player.round_number == C.NUM_ROUNDS
-
-
-class TaxMorale(Page):
-    form_model = 'player'
-    form_fields = ['tax_1', 'tax_2', 'tax_3', 'tax_4']
+    form_fields = ['hh_1', 'hh_2', 'hh_3', 'hh_4', 'hh_5', 'hh_6', 'hh_7', 'hh_8', 'hh_9', 'hh_10']
 
     @staticmethod
     def is_displayed(player: Player):
@@ -749,9 +711,7 @@ class FinalResults(Page):
         total_wealth = player.total_deposit + player.total_cash
         exchange_rate = player.session.config.get('real_world_currency_per_point', 0.01)
         real_payment = float(total_wealth) * exchange_rate
-
         player.payoff = total_wealth
-
         return dict(
             final_deposit=player.total_deposit,
             final_cash=player.total_cash,
@@ -780,7 +740,5 @@ page_sequence = [
     RiskTaskEG,
     LossAversion,
     RuleBreaking,
-    LiquidityPreference,
-    TaxMorale,
     FinalResults,
 ]
