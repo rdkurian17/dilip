@@ -4,46 +4,19 @@
 
 {{ block content }}
 <div class="card stagger-1">
-    <div class="card-body text-center" style="padding: 2.5rem 2rem;">
-        <div class="welcome-icon" style="margin-bottom: 1.5rem;">
-            <svg class="icon icon-2xl icon-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                <path d="M2 17l10 5 10-5"/>
-                <path d="M2 12l10 5 10-5"/>
-            </svg>
-        </div>
-        
-        <h2>Welcome to the Experiment</h2>
-        
-        <p class="lead mt-4">
-            Thank you for participating in this research study.
-        </p>
-        
-        <p class="text-muted">
-            This experiment examines how individuals make financial decisions when faced with changes in monetary conditions and enforcement rules.
-        </p>
-        
-        <div class="alert alert-info mt-4 text-start">
-            <h5>
-                <svg class="icon icon-sm icon-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.3rem;">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M12 16v-4m0-4h.01"/>
-                </svg>
-                What to Expect:
-            </h5>
-            <ul class="mb-0">
-                <li>The session will take approximately <strong>30 minutes</strong></li>
-                <li>You will make decisions across <strong>{{ C.NUM_ROUNDS }} rounds</strong></li>
-                <li>Your earnings will depend on your decisions and some random events</li>
-                <li>All decisions are anonymous and confidential</li>
-            </ul>
-        </div>
-        
-        <p class="mt-4 mb-0">
-            Before we begin, we need you to read the Participant Information Sheet and provide your consent.
-        </p>
+<div class="card-body text-center" style="padding: 3rem 2rem;">
 
-        {{ next_button }}
-    </div>
+<h2>Welcome to the Experiment</h2>
+
+<p class="lead mt-4">
+Thank you for participating in this research study.
+</p>
+
+<p class="text-muted mt-3">
+Before we begin, please read the Participant Information Sheet and provide your consent.
+</p>
+
+{{ next_button }}
+</div>
 </div>
 {{ endblock }}

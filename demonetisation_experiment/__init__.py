@@ -227,7 +227,6 @@ class Player(BasePlayer):
 
     # -------------------------------------------------------
     # HEXACO-60 Honesty-Humility - 10 items, 5-point scale
-    # Items marked (R) are reverse scored
     # Page class is named RuleBreaking; HTML file is RuleBreaking.html
     # -------------------------------------------------------
     hh_1 = models.IntegerField(
@@ -586,6 +585,30 @@ class SpendingDecision(Page):
 
 class AuditOutcome(Page):
     @staticmethod
+    def vars_for_template(player: Player):
+        # FIX: vars_for_template runs BEFORE before_next_page, so was_audited
+        # is always False when the page renders. We compute the result here
+        # directly from random_draw vs audit_probability so the page shows
+        # the correct outcome. before_next_page still does all the accounting.
+        audited = player.random_draw <= (player.audit_probability or 0)
+        if audited:
+            evaded_tax = player.total_cash * C.TAX_RATE
+            total_penalty = evaded_tax + (evaded_tax * C.FINE_MULTIPLIER)
+        else:
+            evaded_tax = cu(0)
+            total_penalty = cu(0)
+        return dict(
+            was_audited=audited,
+            random_draw=player.random_draw,
+            audit_threshold=player.audit_probability,
+            tax_evaded=evaded_tax,
+            fine=total_penalty,
+            cash_balance=player.total_cash,
+            round_num=player.round_number,
+            progress_pct=player.progress_pct,
+        )
+
+    @staticmethod
     def before_next_page(player: Player, timeout_happened):
         if player.random_draw <= (player.audit_probability or 0):
             player.was_audited = True
@@ -605,19 +628,6 @@ class AuditOutcome(Page):
             player.was_audited = False
             player.fine_paid = 0
             player.tax_evaded_found = 0
-
-    @staticmethod
-    def vars_for_template(player: Player):
-        return dict(
-            was_audited=player.was_audited,
-            random_draw=player.random_draw,
-            audit_threshold=player.audit_probability,
-            tax_evaded=player.tax_evaded_found,
-            fine=player.fine_paid,
-            cash_balance=player.total_cash,
-            round_num=player.round_number,
-            progress_pct=player.progress_pct,
-        )
 
 
 class RoundSummary(Page):
@@ -716,8 +726,6 @@ class FinalResults(Page):
             final_deposit=player.total_deposit,
             final_cash=player.total_cash,
             total_wealth=total_wealth,
-            total_tax_paid=player.total_tax_paid,
-            total_fines_paid=player.total_fines_paid,
             real_payment=f"{real_payment:.2f}",
         )
 
