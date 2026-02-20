@@ -3,115 +3,425 @@
 {{ block title }}Comprehension Check{{ endblock }}
 
 {{ block content }}
-<div class="card stagger-1">
-    <div class="card-header bg-info text-white">
-        <div class="icon-header">
-            <svg class="icon icon-md icon-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"/>
-                <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/>
-                <line x1="12" y1="17" x2="12.01" y2="17"/>
-            </svg>
-            <h4 class="mb-0" style="color: #fff;">Comprehension Check</h4>
+
+
+<!-- START: Instructions Button -->
+<style>
+.instructions-link {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: #0066cc;
+    color: white !important;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+.instructions-link:hover {
+    background: #0052a3;
+    color: white !important;
+}
+.instructions-modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.7);
+}
+.instructions-modal-content {
+    background-color: #fefefe;
+    margin: 2% auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 90%;
+    max-width: 900px;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 8px;
+}
+.instructions-modal-header {
+    padding: 20px;
+    background-color: #0066cc;
+    color: white;
+    border-radius: 8px 8px 0 0;
+}
+.instructions-modal-body {
+    padding: 20px;
+}
+.close-instructions {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 20px;
+}
+.close-instructions:hover {
+    color: #ddd;
+}
+</style>
+
+<button type="button" class="instructions-link" onclick="showInstructions()">
+    📋 View Instructions
+</button>
+
+<div id="instructionsModal" class="instructions-modal">
+    <div class="instructions-modal-content">
+        <div class="instructions-modal-header">
+            <span class="close-instructions" onclick="closeInstructions()">&times;</span>
+            <h3 style="margin: 0; color: white;">Instructions</h3>
+        </div>
+        <div class="instructions-modal-body">
+            <p>You will participate in <strong>15 rounds</strong>. In each round, you receive income in a lab currency called <strong>ECU (Experimental Currency Unit)</strong>.</p>
+
+            <p>At the end, your total wealth will be converted at: <strong>1 ECU = £0.01</strong></p>
+
+            <h5 class="mt-4">Each Round:</h5>
+
+            <p><strong>1. Income:</strong> You receive 100 ECU as cash.</p>
+
+            <p><strong>2. Deposit Decision:</strong> Decide how much to deposit.</p>
+            <ul>
+                <li>Deposited amount is taxed at 30%</li>
+                <li>Remaining stays as cash</li>
+                <li>Deposits are safe from audit</li>
+                <li>Cash has audit risk</li>
+            </ul>
+
+            <p><strong>3. Mandatory Spending:</strong> Spend exactly 40 ECU.</p>
+            <ul>
+                <li>Choose how much from deposit</li>
+                <li>Choose how much from cash</li>
+                <li>Must sum to 40 ECU</li>
+                <li>Cash payments require typing a verification code</li>
+            </ul>
+
+            <p><strong>4. Random Audit:</strong> 5% chance each round.</p>
+            <ul>
+                <li>Pay 30% tax on all cash</li>
+                <li>Pay fine = 2× the unpaid tax</li>
+                <li>Total penalty deducted from deposit first</li>
+            </ul>
+
+            <p><strong>5. Round Summary:</strong> See your updated balances.</p>
+
+            <div style="background: #e7f3ff; padding: 15px; border-radius: 5px; margin-top: 20px;">
+                <strong>Example:</strong><br>
+                Start: Deposit = 70, Cash = 30<br>
+                Deposit 60 → Tax 18 → Add 42<br>
+                New: Deposit = 112, Cash = 70<br>
+                Spend: 20 cash + 20 deposit<br>
+                Final: Deposit = 92, Cash = 50
+            </div>
+
+            <button type="button" class="btn btn-primary mt-3" onclick="closeInstructions()">Close</button>
         </div>
     </div>
-    <div class="card-body">
-        <p>Please answer the following questions to confirm your understanding of the experiment. Type your answer as a number.</p>
+</div>
 
-        <div class="quiz-question stagger-2" id="q1-block">
-            <div class="question-text">
-                <svg class="icon icon-sm icon-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.3rem;">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M8 12l2 2 4-4"/>
-                </svg>
-                Question 1: If you deposit 100 ECU in your bank account, how much will be added to your account after the 30% tax?
-            </div>
-            <div class="mt-2">
-                {{ formfield 'quiz_q1' }}
-                <button type="button" class="btn btn-sm btn-primary mt-1" id="check-q1">Check Answer</button>
-                <div id="q1-feedback" class="mt-2" style="display:none;"></div>
-            </div>
+<script>
+function showInstructions() {
+    document.getElementById('instructionsModal').style.display = 'block';
+}
+function closeInstructions() {
+    document.getElementById('instructionsModal').style.display = 'none';
+}
+window.onclick = function(event) {
+    var modal = document.getElementById('instructionsModal');
+    if (event.target == modal) {
+        closeInstructions();
+    }
+}
+</script>
+<!-- END: Instructions Button -->
+
+
+
+
+<!-- Hidden fields so oTree still receives quiz_q1/2/3 values -->
+<input type="hidden" name="quiz_q1" id="hid_q1" value="">
+<input type="hidden" name="quiz_q2" id="hid_q2" value="">
+<input type="hidden" name="quiz_q3" id="hid_q3" value="">
+
+<style>
+.quiz-wrap { max-width: 700px; margin: 0 auto; }
+.quiz-header {
+    background: linear-gradient(135deg, #1a3a5c 0%, #2563a8 100%);
+    color: white;
+    padding: 1.8rem 2rem;
+    border-radius: 12px 12px 0 0;
+}
+.quiz-header h3 { margin: 0 0 0.3rem; font-size: 1.3rem; font-weight: 700; color: white; }
+.quiz-header p  { margin: 0; opacity: 0.85; font-size: 0.9rem; }
+.quiz-body {
+    background: #fff;
+    border: 1px solid #dde3ee;
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    padding: 2rem;
+}
+.section-label {
+    font-size: 0.68rem; font-weight: 800; letter-spacing: 0.14em;
+    text-transform: uppercase; color: #2563a8;
+    margin-bottom: 1.2rem; padding-bottom: 0.4rem;
+    border-bottom: 2px solid #e8edf5;
+}
+.task-instruction {
+    background: #f0f5ff;
+    border-left: 4px solid #2563a8;
+    border-radius: 0 8px 8px 0;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.8rem;
+    font-size: 0.92rem;
+    color: #1e2d40;
+    line-height: 1.6;
+}
+
+/* Question block */
+.q-block {
+    border: 1.5px solid #dde3ee;
+    border-radius: 10px;
+    padding: 1.3rem 1.5rem;
+    margin-bottom: 1.2rem;
+    transition: border-color 0.2s;
+}
+.q-block.correct  { border-color: #27ae60; background: #f0fff4; }
+.q-block.incorrect { border-color: #e74c3c; background: #fff5f5; }
+
+.q-number {
+    display: inline-block;
+    background: #1a3a5c;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    margin-bottom: 0.7rem;
+    letter-spacing: 0.05em;
+}
+.q-text {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #1e2d40;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+/* Answer options */
+.options { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1rem; }
+.opt-btn {
+    padding: 0.5rem 1.2rem;
+    border: 1.5px solid #d1d9e6;
+    border-radius: 8px;
+    background: #f8fafc;
+    color: #374151;
+    font-size: 0.92rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+}
+.opt-btn:hover:not(.locked) { border-color: #2563a8; background: #eff5ff; color: #1a3a5c; }
+.opt-btn.selected { border-color: #2563a8; background: #dbeafe; color: #1a3a5c; font-weight: 700; }
+.opt-btn.correct-ans { border-color: #27ae60 !important; background: #d4edda !important; color: #155724 !important; font-weight: 700; }
+.opt-btn.wrong-ans   { border-color: #e74c3c !important; background: #f8d7da !important; color: #721c24 !important; }
+.opt-btn.locked { cursor: default; }
+
+/* Check button */
+.check-btn {
+    padding: 0.45rem 1.2rem;
+    background: #2563a8;
+    color: white;
+    border: none;
+    border-radius: 7px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s;
+}
+.check-btn:hover { opacity: 0.88; }
+.check-btn:disabled { opacity: 0.4; cursor: default; }
+
+/* Feedback */
+.feedback {
+    display: none;
+    margin-top: 0.7rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.5rem 0.8rem;
+    border-radius: 6px;
+}
+.feedback.ok  { display: block; color: #155724; background: #d4edda; border: 1px solid #c3e6cb; }
+.feedback.err { display: block; color: #721c24; background: #f8d7da; border: 1px solid #f5c6cb; }
+
+/* Progress dots */
+.progress-dots { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+.dot {
+    width: 12px; height: 12px; border-radius: 50%;
+    background: #d1d9e6; transition: background 0.3s;
+}
+.dot.done { background: #27ae60; }
+
+/* Validation banner */
+#val-msg {
+    display: none;
+    background: #fff0f0;
+    border: 1.5px solid #e74c3c;
+    border-radius: 8px;
+    padding: 0.9rem 1.2rem;
+    margin-bottom: 1rem;
+    color: #c0392b;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+</style>
+
+<div class="quiz-wrap">
+    <div class="quiz-header">
+        <h3>&#10003; Comprehension Check</h3>
+        <p>Please answer all three questions to confirm your understanding before we begin.</p>
+    </div>
+    <div class="quiz-body">
+
+        <div class="section-label">Understanding Check</div>
+
+        <div class="task-instruction">
+            Select the correct answer for each question. You will receive immediate feedback.
+            You must answer all three questions before you can proceed.
         </div>
 
-        <div class="quiz-question stagger-3" id="q2-block">
-            <div class="question-text">
-                <svg class="icon icon-sm icon-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.3rem;">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M8 12l2 2 4-4"/>
-                </svg>
-                Question 2: If you keep 50 ECU as cash and are audited, how much will you pay in total (tax (30%) + fine(2 times unpaid tax))?
-            </div>
-            <div class="mt-2">
-                {{ formfield 'quiz_q2' }}
-                <button type="button" class="btn btn-sm btn-primary mt-1" id="check-q2">Check Answer</button>
-                <div id="q2-feedback" class="mt-2" style="display:none;"></div>
-            </div>
+        <div class="progress-dots">
+            <div class="dot" id="dot1"></div>
+            <div class="dot" id="dot2"></div>
+            <div class="dot" id="dot3"></div>
         </div>
 
-        <div class="quiz-question stagger-4" id="q3-block">
-            <div class="question-text">
-                <svg class="icon icon-sm icon-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.3rem;">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M8 12l2 2 4-4"/>
-                </svg>
-                Question 3: What is the audit probability in a round? (Enter a number, e.g. 5 for 5%)
+        <!-- Q1 -->
+        <div class="q-block" id="q1-block">
+            <div class="q-number">Question 1</div>
+            <div class="q-text">If you deposit 100 ECU in your bank account, how much will be added to your account after the 30% tax is deducted?</div>
+            <div class="options" id="q1-options">
+                <button type="button" class="opt-btn" data-q="1" data-val="30" onclick="selectOpt(this)">30 ECU</button>
+                <button type="button" class="opt-btn" data-q="1" data-val="70" onclick="selectOpt(this)">70 ECU</button>
+                <button type="button" class="opt-btn" data-q="1" data-val="100" onclick="selectOpt(this)">100 ECU</button>
+                <button type="button" class="opt-btn" data-q="1" data-val="80" onclick="selectOpt(this)">80 ECU</button>
             </div>
-            <div class="mt-2">
-                {{ formfield 'quiz_q3' }}
-                <button type="button" class="btn btn-sm btn-primary mt-1" id="check-q3">Check Answer</button>
-                <div id="q3-feedback" class="mt-2" style="display:none;"></div>
-            </div>
+            <button type="button" class="check-btn" id="check1" onclick="checkAnswer(1, '{{ correct_q1 }}')" disabled>Check Answer</button>
+            <div class="feedback" id="fb1"></div>
         </div>
 
-        <p class="text-muted mt-3"><small>You must check all three answers before proceeding.</small></p>
+        <!-- Q2 -->
+        <div class="q-block" id="q2-block">
+            <div class="q-number">Question 2</div>
+            <div class="q-text">If you keep 50 ECU as cash and are audited, how much will you pay in total? (tax = 30% of cash; fine = 2× the unpaid tax)</div>
+            <div class="options" id="q2-options">
+                <button type="button" class="opt-btn" data-q="2" data-val="15" onclick="selectOpt(this)">15 ECU</button>
+                <button type="button" class="opt-btn" data-q="2" data-val="30" onclick="selectOpt(this)">30 ECU</button>
+                <button type="button" class="opt-btn" data-q="2" data-val="45" onclick="selectOpt(this)">45 ECU</button>
+                <button type="button" class="opt-btn" data-q="2" data-val="50" onclick="selectOpt(this)">50 ECU</button>
+            </div>
+            <button type="button" class="check-btn" id="check2" onclick="checkAnswer(2, '{{ correct_q2 }}')" disabled>Check Answer</button>
+            <div class="feedback" id="fb2"></div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="q-block" id="q3-block">
+            <div class="q-number">Question 3</div>
+            <div class="q-text">What is the base audit probability in each round?</div>
+            <div class="options" id="q3-options">
+                <button type="button" class="opt-btn" data-q="3" data-val="5" onclick="selectOpt(this)">5%</button>
+                <button type="button" class="opt-btn" data-q="3" data-val="10" onclick="selectOpt(this)">10%</button>
+                <button type="button" class="opt-btn" data-q="3" data-val="20" onclick="selectOpt(this)">20%</button>
+                <button type="button" class="opt-btn" data-q="3" data-val="30" onclick="selectOpt(this)">30%</button>
+            </div>
+            <button type="button" class="check-btn" id="check3" onclick="checkAnswer(3, '{{ correct_q3 }}')" disabled>Check Answer</button>
+            <div class="feedback" id="fb3"></div>
+        </div>
+
+        <div id="val-msg">&#9888; Please check all three answers before proceeding.</div>
 
         {{ next_button }}
     </div>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var correctAnswers = {
-            1: '{{ correct_q1 }}',
-            2: '{{ correct_q2 }}',
-            3: '{{ correct_q3 }}'
-        };
+var answered = {1: false, 2: false, 3: false};
+var selected  = {1: null,  2: null,  3: null};
 
-        var checked = {1: false, 2: false, 3: false};
+function selectOpt(btn) {
+    var q = btn.getAttribute('data-q');
+    if (answered[q]) return; // locked after checking
+    document.querySelectorAll('.opt-btn[data-q="' + q + '"]').forEach(function(b) {
+        b.classList.remove('selected');
+    });
+    btn.classList.add('selected');
+    selected[q] = btn.getAttribute('data-val');
+    document.getElementById('check' + q).disabled = false;
+}
 
-        function checkAnswer(qNum) {
-            var input = document.querySelector('input[name="quiz_q' + qNum + '"]');
-            var feedback = document.getElementById('q' + qNum + '-feedback');
-            var userAnswer = (input.value || '').trim();
+function checkAnswer(q, correct) {
+    var userVal = selected[q];
+    if (!userVal) return;
 
-            if (!userAnswer) {
-                feedback.style.display = 'block';
-                feedback.innerHTML = '<span style="color: var(--color-warning); font-weight: 600;">Please enter an answer.</span>';
-                return;
-            }
+    var fb = document.getElementById('fb' + q);
+    var block = document.getElementById('q' + q + '-block');
 
-            feedback.style.display = 'block';
-            if (userAnswer === correctAnswers[qNum]) {
-                feedback.innerHTML = '<span style="color: var(--color-success); font-weight: 600;">&#10003; Correct!</span>';
-            } else {
-                feedback.innerHTML = '<span style="color: var(--color-danger); font-weight: 600;">&#10007; Incorrect.</span> The correct answer is <strong>' + correctAnswers[qNum] + '</strong>.';
-            }
-            checked[qNum] = true;
-        }
-
-        document.getElementById('check-q1').addEventListener('click', function() { checkAnswer(1); });
-        document.getElementById('check-q2').addEventListener('click', function() { checkAnswer(2); });
-        document.getElementById('check-q3').addEventListener('click', function() { checkAnswer(3); });
-
-        // Block form submission until all answers checked
-        var form = document.querySelector('form');
-        if (form) {
-            form.addEventListener('submit', function(e) {
-                if (!checked[1] || !checked[2] || !checked[3]) {
-                    e.preventDefault();
-                    alert('Please check all three answers before proceeding.');
-                }
-            });
+    // Lock all buttons
+    document.querySelectorAll('.opt-btn[data-q="' + q + '"]').forEach(function(b) {
+        b.classList.add('locked');
+        if (b.getAttribute('data-val') === correct) {
+            b.classList.add('correct-ans');
+        } else if (b.classList.contains('selected')) {
+            b.classList.add('wrong-ans');
+            b.classList.remove('selected');
         }
     });
+
+    document.getElementById('check' + q).disabled = true;
+
+    if (userVal === correct) {
+        fb.className = 'feedback ok';
+        fb.innerHTML = '&#10003; Correct!';
+        block.classList.add('correct');
+    } else {
+        fb.className = 'feedback err';
+        fb.innerHTML = '&#10007; Incorrect — the correct answer is <strong>' + correct + '</strong>. Please review the instructions if needed.';
+        block.classList.add('incorrect');
+    }
+
+    // Store value in hidden field regardless of correct/incorrect
+    document.getElementById('hid_q' + q).value = userVal;
+    answered[q] = true;
+
+    // Update progress dot
+    document.getElementById('dot' + q).classList.add('done');
+
+    // Hide validation banner if all done
+    if (answered[1] && answered[2] && answered[3]) {
+        document.getElementById('val-msg').style.display = 'none';
+    }
+}
+
+// Block form submit until all 3 checked
+document.addEventListener('submit', function(e) {
+    if (!answered[1] || !answered[2] || !answered[3]) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        var msg = document.getElementById('val-msg');
+        msg.style.display = 'block';
+        msg.scrollIntoView({behavior: 'smooth', block: 'center'});
+    }
+}, true);
 </script>
+
 {{ endblock }}

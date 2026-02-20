@@ -3,58 +3,133 @@
 {{ block title }}Post-Experiment Survey{{ endblock }}
 
 {{ block content }}
-<div class="card stagger-1">
-    <div class="card-header bg-primary text-white">
-        <div class="icon-header">
-            <svg class="icon icon-md icon-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
-                <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
-            </svg>
-            <h4 class="mb-0" style="color: #fff;">Thank You! Please Answer a Few Questions</h4>
-        </div>
+<style>
+.survey-wrap { max-width: 680px; margin: 0 auto; }
+.survey-header {
+    background: linear-gradient(135deg, #1a3a5c 0%, #2563a8 100%);
+    color: white;
+    padding: 1.8rem 2rem;
+    border-radius: 12px 12px 0 0;
+}
+.survey-header h3 { margin: 0 0 0.3rem; font-size: 1.3rem; font-weight: 700; color: white; }
+.survey-header p  { margin: 0; opacity: 0.85; font-size: 0.9rem; }
+.survey-body {
+    background: #fff;
+    border: 1px solid #dde3ee;
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    padding: 2rem;
+}
+.section-label {
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #2563a8;
+    margin-bottom: 1.1rem;
+    padding-bottom: 0.45rem;
+    border-bottom: 2px solid #e8edf5;
+}
+.survey-divider { border: none; border-top: 1.5px solid #e8edf5; margin: 1.8rem 0; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-bottom: 1.2rem; }
+
+/* Pill-style gender buttons */
+.gender-options { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.3rem; }
+.gender-btn {
+    padding: 0.42rem 1rem;
+    border: 1.5px solid #d1d9e6;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.87rem;
+    color: #374151;
+    background: #f8fafc;
+    transition: all 0.15s;
+    user-select: none;
+}
+.gender-btn input[type="radio"] { display: none; }
+.gender-btn.selected {
+    border-color: #2563a8;
+    background: #eff5ff;
+    color: #1a3a5c;
+    font-weight: 600;
+}
+
+/* Sliders */
+.slider-card {
+    background: #f8fafc;
+    border: 1.5px solid #e0e7f0;
+    border-radius: 10px;
+    padding: 1.3rem 1.5rem;
+    margin-bottom: 1rem;
+}
+.slider-question { font-size: 0.93rem; font-weight: 600; color: #1e2d40; margin-bottom: 0.9rem; }
+.slider-question em { display: block; font-style: italic; font-weight: 400; color: #555; font-size: 0.87rem; margin-top: 0.2rem; }
+.slider-labels { display: flex; justify-content: space-between; font-size: 0.77rem; color: #6b7a99; margin-bottom: 0.35rem; }
+.slider-ticks { display: flex; justify-content: space-between; font-size: 0.73rem; color: #aab; margin-top: 0.25rem; padding: 0 2px; }
+input[type="range"] {
+    -webkit-appearance: none; width: 100%; height: 6px;
+    border-radius: 3px; background: #d1d9e6; cursor: pointer; outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%;
+    background: #2563a8; border: 3px solid white; box-shadow: 0 1px 4px rgba(0,0,0,0.2); cursor: pointer;
+}
+.slider-readout { text-align: center; margin-top: 0.55rem; font-size: 0.88rem; color: #374151; }
+.slider-readout strong { color: #2563a8; font-size: 1.05rem; }
+</style>
+
+<div class="survey-wrap">
+    <div class="survey-header">
+        <h3>&#128203; Post-Experiment Survey</h3>
+        <p>Please answer each question carefully. Your responses are anonymous and confidential.</p>
     </div>
-    <div class="card-body">
-        <p>Your responses will help us understand decision-making patterns. All answers are optional.</p>
+    <div class="survey-body">
 
-        {{ formfield 'participant_name' }}
-        {{ formfield 'age' }}
-        {{ formfield 'gender' }}
+        <div class="section-label">About You</div>
 
-        <!-- Trust in Government - horizontal slider -->
-        <div class="form-group mt-4">
-            <label><strong>How much do you trust government institutions?</strong></label>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.9em; color: #666;">
-                <span>0 &mdash; Do not trust at all</span>
-                <span>10 &mdash; Trust completely</span>
-            </div>
-            <input type="range" name="trust_government" id="id_trust_government"
-                min="0" max="10" step="1" value="5"
-                style="width: 100%; cursor: pointer;">
-            <div style="display: flex; justify-content: space-between; font-size: 0.85em; color: #999; margin-top: 2px;">
-                <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
-            </div>
-            <div style="text-align: center; margin-top: 8px;">
-                <span style="font-size: 1.1em; font-weight: bold; color: #333;">Selected: <span id="trust_value">5</span></span>
+        <div class="field-row">
+            <div>{{ formfield 'participant_name' }}</div>
+            <div>{{ formfield 'age' }}</div>
+        </div>
+
+        <div style="margin-bottom: 1.4rem;">
+            <label style="font-size:0.85rem; font-weight:600; color:#374151; display:block; margin-bottom:0.4rem;">Gender</label>
+            <div class="gender-options">
+                <label class="gender-btn"><input type="radio" name="gender" value="Male"> Male</label>
+                <label class="gender-btn"><input type="radio" name="gender" value="Female"> Female</label>
+                <label class="gender-btn"><input type="radio" name="gender" value="Non-binary"> Non-binary</label>
+                <label class="gender-btn"><input type="radio" name="gender" value="Prefer not to say"> Prefer not to say</label>
             </div>
         </div>
 
-        <!-- Tax Morale - WVS item, horizontal slider -->
-        <div class="form-group mt-4">
-            <label><strong>Please tell me whether you think the following can always be justified, never be justified, or something in between:</strong></label>
-            <p class="mt-1 mb-2"><em>Cheating on taxes if you have a chance.</em></p>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.9em; color: #666;">
-                <span>1 &mdash; Never justifiable</span>
-                <span>10 &mdash; Always justifiable</span>
+        <hr class="survey-divider">
+        <div class="section-label">Attitudes &amp; Beliefs</div>
+
+        <div class="slider-card">
+            <div class="slider-question">How much do you trust government institutions?</div>
+            <div class="slider-labels"><span>0 — Do not trust at all</span><span>10 — Trust completely</span></div>
+            <input type="range" name="trust_government" id="id_trust" min="0" max="10" step="1" value="5">
+            <div class="slider-ticks"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
+            <div class="slider-readout">Selected: <strong id="trust_val">5</strong></div>
+        </div>
+
+        <div class="slider-card">
+            <div class="slider-question">
+                Please indicate whether you think the following can always be justified, never be justified, or something in between:
+                <em>Cheating on taxes if you have a chance.</em>
             </div>
-            <input type="range" name="tax_morale" id="id_tax_morale"
-                min="1" max="10" step="1" value="5"
-                style="width: 100%; cursor: pointer;">
-            <div style="display: flex; justify-content: space-between; font-size: 0.85em; color: #999; margin-top: 2px;">
-                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
-            </div>
-            <div style="text-align: center; margin-top: 8px;">
-                <span style="font-size: 1.1em; font-weight: bold; color: #333;">Selected: <span id="tax_morale_value">5</span></span>
-            </div>
+            <div class="slider-labels"><span>1 — Never justifiable</span><span>10 — Always justifiable</span></div>
+            <input type="range" name="tax_morale" id="id_tax" min="1" max="10" step="1" value="5">
+            <div class="slider-ticks"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
+            <div class="slider-readout">Selected: <strong id="tax_val">5</strong></div>
+        </div>
+
+        {{ next_button }}
+    </div>
+</div>
+
+        <div id="validation-msg" style="display:none; background:#fff0f0; border:1.5px solid #e74c3c; border-radius:8px; padding:0.9rem 1.2rem; margin-bottom:1rem; color:#c0392b; font-size:0.9rem; font-weight:600;">
+            &#9888; Please select a gender option before continuing.
         </div>
 
         {{ next_button }}
@@ -62,16 +137,38 @@
 </div>
 
 <script>
-const trustSlider = document.getElementById('id_trust_government');
-const trustDisplay = document.getElementById('trust_value');
-trustSlider.addEventListener('input', function() {
-    trustDisplay.textContent = this.value;
+function initSlider(id, displayId) {
+    const s = document.getElementById(id);
+    const d = document.getElementById(displayId);
+    function update() {
+        const pct = (s.value - s.min) / (s.max - s.min) * 100;
+        s.style.background = `linear-gradient(to right, #2563a8 ${pct}%, #d1d9e6 ${pct}%)`;
+        d.textContent = s.value;
+    }
+    s.addEventListener('input', update);
+    update();
+}
+initSlider('id_trust', 'trust_val');
+initSlider('id_tax', 'tax_val');
+
+document.querySelectorAll('.gender-btn input[type="radio"]').forEach(r => {
+    r.addEventListener('change', () => {
+        document.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('selected'));
+        if (r.checked) r.closest('.gender-btn').classList.add('selected');
+        document.getElementById('validation-msg').style.display = 'none';
+        document.querySelectorAll('.gender-btn').forEach(b => b.style.outline = '');
+    });
 });
 
-const taxSlider = document.getElementById('id_tax_morale');
-const taxDisplay = document.getElementById('tax_morale_value');
-taxSlider.addEventListener('input', function() {
-    taxDisplay.textContent = this.value;
-});
+document.addEventListener('submit', function(e) {
+    const genderPicked = document.querySelector('input[name="gender"]:checked');
+    if (!genderPicked) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        document.getElementById('validation-msg').style.display = 'block';
+        document.querySelectorAll('.gender-btn').forEach(b => b.style.outline = '2px solid #e74c3c');
+        document.getElementById('validation-msg').scrollIntoView({behavior:'smooth', block:'center'});
+    }
+}, true);
 </script>
 {{ endblock }}
