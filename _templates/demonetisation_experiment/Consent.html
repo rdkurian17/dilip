@@ -4,212 +4,81 @@
 
 {{ block content }}
 <style>
-.consent-wrap { max-width: 680px; margin: 0 auto; }
-.consent-header {
-    background: linear-gradient(135deg, #1a3a5c 0%, #2563a8 100%);
-    color: white;
-    padding: 1.8rem 2rem;
-    border-radius: 12px 12px 0 0;
-}
-.consent-header h3 { margin: 0 0 0.3rem; font-size: 1.3rem; font-weight: 700; color: white; }
-.consent-header p  { margin: 0; opacity: 0.85; font-size: 0.9rem; }
-.consent-body {
-    background: #fff;
-    border: 1px solid #dde3ee;
-    border-top: none;
-    border-radius: 0 0 12px 12px;
-    padding: 2rem;
-}
-.section-label {
-    font-size: 0.68rem; font-weight: 800; letter-spacing: 0.14em;
-    text-transform: uppercase; color: #2563a8;
-    margin-bottom: 1.2rem; padding-bottom: 0.4rem;
-    border-bottom: 2px solid #e8edf5;
-}
-
-/* Consent item cards */
-.consent-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    padding: 1rem 1.2rem;
-    border: 1.5px solid #dde3ee;
-    border-radius: 10px;
-    margin-bottom: 0.75rem;
-    cursor: pointer;
-    transition: all 0.18s;
-    user-select: none;
-    background: #f8fafc;
-}
-.consent-item:hover {
-    border-color: #2563a8;
-    background: #f0f5ff;
-}
-.consent-item.agreed {
-    border-color: #27ae60;
-    background: #f0fff4;
-}
-
-/* Custom checkbox circle */
-.consent-check {
-    flex-shrink: 0;
-    width: 24px;
-    height: 24px;
-    border: 2px solid #c4cdd8;
-    border-radius: 6px;
-    margin-top: 1px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.18s;
-}
-.consent-item.agreed .consent-check {
-    background: #27ae60;
-    border-color: #27ae60;
-}
-.consent-check svg {
-    display: none;
-    width: 14px;
-    height: 14px;
-}
-.consent-item.agreed .consent-check svg { display: block; }
-
-.consent-text {
-    font-size: 0.91rem;
-    color: #374151;
-    line-height: 1.55;
-}
-.consent-item.agreed .consent-text { color: #1a3a2a; }
-
-/* Last item (I agree) is bold */
-.consent-item.primary-agree .consent-text { font-weight: 700; font-size: 0.95rem; color: #1a3a5c; }
-.consent-item.primary-agree { border-color: #2563a8; background: #eff5ff; }
-.consent-item.primary-agree.agreed { border-color: #27ae60; background: #f0fff4; }
-
-/* Hidden real checkboxes for form */
-.consent-item input[type="checkbox"] { display: none; }
-
-/* Submit area */
-.submit-area { margin-top: 1.5rem; }
-#val-msg {
-    display: none;
-    background: #fff0f0;
-    border: 1.5px solid #e74c3c;
-    border-radius: 8px;
-    padding: 0.8rem 1.1rem;
-    margin-bottom: 1rem;
-    color: #c0392b;
-    font-size: 0.88rem;
-    font-weight: 600;
-}
+.consent-wrap{max-width:680px;margin:0 auto}
+.consent-header{background:linear-gradient(135deg,#1a3a5c 0%,#2563a8 100%);color:white;padding:1.8rem 2rem;border-radius:12px 12px 0 0}
+.consent-header h3{margin:0 0 0.25rem;font-size:1.3rem;font-weight:700;color:white}
+.consent-header p{margin:0;opacity:0.8;font-size:0.88rem}
+.consent-body{background:#fff;border:1px solid #dde3ee;border-top:none;border-radius:0 0 12px 12px;padding:2rem}
+.section-label{font-size:0.68rem;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;color:#2563a8;margin-bottom:1.1rem;padding-bottom:0.4rem;border-bottom:2px solid #e8edf5}
+.survey-divider{border:none;border-top:1.5px solid #e8edf5;margin:1.6rem 0}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin-bottom:1rem}
+.field-row.full{grid-template-columns:1fr}
+.consent-item{display:flex;align-items:flex-start;gap:1rem;padding:0.95rem 1.1rem;border:1.5px solid #dde3ee;border-radius:10px;margin-bottom:0.65rem;cursor:pointer;transition:all 0.15s;user-select:none;background:#f8fafc}
+.consent-item:hover{border-color:#2563a8;background:#f0f5ff}
+.consent-item.agreed{border-color:#27ae60;background:#f0fff4}
+.consent-check{flex-shrink:0;width:22px;height:22px;border:2px solid #c4cdd8;border-radius:6px;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.consent-item.agreed .consent-check{background:#27ae60;border-color:#27ae60}
+.consent-check svg{display:none;width:13px;height:13px}
+.consent-item.agreed .consent-check svg{display:block}
+.consent-text{font-size:0.9rem;color:#374151;line-height:1.55}
+.consent-item.primary-agree{border-color:#2563a8;background:#eff5ff}
+.consent-item.primary-agree .consent-text{font-weight:700;color:#1a3a5c}
+.consent-item.primary-agree.agreed{border-color:#27ae60;background:#f0fff4}
+#val-msg{display:none;background:#fff0f0;border:1.5px solid #e74c3c;border-radius:8px;padding:0.8rem 1.1rem;margin-bottom:1rem;color:#c0392b;font-size:0.88rem;font-weight:600}
+.consent-item input[type="checkbox"]{display:none}
 </style>
-
 <div class="consent-wrap">
-    <div class="consent-header">
-        <h3>&#128221; Participant Consent Form</h3>
-        <p>Please read and agree to each statement by clicking on it.</p>
-    </div>
-    <div class="consent-body">
-
-        <div class="section-label">Please confirm each of the following</div>
-
-        <div class="consent-item" onclick="toggleConsent(this, 'consent1')">
-            <input type="checkbox" id="consent1">
-            <div class="consent-check">
-                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20 6 9 17 4 12"/>
-                </svg>
-            </div>
-            <div class="consent-text">I confirm that I have read and understood the Participant Information Sheet and have had the opportunity to ask questions.</div>
-        </div>
-
-        <div class="consent-item" onclick="toggleConsent(this, 'consent2')">
-            <input type="checkbox" id="consent2">
-            <div class="consent-check">
-                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20 6 9 17 4 12"/>
-                </svg>
-            </div>
-            <div class="consent-text">I understand that my participation is voluntary and that I may withdraw at any time without penalty. I understand that once data has been anonymised it may not be possible to withdraw it.</div>
-        </div>
-
-        <div class="consent-item" onclick="toggleConsent(this, 'consent3')">
-            <input type="checkbox" id="consent3">
-            <div class="consent-check">
-                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20 6 9 17 4 12"/>
-                </svg>
-            </div>
-            <div class="consent-text">I confirm that I am 18 years or older and understand that there are no known physical risks associated with this study.</div>
-        </div>
-
-        <div class="consent-item" onclick="toggleConsent(this, 'consent4')">
-            <input type="checkbox" id="consent4">
-            <div class="consent-check">
-                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20 6 9 17 4 12"/>
-                </svg>
-            </div>
-            <div class="consent-text">I understand that my data will be kept confidential, stored securely, and processed in accordance with UK GDPR and the Data Protection Act 2018.</div>
-        </div>
-
-        <div class="consent-item" onclick="toggleConsent(this, 'consent5')">
-            <input type="checkbox" id="consent5">
-            <div class="consent-check">
-                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20 6 9 17 4 12"/>
-                </svg>
-            </div>
-            <div class="consent-text">I understand that anonymised data may be used for academic publications and future research.</div>
-        </div>
-
-        <div class="consent-item primary-agree" onclick="toggleConsent(this, 'consent6')">
-            <input type="checkbox" id="consent6">
-            <div class="consent-check">
-                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20 6 9 17 4 12"/>
-                </svg>
-            </div>
-            <div class="consent-text">I agree to take part in this study.</div>
-        </div>
-
-        <div class="submit-area">
-            <div id="val-msg">&#9888; Please agree to all statements before continuing.</div>
-            {{ next_button }}
-        </div>
-
-    </div>
+<div class="consent-header">
+<h3>&#128221; Participant Consent Form</h3>
+<p>Ethics approval: ERAMS Ref. ETH2526-0742</p>
+</div>
+<div class="consent-body">
+<div class="section-label">Your Details</div>
+<div class="field-row">
+<div>{{ formfield 'participant_full_name' }}</div>
+<div>{{ formfield 'participant_email' }}</div>
+</div>
+<div class="field-row full">
+<div>{{ formfield 'seat_number' }}</div>
+</div>
+<hr class="survey-divider">
+<div class="section-label">Please confirm each of the following</div>
+<div class="consent-item" onclick="toggleConsent(this,'consent1')"><input type="checkbox" id="consent1"><div class="consent-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="consent-text">I confirm that I have read and understood the Participant Information Sheet and have had the opportunity to ask questions.</div></div>
+<div class="consent-item" onclick="toggleConsent(this,'consent2')"><input type="checkbox" id="consent2"><div class="consent-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="consent-text">I understand that my participation is voluntary and that I may withdraw at any time without penalty. I understand that once data has been anonymised it may not be possible to withdraw it.</div></div>
+<div class="consent-item" onclick="toggleConsent(this,'consent3')"><input type="checkbox" id="consent3"><div class="consent-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="consent-text">I confirm that I am 18 years or older and understand that there are no known physical risks associated with this study.</div></div>
+<div class="consent-item" onclick="toggleConsent(this,'consent4')"><input type="checkbox" id="consent4"><div class="consent-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="consent-text">I understand that my data will be kept confidential, stored securely, and processed in accordance with UK GDPR and the Data Protection Act 2018.</div></div>
+<div class="consent-item" onclick="toggleConsent(this,'consent5')"><input type="checkbox" id="consent5"><div class="consent-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="consent-text">I understand that anonymised data may be used for academic publications and future research.</div></div>
+<div class="consent-item primary-agree" onclick="toggleConsent(this,'consent6')"><input type="checkbox" id="consent6"><div class="consent-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="consent-text">I agree to take part in this study.</div></div>
+<div id="val-msg">&#9888; Please fill in your details and agree to all statements before continuing.</div>
+{{ next_button }}
+</div>
 </div>
 
 <script>
-function toggleConsent(item, checkId) {
-    const cb = document.getElementById(checkId);
-    cb.checked = !cb.checked;
-    item.classList.toggle('agreed', cb.checked);
-    // Hide error message as soon as user interacts
-    document.getElementById('val-msg').style.display = 'none';
+function toggleConsent(item,id){
+  var cb=document.getElementById(id);
+  cb.checked=!cb.checked;
+  item.classList.toggle('agreed',cb.checked);
+  document.getElementById('val-msg').style.display='none';
 }
-
-document.addEventListener('submit', function(e) {
-    const allChecked = ['consent1','consent2','consent3','consent4','consent5','consent6']
-        .every(id => document.getElementById(id).checked);
-    if (!allChecked) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        const msg = document.getElementById('val-msg');
-        msg.style.display = 'block';
-        msg.scrollIntoView({behavior: 'smooth', block: 'center'});
-        // Highlight unchecked items
-        ['consent1','consent2','consent3','consent4','consent5','consent6'].forEach(function(id) {
-            const cb = document.getElementById(id);
-            const item = cb.closest('.consent-item');
-            if (!cb.checked) {
-                item.style.borderColor = '#e74c3c';
-                item.style.background = '#fff5f5';
-            }
-        });
-    }
-}, true);
+document.addEventListener('submit',function(e){
+  var ids=['consent1','consent2','consent3','consent4','consent5','consent6'];
+  var ok=ids.every(function(id){return document.getElementById(id).checked;});
+  if(!ok){
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    var msg=document.getElementById('val-msg');
+    msg.style.display='block';
+    msg.scrollIntoView({behavior:'smooth',block:'center'});
+    ids.forEach(function(id){
+      var cb=document.getElementById(id);
+      if(!cb.checked){
+        var item=cb.closest('.consent-item');
+        item.style.borderColor='#e74c3c';
+        item.style.background='#fff5f5';
+      }
+    });
+  }
+},true);
 </script>
-
 {{ endblock }}

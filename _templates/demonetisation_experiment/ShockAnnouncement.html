@@ -251,26 +251,29 @@ stroke-linejoin="round" style="color: var(--color-text-secondary);
 margin-right: 0.3rem;">
 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
 </svg>
-<h5 class="mb-0">Audit Rate Changes (Rounds 8-10 Only)</h5>
+<h5 class="mb-0">Audit Rules for Rounds 8–10</h5>
 </div>
 </div>
 <div class="card-body">
-<p>Based on how much old cash you convert, your audit rate will change
-for the next 3 rounds:</p>
+<p>During rounds 8–10, the audit applies to <strong>both your cash in hand and the amount you convert today</strong>. If you are audited, tax and fines are calculated on the combined total of your current cash balance <strong>plus</strong> the amount you converted at the policy change.</p>
+<p>From round 11 onwards, converted money becomes safe — only your cash in hand is subject to audit, and the rate returns to 5% for everyone.</p>
+<p>Your personal audit rate for rounds 8–10 depends on how much old cash you convert:</p>
 <table class="table table-bordered mb-3">
 <thead>
 <tr>
 <th>Amount Converted</th>
-<th>Audit Rate (Rounds 8-10)</th>
+<th>Audit Rate (Rounds 8–10)</th>
+<th>What Is Audited</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>1 - {{ C.TIER_1_THRESHOLD }} ECU</td>
+<td>1 – {{ C.TIER_1_THRESHOLD }} ECU</td>
 <td><strong>{{ C.TIER_1_AUDIT }}%</strong></td>
+<td rowspan="3" style="vertical-align:middle;">Cash in hand <strong>+</strong> converted amount</td>
 </tr>
 <tr class="table-warning">
-<td>51 - {{ C.TIER_2_THRESHOLD }} ECU</td>
+<td>51 – {{ C.TIER_2_THRESHOLD }} ECU</td>
 <td><strong>{{ C.TIER_2_AUDIT }}%</strong></td>
 </tr>
 <tr class="table-danger">
@@ -279,8 +282,8 @@ for the next 3 rounds:</p>
 </tr>
 </tbody>
 </table>
-<p class="mb-0"><small class="text-muted">After Round 10, the
-audit rate returns to 5% for everyone.</small></p>
+<p class="mb-0"><small class="text-muted">After round 10, the audit rate returns to 5% and only cash in hand is audited — converted money is no longer at risk.</small></p>
+
 </div>
 </div>
 

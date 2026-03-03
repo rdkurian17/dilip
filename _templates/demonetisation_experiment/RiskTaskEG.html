@@ -7,134 +7,83 @@
 .survey-wrap { max-width: 720px; margin: 0 auto; }
 .survey-header {
     background: linear-gradient(135deg, #1a3a5c 0%, #2563a8 100%);
-    color: white;
-    padding: 1.8rem 2rem;
-    border-radius: 12px 12px 0 0;
+    color: white; padding: 1.8rem 2rem; border-radius: 12px 12px 0 0;
 }
 .survey-header h3 { margin: 0 0 0.3rem; font-size: 1.3rem; font-weight: 700; color: white; }
 .survey-header p  { margin: 0; opacity: 0.85; font-size: 0.9rem; }
 .survey-body {
-    background: #fff;
-    border: 1px solid #dde3ee;
-    border-top: none;
-    border-radius: 0 0 12px 12px;
-    padding: 2rem;
+    background: #fff; border: 1px solid #dde3ee;
+    border-top: none; border-radius: 0 0 12px 12px; padding: 2rem;
 }
 .section-label {
     font-size: 0.68rem; font-weight: 800; letter-spacing: 0.14em;
     text-transform: uppercase; color: #2563a8;
-    margin-bottom: 1rem; padding-bottom: 0.4rem;
-    border-bottom: 2px solid #e8edf5;
+    margin-bottom: 1rem; padding-bottom: 0.4rem; border-bottom: 2px solid #e8edf5;
 }
 .task-instruction {
-    background: #f0f5ff;
-    border-left: 4px solid #2563a8;
-    border-radius: 0 8px 8px 0;
-    padding: 1rem 1.2rem;
-    margin-bottom: 1.5rem;
-    font-size: 0.93rem;
-    color: #1e2d40;
-    line-height: 1.6;
+    background: #f0f5ff; border-left: 4px solid #2563a8;
+    border-radius: 0 8px 8px 0; padding: 1rem 1.2rem;
+    margin-bottom: 1.5rem; font-size: 0.93rem; color: #1e2d40; line-height: 1.6;
 }
-
-/* Lottery selection table */
-.lottery-table { width: 100%; border-collapse: separate; border-spacing: 0; margin-bottom: 1.5rem; }
+.lottery-table { width: 100%; border-collapse: separate; border-spacing: 0; margin-bottom: 1rem; }
 .lottery-table thead tr th {
-    background: #1a3a5c;
-    color: white;
-    font-size: 0.82rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    padding: 0.75rem 1rem;
-    text-align: center;
+    background: #1a3a5c; color: white; font-size: 0.82rem; font-weight: 600;
+    letter-spacing: 0.05em; padding: 0.75rem 1rem; text-align: center;
 }
 .lottery-table thead tr th:first-child { border-radius: 8px 0 0 0; text-align: left; }
 .lottery-table thead tr th:last-child  { border-radius: 0 8px 0 0; }
-
 .lottery-row { cursor: pointer; transition: background 0.15s; }
 .lottery-row:nth-child(even) { background: #f8fafc; }
 .lottery-row:hover { background: #eff5ff; }
 .lottery-row.selected { background: #dbeafe !important; }
 .lottery-row td {
-    padding: 0.8rem 1rem;
-    font-size: 0.93rem;
-    color: #374151;
-    text-align: center;
-    border-bottom: 1px solid #e8edf5;
+    padding: 0.8rem 1rem; font-size: 0.93rem; color: #374151;
+    text-align: center; border-bottom: 1px solid #e8edf5;
 }
 .lottery-row td:first-child { text-align: left; }
-.lottery-row td:last-child {
-    /* radio column */
-    width: 60px;
-}
+.lottery-row td:last-child { width: 60px; }
 .lottery-row input[type="radio"] { display: none; }
 .radio-circle {
-    width: 20px; height: 20px;
-    border: 2px solid #9ab;
-    border-radius: 50%;
-    display: inline-block;
-    position: relative;
-    transition: all 0.15s;
+    width: 20px; height: 20px; border: 2px solid #9ab; border-radius: 50%;
+    display: inline-block; position: relative; transition: all 0.15s;
 }
-.lottery-row.selected .radio-circle {
-    border-color: #2563a8;
-    background: #2563a8;
-}
+.lottery-row.selected .radio-circle { border-color: #2563a8; background: #2563a8; }
 .lottery-row.selected .radio-circle::after {
-    content: '';
-    position: absolute;
-    top: 4px; left: 4px;
-    width: 8px; height: 8px;
-    background: white;
-    border-radius: 50%;
+    content: ""; position: absolute; top: 4px; left: 4px;
+    width: 8px; height: 8px; background: white; border-radius: 50%;
 }
 .opt-badge {
-    display: inline-block;
-    background: #e8edf5;
-    color: #1a3a5c;
-    font-weight: 700;
-    font-size: 0.85rem;
-    padding: 0.2rem 0.65rem;
-    border-radius: 5px;
-    min-width: 2.5rem;
-    text-align: center;
+    display: inline-block; background: #e8edf5; color: #1a3a5c;
+    font-weight: 700; font-size: 0.85rem; padding: 0.2rem 0.65rem;
+    border-radius: 5px; min-width: 2.5rem; text-align: center;
 }
-.lottery-row.selected .opt-badge {
-    background: #2563a8;
-    color: white;
-}
+.lottery-row.selected .opt-badge { background: #2563a8; color: white; }
 .prob-badge {
-    display: inline-block;
-    font-size: 0.75rem;
-    color: #6b7a99;
-    background: #f0f4f9;
-    border-radius: 4px;
-    padding: 0.15rem 0.4rem;
-    margin-left: 0.3rem;
+    display: inline-block; font-size: 0.75rem; color: #6b7a99;
+    background: #f0f4f9; border-radius: 4px; padding: 0.15rem 0.4rem; margin-left: 0.3rem;
 }
-.outcome-val {
-    font-weight: 600;
-    font-size: 1rem;
-}
+.outcome-val { font-weight: 600; font-size: 1rem; }
 .low-val  { color: #c0392b; }
 .high-val { color: #1a6b3a; }
+#validation-msg {
+    display: none; background: #fff0f0; border: 1.5px solid #e74c3c;
+    border-radius: 8px; padding: 0.9rem 1.2rem; margin-bottom: 1rem;
+    color: #c0392b; font-size: 0.9rem; font-weight: 600;
+}
 </style>
 
 <div class="survey-wrap">
     <div class="survey-header">
         <h3>&#127922; Risk Preference Task</h3>
-        <p>Page 2 of 4 — Post-experiment questionnaire</p>
+        <p>Page 2 of 4 â Post-experiment questionnaire</p>
     </div>
     <div class="survey-body">
-
         <div class="section-label">Lottery Choice</div>
-
         <div class="task-instruction">
             Each option below pays either a <strong>Low</strong> or <strong>High</strong> amount,
             each with a <strong>50% chance</strong>.
             Please select the option you prefer most.
         </div>
-
         <table class="lottery-table">
             <thead>
                 <tr>
@@ -158,31 +107,22 @@
                 {{ endfor }}
             </tbody>
         </table>
-
-        {{ next_button }}
-    </div>
-</div>
-
-        <div id="validation-msg" style="display:none; background:#fff0f0; border:1.5px solid #e74c3c; border-radius:8px; padding:0.9rem 1.2rem; margin-bottom:1rem; color:#c0392b; font-size:0.9rem; font-weight:600;">
-            &#9888; Please select one option before continuing.
-        </div>
-
+        <div id="validation-msg">&#9888; Please select one option before continuing.</div>
         {{ next_button }}
     </div>
 </div>
 
 <script>
 function selectLottery(row) {
-    document.querySelectorAll('.lottery-row').forEach(r => r.classList.remove('selected'));
+    document.querySelectorAll('.lottery-row').forEach(function(r) { r.classList.remove('selected'); });
     row.classList.add('selected');
-    const val = row.getAttribute('data-value');
-    const radio = document.getElementById('eg_' + val);
+    var val = row.getAttribute('data-value');
+    var radio = document.getElementById('eg_' + val);
     if (radio) radio.checked = true;
     document.getElementById('validation-msg').style.display = 'none';
 }
-
 document.addEventListener('submit', function(e) {
-    const chosen = document.querySelector('input[name="eg_choice"]:checked');
+    var chosen = document.querySelector('input[name="eg_choice"]:checked');
     if (!chosen) {
         e.preventDefault();
         e.stopImmediatePropagation();
