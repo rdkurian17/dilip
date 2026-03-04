@@ -1,134 +1,84 @@
 {{ extends 'global/Page.html' }}
 
-{{ block title }}Risk Preference Task{{ endblock }}
+{{ block title }}Risk Questions{{ endblock }}
 
 {{ block content }}
 <style>
-.survey-wrap { max-width: 720px; margin: 0 auto; }
-.survey-header {
-    background: linear-gradient(135deg, #1a3a5c 0%, #2563a8 100%);
-    color: white; padding: 1.8rem 2rem; border-radius: 12px 12px 0 0;
-}
-.survey-header h3 { margin: 0 0 0.3rem; font-size: 1.3rem; font-weight: 700; color: white; }
-.survey-header p  { margin: 0; opacity: 0.85; font-size: 0.9rem; }
-.survey-body {
-    background: #fff; border: 1px solid #dde3ee;
-    border-top: none; border-radius: 0 0 12px 12px; padding: 2rem;
-}
-.section-label {
-    font-size: 0.68rem; font-weight: 800; letter-spacing: 0.14em;
-    text-transform: uppercase; color: #2563a8;
-    margin-bottom: 1rem; padding-bottom: 0.4rem; border-bottom: 2px solid #e8edf5;
-}
-.task-instruction {
-    background: #f0f5ff; border-left: 4px solid #2563a8;
-    border-radius: 0 8px 8px 0; padding: 1rem 1.2rem;
-    margin-bottom: 1.5rem; font-size: 0.93rem; color: #1e2d40; line-height: 1.6;
-}
-.lottery-table { width: 100%; border-collapse: separate; border-spacing: 0; margin-bottom: 1rem; }
-.lottery-table thead tr th {
-    background: #1a3a5c; color: white; font-size: 0.82rem; font-weight: 600;
-    letter-spacing: 0.05em; padding: 0.75rem 1rem; text-align: center;
-}
-.lottery-table thead tr th:first-child { border-radius: 8px 0 0 0; text-align: left; }
-.lottery-table thead tr th:last-child  { border-radius: 0 8px 0 0; }
-.lottery-row { cursor: pointer; transition: background 0.15s; }
-.lottery-row:nth-child(even) { background: #f8fafc; }
-.lottery-row:hover { background: #eff5ff; }
-.lottery-row.selected { background: #dbeafe !important; }
-.lottery-row td {
-    padding: 0.8rem 1rem; font-size: 0.93rem; color: #374151;
-    text-align: center; border-bottom: 1px solid #e8edf5;
-}
-.lottery-row td:first-child { text-align: left; }
-.lottery-row td:last-child { width: 60px; }
-.lottery-row input[type="radio"] { display: none; }
-.radio-circle {
-    width: 20px; height: 20px; border: 2px solid #9ab; border-radius: 50%;
-    display: inline-block; position: relative; transition: all 0.15s;
-}
-.lottery-row.selected .radio-circle { border-color: #2563a8; background: #2563a8; }
-.lottery-row.selected .radio-circle::after {
-    content: ""; position: absolute; top: 4px; left: 4px;
-    width: 8px; height: 8px; background: white; border-radius: 50%;
-}
-.opt-badge {
-    display: inline-block; background: #e8edf5; color: #1a3a5c;
-    font-weight: 700; font-size: 0.85rem; padding: 0.2rem 0.65rem;
-    border-radius: 5px; min-width: 2.5rem; text-align: center;
-}
-.lottery-row.selected .opt-badge { background: #2563a8; color: white; }
-.prob-badge {
-    display: inline-block; font-size: 0.75rem; color: #6b7a99;
-    background: #f0f4f9; border-radius: 4px; padding: 0.15rem 0.4rem; margin-left: 0.3rem;
-}
-.outcome-val { font-weight: 600; font-size: 1rem; }
-.low-val  { color: #c0392b; }
-.high-val { color: #1a6b3a; }
-#validation-msg {
-    display: none; background: #fff0f0; border: 1.5px solid #e74c3c;
-    border-radius: 8px; padding: 0.9rem 1.2rem; margin-bottom: 1rem;
-    color: #c0392b; font-size: 0.9rem; font-weight: 600;
-}
+.survey-wrap{max-width:680px;margin:0 auto}
+.survey-header{background:linear-gradient(135deg,#1a3a5c 0%,#2563a8 100%);color:white;padding:1.8rem 2rem;border-radius:12px 12px 0 0}
+.survey-header h3{margin:0 0 0.3rem;font-size:1.3rem;font-weight:700;color:white}
+.survey-header p{margin:0;opacity:0.85;font-size:0.9rem}
+.survey-body{background:#fff;border:1px solid #dde3ee;border-top:none;border-radius:0 0 12px 12px;padding:2rem}
+.section-label{font-size:0.68rem;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;color:#2563a8;margin-bottom:1rem;padding-bottom:0.4rem;border-bottom:2px solid #e8edf5}
+.slider-card{background:#f8fafc;border:1.5px solid #e0e7f0;border-radius:10px;padding:1.3rem 1.5rem;margin-bottom:1rem}
+.slider-question{font-size:0.95rem;font-weight:600;color:#1e2d40;margin-bottom:0.9rem;line-height:1.5}
+.slider-labels{display:flex;justify-content:space-between;font-size:0.77rem;color:#6b7a99;margin-bottom:0.35rem}
+.slider-ticks{display:flex;justify-content:space-between;font-size:0.73rem;color:#aab;margin-top:0.25rem;padding:0 2px}
+input[type="range"]{-webkit-appearance:none;width:100%;height:6px;border-radius:3px;background:#d1d9e6;cursor:pointer;outline:none}
+input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#2563a8;border:3px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.2);cursor:pointer}
+.slider-readout{text-align:center;margin-top:0.55rem;font-size:0.88rem;color:#374151}
+.slider-readout strong{color:#2563a8;font-size:1.05rem}
 </style>
 
 <div class="survey-wrap">
-    <div class="survey-header">
-        <h3>&#127922; Task 1</h3>
-        <p>Page 2 of 4 â Post-experiment questionnaire</p>
-    </div>
-    <div class="survey-body">
-        <div class="section-label">Lottery Choice</div>
-        <div class="task-instruction">
-            Each option below pays either a <strong>Low</strong> or <strong>High</strong> amount,
-            each with a <strong>50% chance</strong>.
-            Please select the option you prefer most.
-        </div>
-        <table class="lottery-table">
-            <thead>
-                <tr>
-                    <th>Option</th>
-                    <th>Low outcome <span class="prob-badge">50%</span></th>
-                    <th>High outcome <span class="prob-badge">50%</span></th>
-                    <th>Select</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{ for L in lotteries }}
-                <tr class="lottery-row" data-value="{{ L.opt }}" onclick="selectLottery(this)">
-                    <td><span class="opt-badge">{{ L.opt }}</span></td>
-                    <td><span class="outcome-val low-val">{{ L.low }}</span></td>
-                    <td><span class="outcome-val high-val">{{ L.high }}</span></td>
-                    <td>
-                        <input type="radio" name="eg_choice" value="{{ L.opt }}" id="eg_{{ L.opt }}">
-                        <span class="radio-circle"></span>
-                    </td>
-                </tr>
-                {{ endfor }}
-            </tbody>
-        </table>
-        <div id="validation-msg">&#9888; Please select one option before continuing.</div>
-        {{ next_button }}
-    </div>
+<div class="survey-header">
+<h3>&#127919; Risk Attitudes</h3>
+<p>Page 2 of 4 — Post-experiment questionnaire</p>
+</div>
+<div class="survey-body">
+<div class="section-label">For each question, please indicate your willingness to take risks on a scale from 0 (not at all willing) to 10 (very willing)</div>
+
+<div class="slider-card">
+<div class="slider-question">How willing are you to take risks in general?</div>
+<div class="slider-labels"><span>0 — Not at all willing</span><span>10 — Very willing</span></div>
+<input type="range" name="risk_general" id="id_rg" min="0" max="10" step="1" value="5">
+<div class="slider-ticks"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
+<div class="slider-readout">Selected: <strong id="rg_val">5</strong></div>
+</div>
+
+<div class="slider-card">
+<div class="slider-question">How willing are you to take risks in financial matters?</div>
+<div class="slider-labels"><span>0 — Not at all willing</span><span>10 — Very willing</span></div>
+<input type="range" name="risk_financial" id="id_rf" min="0" max="10" step="1" value="5">
+<div class="slider-ticks"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
+<div class="slider-readout">Selected: <strong id="rf_val">5</strong></div>
+</div>
+
+<div class="slider-card">
+<div class="slider-question">How willing are you to take risks in your occupation or career?</div>
+<div class="slider-labels"><span>0 — Not at all willing</span><span>10 — Very willing</span></div>
+<input type="range" name="risk_career" id="id_rc" min="0" max="10" step="1" value="5">
+<div class="slider-ticks"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
+<div class="slider-readout">Selected: <strong id="rc_val">5</strong></div>
+</div>
+
+<div class="slider-card">
+<div class="slider-question">How willing are you to take risks regarding your health?</div>
+<div class="slider-labels"><span>0 — Not at all willing</span><span>10 — Very willing</span></div>
+<input type="range" name="risk_health" id="id_rh" min="0" max="10" step="1" value="5">
+<div class="slider-ticks"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
+<div class="slider-readout">Selected: <strong id="rh_val">5</strong></div>
+</div>
+
+{{ next_button }}
+</div>
 </div>
 
 <script>
-function selectLottery(row) {
-    document.querySelectorAll('.lottery-row').forEach(function(r) { r.classList.remove('selected'); });
-    row.classList.add('selected');
-    var val = row.getAttribute('data-value');
-    var radio = document.getElementById('eg_' + val);
-    if (radio) radio.checked = true;
-    document.getElementById('validation-msg').style.display = 'none';
-}
-document.addEventListener('submit', function(e) {
-    var chosen = document.querySelector('input[name="eg_choice"]:checked');
-    if (!chosen) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        document.getElementById('validation-msg').style.display = 'block';
-        document.getElementById('validation-msg').scrollIntoView({behavior:'smooth', block:'center'});
+function initSlider(id, displayId) {
+    var s = document.getElementById(id);
+    var d = document.getElementById(displayId);
+    function update() {
+        var pct = (s.value - s.min) / (s.max - s.min) * 100;
+        s.style.background = 'linear-gradient(to right, #2563a8 ' + pct + '%, #d1d9e6 ' + pct + '%)';
+        d.textContent = s.value;
     }
-}, true);
+    s.addEventListener('input', update);
+    update();
+}
+initSlider('id_rg', 'rg_val');
+initSlider('id_rf', 'rf_val');
+initSlider('id_rc', 'rc_val');
+initSlider('id_rh', 'rh_val');
 </script>
 {{ endblock }}

@@ -59,15 +59,41 @@ function toggleConsent(item,id){
   var cb=document.getElementById(id);
   cb.checked=!cb.checked;
   item.classList.toggle('agreed',cb.checked);
+  item.style.borderColor='';
+  item.style.background='';
   document.getElementById('val-msg').style.display='none';
+}
+var seatInput=document.querySelector('input[name="seat_number"]');
+if(seatInput){
+  // Suppress browser's built-in "value must be less than 32" tooltip
+  var form=seatInput.closest('form');
+  if(form) form.setAttribute('novalidate','novalidate');
+  seatInput.addEventListener('input',function(){
+    var v=parseInt(this.value,10);
+    if(!isNaN(v)&&v>=1&&v<=32){
+      this.style.borderColor='';
+      this.style.background='';
+      document.getElementById('val-msg').style.display='none';
+    }
+  });
 }
 document.addEventListener('submit',function(e){
   var ids=['consent1','consent2','consent3','consent4','consent5','consent6'];
   var ok=ids.every(function(id){return document.getElementById(id).checked;});
-  if(!ok){
+  var seat=document.querySelector('input[name="seat_number"]');
+  var seatVal=seat?parseInt(seat.value,10):NaN;
+  var seatOk=seat&&seat.value.trim()!==''&&!isNaN(seatVal)&&seatVal>=1&&seatVal<=32;
+  if(!ok||!seatOk){
     e.preventDefault();
     e.stopImmediatePropagation();
     var msg=document.getElementById('val-msg');
+    if(!seatOk&&seat){
+      seat.style.borderColor='#e74c3c';
+      seat.style.background='#fff5f5';
+      msg.textContent='\u26a0 Please enter your computer station number (shown on your desk) and agree to all statements before continuing.';
+    } else {
+      msg.textContent='\u26a0 Please fill in your details and agree to all statements before continuing.';
+    }
     msg.style.display='block';
     msg.scrollIntoView({behavior:'smooth',block:'center'});
     ids.forEach(function(id){

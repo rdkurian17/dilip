@@ -88,8 +88,8 @@ input[type="range"]::-webkit-slider-thumb {
         <div class="section-label">About You</div>
 
         <div class="field-row">
-            <div>{{ formfield 'participant_name' }}</div>
             <div>{{ formfield 'age' }}</div>
+            <div>{{ formfield 'country_of_origin' }}</div>
         </div>
 
         <div style="margin-bottom: 1.4rem;">
@@ -104,14 +104,6 @@ input[type="range"]::-webkit-slider-thumb {
 
         <hr class="survey-divider">
         <div class="section-label">Attitudes &amp; Beliefs</div>
-
-        <div class="slider-card">
-            <div class="slider-question">How much do you trust government institutions?</div>
-            <div class="slider-labels"><span>0 — Do not trust at all</span><span>10 — Trust completely</span></div>
-            <input type="range" name="trust_government" id="id_trust" min="0" max="10" step="1" value="5">
-            <div class="slider-ticks"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
-            <div class="slider-readout">Selected: <strong id="trust_val">5</strong></div>
-        </div>
 
         <div class="slider-card">
             <div class="slider-question">
@@ -144,7 +136,6 @@ function initSlider(id, displayId) {
     s.addEventListener('input', update);
     update();
 }
-initSlider('id_trust', 'trust_val');
 initSlider('id_tax', 'tax_val');
 
 document.querySelectorAll('.gender-btn input[type="radio"]').forEach(r => {

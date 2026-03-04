@@ -134,12 +134,12 @@ class Player(BasePlayer):
     # -------------------------------------------------------
     participant_full_name = models.StringField(label="Full name:")
     participant_email = models.StringField(label="Email address:")
-    seat_number = models.StringField(label="Seat / PC number:")
+    seat_number = models.IntegerField(label="Seat / PC number:", min=1, max=32)
 
     # Post-survey: Demographics & trust (PostSurvey page)
     # -------------------------------------------------------
-    participant_name = models.StringField(label="Your name:", blank=True)
     age = models.IntegerField(label="Your age:", min=18, max=100)
+    country_of_origin = models.StringField(label="Country of origin:")
     gender = models.StringField(
         label="Gender:",
         choices=[
@@ -149,15 +149,6 @@ class Player(BasePlayer):
             ['Prefer not to say', 'Prefer not to say'],
         ],
         widget=widgets.RadioSelect,
-    )
-    risk_attitude = models.IntegerField(
-        label="How willing are you to take risks?",
-        choices=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-        widget=widgets.RadioSelect,
-    )
-    trust_government = models.IntegerField(
-        label="How much do you trust government institutions?",
-        min=0, max=10,
     )
 
     # -------------------------------------------------------
@@ -185,6 +176,15 @@ class Player(BasePlayer):
         label="Please choose ONE option.",
     )
     eg_risk_type = models.StringField(initial='')
+
+    # -------------------------------------------------------
+    # Risk attitude questions (4-domain, 0-10 scale)
+    # Displayed as horizontal sliders on RiskTaskEG page
+    # -------------------------------------------------------
+    risk_general = models.IntegerField(label='How willing are you to take risks in general?', min=0, max=10)
+    risk_financial = models.IntegerField(label='How willing are you to take risks in financial matters?', min=0, max=10)
+    risk_career = models.IntegerField(label='How willing are you to take risks in your occupation or career?', min=0, max=10)
+    risk_health = models.IntegerField(label='How willing are you to take risks regarding your health?', min=0, max=10)
 
     # -------------------------------------------------------
     # Loss Aversion Scale - Li et al. (2021)
@@ -467,10 +467,12 @@ class ConversionDecision(Page):
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
+        entered_conversion = player.conversion_amount or 0  # save BEFORE carry_forward overwrites it
         player.carry_forward()
         prev = player.in_round(C.SHOCK_ROUND - 1)
         old_cash = prev.total_cash
-        converted = min(player.conversion_amount or 0, old_cash)
+        converted = min(entered_conversion, old_cash)
+        player.conversion_amount = converted  # restore the entered value after carry_forward
         player.cash_lost = old_cash - converted
         player.total_deposit += converted
         player.total_cash = 0
@@ -684,7 +686,7 @@ class RoundSummary(Page):
 
 class PostSurvey(Page):
     form_model = 'player'
-    form_fields = ['participant_name', 'age', 'gender', 'trust_government', 'tax_morale']
+    form_fields = ['age', 'country_of_origin', 'gender', 'tax_morale']
 
     @staticmethod
     def is_displayed(player: Player):
@@ -693,33 +695,13 @@ class PostSurvey(Page):
 
 class RiskTaskEG(Page):
     form_model = 'player'
-    form_fields = ['eg_choice']
+    form_fields = ['risk_general', 'risk_financial', 'risk_career', 'risk_health']
 
     @staticmethod
     def is_displayed(player: Player):
         return player.round_number == C.NUM_ROUNDS
 
-    @staticmethod
-    def before_next_page(player: Player, timeout_happened):
-        c = player.eg_choice or 0
-        if c in [1, 2]:
-            player.eg_risk_type = 'risk_averse'
-        elif c in [3, 4]:
-            player.eg_risk_type = 'risk_neutral_or_moderate'
-        elif c in [5, 6]:
-            player.eg_risk_type = 'risk_seeking'
 
-    @staticmethod
-    def vars_for_template(player: Player):
-        lotteries = [
-            dict(opt=1, low=cu(40), high=cu(40)),
-            dict(opt=2, low=cu(32), high=cu(48)),
-            dict(opt=3, low=cu(24), high=cu(56)),
-            dict(opt=4, low=cu(16), high=cu(64)),
-            dict(opt=5, low=cu(8), high=cu(72)),
-            dict(opt=6, low=cu(0), high=cu(80)),
-        ]
-        return dict(lotteries=lotteries)
 
 
 class LossAversion(Page):
