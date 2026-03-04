@@ -54,8 +54,6 @@
         <ul>
             <li>The deposited amount is <strong>taxed at 30%</strong>.</li>
             <li>Any amount not deposited remains as <strong>cash in hand</strong>.</li>
-            <li>Deposited funds are <strong>not subject to audit</strong>.</li>
-            <li>Cash holdings are <strong>subject to audit risk</strong>.</li>
         </ul>
 
         <h5 class="mt-4">3. Mandatory Spending</h5>
@@ -79,7 +77,7 @@
         </div>
 
         <h5 class="mt-4">4. Random Audit</h5>
-        <p>Each round, there is a <strong>{{ C.BASE_AUDIT_PROB }}% chance</strong> of an audit.</p>
+        <p>Each round, there is a <strong>{{ C.BASE_AUDIT_PROB }}% chance</strong> of an audit. Only your <strong>cash in hand</strong> is subject to audit — funds held in your deposit account are safe.</p>
         <p>If audited:</p>
         <ul>
             <li>You must pay <strong>30% tax</strong> on all cash currently held.</li>
