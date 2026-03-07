@@ -1,24 +1,110 @@
 {{ extends 'global/Page.html' }}
 
-{{ block title }}Survey{{ endblock }}
+{{ block title }}Attitudes &amp; Beliefs{{ endblock }}
 
 {{ block content }}
-<div class="card stagger-1">
-    <div class="card-header bg-primary text-white">
-        <div class="icon-header">
-            <svg class="icon icon-md icon-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
-                <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
-            </svg>
-            <h4 class="mb-0" style="color: #fff;">Please answer the following statements</h4>
-        </div>
-    </div>
-    <div class="card-body">
-        <p class="text-muted">For each statement below, please indicate how much you agree or disagree.</p>
+<style>
+.survey-wrap { max-width: 680px; margin: 0 auto; }
+.survey-header {
+    background: linear-gradient(135deg, #1a3a5c 0%, #2563a8 100%);
+    color: white;
+    padding: 1.8rem 2rem;
+    border-radius: 12px 12px 0 0;
+}
+.survey-header h3 { margin: 0 0 0.3rem; font-size: 1.3rem; font-weight: 700; color: white; }
+.survey-header p  { margin: 0; opacity: 0.85; font-size: 0.9rem; }
+.survey-body {
+    background: #fff;
+    border: 1px solid #dde3ee;
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    padding: 2rem;
+}
+.section-label {
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #2563a8;
+    margin-bottom: 1.1rem;
+    padding-bottom: 0.45rem;
+    border-bottom: 2px solid #e8edf5;
+}
+.slider-card {
+    background: #f8fafc;
+    border: 1.5px solid #e0e7f0;
+    border-radius: 10px;
+    padding: 1.3rem 1.5rem;
+    margin-bottom: 1rem;
+}
+.slider-question { font-size: 0.93rem; font-weight: 600; color: #1e2d40; margin-bottom: 0.9rem; }
+.slider-question em { display: block; font-style: italic; font-weight: 400; color: #555; font-size: 0.87rem; margin-top: 0.2rem; }
+.slider-labels { display: flex; justify-content: space-between; font-size: 0.77rem; color: #6b7a99; margin-bottom: 0.35rem; }
+.slider-ticks { display: flex; justify-content: space-between; font-size: 0.73rem; color: #aab; margin-top: 0.25rem; padding: 0 2px; }
+input[type="range"] {
+    -webkit-appearance: none; width: 100%; height: 6px;
+    border-radius: 3px; background: #d1d9e6; cursor: pointer; outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%;
+    background: #2563a8; border: 3px solid white; box-shadow: 0 1px 4px rgba(0,0,0,0.2); cursor: pointer;
+}
+.slider-readout { text-align: center; margin-top: 0.55rem; font-size: 0.88rem; color: #374151; }
+.slider-readout strong { color: #2563a8; font-size: 1.05rem; }
+</style>
 
-        {{ formfields }}
+<div class="survey-wrap">
+    <div class="survey-header">
+        <h3>&#128203; Attitudes &amp; Beliefs</h3>
+        <p>Page 2 of 4 — Please answer the question below carefully.</p>
+    </div>
+    <div class="survey-body">
+
+        <div class="section-label">Tax Attitudes</div>
+
+        <div class="slider-card">
+            <div class="slider-question">
+                Please indicate whether you think the following can always be justified, never be justified, or something in between:
+                <em>Cheating on taxes if you have a chance.</em>
+            </div>
+            <div class="slider-labels"><span>1 — Never justifiable</span><span>10 — Always justifiable</span></div>
+            <input type="range" name="tax_morale" id="id_tax" min="1" max="10" step="1">
+            <div class="slider-ticks"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
+            <div class="slider-readout">Selected: <strong id="tax_val">— please move the slider to select —</strong></div>
+        </div>
+
+        <div id="validation-msg" style="display:none; background:#fff0f0; border:1.5px solid #e74c3c; border-radius:8px; padding:0.9rem 1.2rem; margin-bottom:1rem; color:#c0392b; font-size:0.9rem; font-weight:600;">
+            &#9888; Please move the slider to select a value before continuing.
+        </div>
 
         {{ next_button }}
     </div>
 </div>
+
+<script>
+var taxSliderTouched = false;
+var taxSlider = document.getElementById('id_tax');
+var taxVal = document.getElementById('tax_val');
+
+// Remove the default value so nothing is pre-selected visually
+taxSlider.removeAttribute('value');
+taxSlider.style.background = '#d1d9e6';
+
+taxSlider.addEventListener('input', function() {
+    taxSliderTouched = true;
+    var pct = (taxSlider.value - taxSlider.min) / (taxSlider.max - taxSlider.min) * 100;
+    taxSlider.style.background = 'linear-gradient(to right, #2563a8 ' + pct + '%, #d1d9e6 ' + pct + '%)';
+    taxVal.textContent = taxSlider.value;
+    document.getElementById('validation-msg').style.display = 'none';
+});
+
+document.addEventListener('submit', function(e) {
+    if (!taxSliderTouched) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        document.getElementById('validation-msg').style.display = 'block';
+        document.getElementById('validation-msg').scrollIntoView({behavior:'smooth', block:'center'});
+    }
+}, true);
+</script>
 {{ endblock }}

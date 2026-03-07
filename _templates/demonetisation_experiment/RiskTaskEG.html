@@ -21,64 +21,90 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;hei
 </style>
 
 <div class="survey-wrap">
-<div class="survey-header">
-<h3>&#127919; Risk Attitudes</h3>
-<p>Page 2 of 4 — Post-experiment questionnaire</p>
-</div>
-<div class="survey-body">
-<div class="section-label">For each question, please indicate your willingness to take risks on a scale from 0 (not at all willing) to 10 (very willing)</div>
+    <div class="survey-header">
+        <h3>&#127919; Task 1</h3>
+        <p>Page 3 of 4 — Post-experiment questionnaire</p>
+    </div>
+    <div class="survey-body">
+        <div class="section-label">For each question, please indicate your willingness to take risks on a scale from 0 (not at all willing) to 10 (very willing)</div>
 
-<div class="slider-card">
-<div class="slider-question">How willing are you to take risks in general?</div>
-<div class="slider-labels"><span>0 — Not at all willing</span><span>10 — Very willing</span></div>
-<input type="range" name="risk_general" id="id_rg" min="0" max="10" step="1" value="5">
-<div class="slider-ticks"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
-<div class="slider-readout">Selected: <strong id="rg_val">5</strong></div>
-</div>
+        <div class="slider-card">
+            <div class="slider-question">How willing are you to take risks in general?</div>
+            <div class="slider-labels"><span>0 — Not at all willing</span><span>10 — Very willing</span></div>
+            <input type="range" name="risk_general" id="id_rg" min="0" max="10" step="1">
+            <div class="slider-ticks"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
+            <div class="slider-readout">Selected: <strong id="rg_val">— please move the slider —</strong></div>
+        </div>
 
-<div class="slider-card">
-<div class="slider-question">How willing are you to take risks in financial matters?</div>
-<div class="slider-labels"><span>0 — Not at all willing</span><span>10 — Very willing</span></div>
-<input type="range" name="risk_financial" id="id_rf" min="0" max="10" step="1" value="5">
-<div class="slider-ticks"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
-<div class="slider-readout">Selected: <strong id="rf_val">5</strong></div>
-</div>
+        <div class="slider-card">
+            <div class="slider-question">How willing are you to take risks in financial matters?</div>
+            <div class="slider-labels"><span>0 — Not at all willing</span><span>10 — Very willing</span></div>
+            <input type="range" name="risk_financial" id="id_rf" min="0" max="10" step="1">
+            <div class="slider-ticks"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
+            <div class="slider-readout">Selected: <strong id="rf_val">— please move the slider —</strong></div>
+        </div>
 
-<div class="slider-card">
-<div class="slider-question">How willing are you to take risks in your occupation or career?</div>
-<div class="slider-labels"><span>0 — Not at all willing</span><span>10 — Very willing</span></div>
-<input type="range" name="risk_career" id="id_rc" min="0" max="10" step="1" value="5">
-<div class="slider-ticks"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
-<div class="slider-readout">Selected: <strong id="rc_val">5</strong></div>
-</div>
+        <div class="slider-card">
+            <div class="slider-question">How willing are you to take risks in your occupation or career?</div>
+            <div class="slider-labels"><span>0 — Not at all willing</span><span>10 — Very willing</span></div>
+            <input type="range" name="risk_career" id="id_rc" min="0" max="10" step="1">
+            <div class="slider-ticks"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
+            <div class="slider-readout">Selected: <strong id="rc_val">— please move the slider —</strong></div>
+        </div>
 
-<div class="slider-card">
-<div class="slider-question">How willing are you to take risks regarding your health?</div>
-<div class="slider-labels"><span>0 — Not at all willing</span><span>10 — Very willing</span></div>
-<input type="range" name="risk_health" id="id_rh" min="0" max="10" step="1" value="5">
-<div class="slider-ticks"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
-<div class="slider-readout">Selected: <strong id="rh_val">5</strong></div>
-</div>
+        <div class="slider-card">
+            <div class="slider-question">How willing are you to take risks regarding your health?</div>
+            <div class="slider-labels"><span>0 — Not at all willing</span><span>10 — Very willing</span></div>
+            <input type="range" name="risk_health" id="id_rh" min="0" max="10" step="1">
+            <div class="slider-ticks"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
+            <div class="slider-readout">Selected: <strong id="rh_val">— please move the slider —</strong></div>
+        </div>
 
-{{ next_button }}
-</div>
+        <div id="validation-msg" style="display:none; background:#fff0f0; border:1.5px solid #e74c3c; border-radius:8px; padding:0.9rem 1.2rem; margin-bottom:1rem; color:#c0392b; font-size:0.9rem; font-weight:600;">
+            &#9888; Please move all four sliders to select your answers before continuing.
+        </div>
+
+        {{ next_button }}
+    </div>
 </div>
 
 <script>
-function initSlider(id, displayId) {
-    var s = document.getElementById(id);
-    var d = document.getElementById(displayId);
-    function update() {
-        var pct = (s.value - s.min) / (s.max - s.min) * 100;
-        s.style.background = 'linear-gradient(to right, #2563a8 ' + pct + '%, #d1d9e6 ' + pct + '%)';
-        d.textContent = s.value;
-    }
-    s.addEventListener('input', update);
-    update();
-}
-initSlider('id_rg', 'rg_val');
-initSlider('id_rf', 'rf_val');
-initSlider('id_rc', 'rc_val');
-initSlider('id_rh', 'rh_val');
+(function() {
+    var sliders = [
+        { id: 'id_rg', valId: 'rg_val', touched: false },
+        { id: 'id_rf', valId: 'rf_val', touched: false },
+        { id: 'id_rc', valId: 'rc_val', touched: false },
+        { id: 'id_rh', valId: 'rh_val', touched: false },
+    ];
+
+    sliders.forEach(function(s) {
+        var el = document.getElementById(s.id);
+        var valEl = document.getElementById(s.valId);
+        // Remove default value — no pre-selection
+        el.removeAttribute('value');
+        el.style.background = '#d1d9e6';
+
+        el.addEventListener('input', function() {
+            s.touched = true;
+            var pct = (el.value - el.min) / (el.max - el.min) * 100;
+            el.style.background = 'linear-gradient(to right, #2563a8 ' + pct + '%, #d1d9e6 ' + pct + '%)';
+            valEl.textContent = el.value;
+            // Hide validation if all now touched
+            if (sliders.every(function(x) { return x.touched; })) {
+                document.getElementById('validation-msg').style.display = 'none';
+            }
+        });
+    });
+
+    document.addEventListener('submit', function(e) {
+        var allTouched = sliders.every(function(s) { return s.touched; });
+        if (!allTouched) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            document.getElementById('validation-msg').style.display = 'block';
+            document.getElementById('validation-msg').scrollIntoView({behavior:'smooth', block:'center'});
+        }
+    }, true);
+})();
 </script>
 {{ endblock }}

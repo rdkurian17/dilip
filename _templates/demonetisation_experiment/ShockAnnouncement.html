@@ -7,287 +7,262 @@
 <!-- START: Instructions Button -->
 <style>
 .instructions-link {
-position: fixed;
-top: 20px;
-right: 20px;
-z-index: 1000;
-background: #0066cc;
-color: white !important;
-padding: 10px 20px;
-border-radius: 5px;
-text-decoration: none;
-font-weight: bold;
-box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-border: none;
-cursor: pointer;
-font-size: 14px;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: #0066cc;
+    color: white !important;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
 }
 .instructions-link:hover {
-background: #0052a3;
-color: white !important;
+    background: #0052a3;
+    color: white !important;
 }
 .instructions-modal {
-display: none;
-position: fixed;
-z-index: 2000;
-left: 0;
-top: 0;
-width: 100%;
-height: 100%;
-overflow: auto;
-background-color: rgba(0,0,0,0.7);
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.7);
 }
 .instructions-modal-content {
-background-color: #fefefe;
-margin: 2% auto;
-padding: 0;
-border: 1px solid #888;
-width: 90%;
-max-width: 900px;
-max-height: 90vh;
-overflow-y: auto;
-border-radius: 8px;
+    background-color: #fefefe;
+    margin: 2% auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 90%;
+    max-width: 900px;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 8px;
 }
 .instructions-modal-header {
-padding: 20px;
-background-color: #0066cc;
-color: white;
-border-radius: 8px 8px 0 0;
+    padding: 20px;
+    background-color: #0066cc;
+    color: white;
+    border-radius: 8px 8px 0 0;
 }
 .instructions-modal-body {
-padding: 20px;
+    padding: 20px;
 }
 .close-instructions {
-color: white;
-float: right;
-font-size: 28px;
-font-weight: bold;
-cursor: pointer;
-line-height: 20px;
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 20px;
 }
 .close-instructions:hover {
-color: #ddd;
+    color: #ddd;
 }
 </style>
 
-<button type="button" class="instructions-link"
-onclick="showInstructions()">
-📋 View Instructions
+<button type="button" class="instructions-link" onclick="showInstructions()">
+    📋 View Instructions
 </button>
 
 <div id="instructionsModal" class="instructions-modal">
-<div class="instructions-modal-content">
-<div class="instructions-modal-header">
-<span class="close-instructions"
-onclick="closeInstructions()">&times;</span>
-<h3 style="margin: 0; color: white;">Instructions</h3>
-</div>
-<div class="instructions-modal-body">
-<p>You will participate in <strong>15 rounds</strong>. In each
-round, you receive income in a lab currency called <strong>ECU
-(Experimental Currency Unit)</strong>.</p>
+    <div class="instructions-modal-content">
+        <div class="instructions-modal-header">
+            <span class="close-instructions" onclick="closeInstructions()">&times;</span>
+            <h3 style="margin: 0; color: white;">Instructions</h3>
+        </div>
+        <div class="instructions-modal-body">
+            <p>In this task, you will participate in <strong>15 rounds</strong>. In each round, you receive income in a lab currency called <strong>ECU (Experimental Currency Unit)</strong>.</p>
 
-<p>At the end, your total wealth will be converted at: <strong>1 ECU
-= £0.01</strong></p>
+            <p>At the end, your total wealth will be converted into British pounds (£) at the exchange rate: <strong>1 ECU = £0.01</strong></p>
 
-<h5 class="mt-4">Each Round:</h5>
+            <h5 class="mt-4">Each Round:</h5>
 
-<p><strong>1. Income:</strong> You receive 100 ECU as cash.</p>
+            <p><strong>1. Income:</strong> You receive 100 ECU in cash.</p>
 
-<p><strong>2. Deposit Decision:</strong> Decide how much to
-deposit.</p>
-<ul>
-<li>Deposited amount is taxed at 30%</li>
-<li>Remaining stays as cash</li>
-<li>Deposits are safe from audit</li>
-<li>Cash has audit risk</li>
-</ul>
+            <p><strong>2. Deposit Decision:</strong> Decide how much to deposit.</p>
+            <ul>
+                <li>Deposited amount is taxed at 30%</li>
+                <li>Remaining stays as cash in hand and is not declared for tax purposes</li>
+                <li>Deposits are safe from audit</li>
+                <li>Cash has audit risk</li>
+            </ul>
 
-<p><strong>3. Mandatory Spending:</strong> Spend exactly 40
-ECU.</p>
-<ul>
-<li>Choose how much from deposit</li>
-<li>Choose how much from cash</li>
-<li>Must sum to 40 ECU</li>
-<li>Cash payments require typing a verification code</li>
-</ul>
+            <p><strong>3. Mandatory Spending:</strong> Spend exactly 40 ECU.</p>
+            <ul>
+                <li>Choose how much from deposit</li>
+                <li>Choose how much from cash</li>
+                <li>Must sum to 40 ECU</li>
+                <li>Cash payments require typing a verification code</li>
+            </ul>
 
-<p><strong>4. Random Audit:</strong> 5% chance each round.</p>
-<ul>
-<li>Pay 30% tax on all cash</li>
-<li>Pay fine = 2× the unpaid tax</li>
-<li>Total penalty deducted from deposit first</li>
-</ul>
+            <p><strong>4. Random Audit:</strong> 5% chance each round.</p>
+            <ul>
+                <li>Pay 30% tax on all cash in hand</li>
+                <li>Pay fine = 2× the unpaid tax</li>
+                <li>Total penalty deducted from deposit first</li>
+                <li>After penalty is paid, remaining cash is automatically moved into your deposit account (tax-free)</li>
+            </ul>
 
-<p><strong>5. Round Summary:</strong> See your updated
-balances.</p>
+            <p><strong>5. Round Summary:</strong> See your updated balances.</p>
 
-<div style="background: #e7f3ff; padding: 15px; border-radius: 5px;
-margin-top: 20px;">
-<strong>Example:</strong><br>
-Start: Deposit = 70, Cash = 30<br>
-Deposit 60 → Tax 18 → Add 42<br>
-New: Deposit = 112, Cash = 70<br>
-Spend: 20 cash + 20 deposit<br>
-Final: Deposit = 92, Cash = 50
-</div>
+            <div style="background: #e7f3ff; padding: 15px; border-radius: 5px; margin-top: 20px;">
+                <strong>Example:</strong><br>
+                Start: Deposit = 70, Cash = 30<br>
+                Deposit 60 → Tax 18 → Add 42 → New: Deposit = 112, Cash = 70<br>
+                Spend: 20 cash + 20 deposit → New: Deposit = 92, Cash = 50<br>
+                If audited: Tax = 15, Fine = 30, Penalty = 45<br>
+                Deposit after penalty = 92 − 45 = 47<br>
+                Remaining cash (50) moved to deposit → Final: Deposit = 97, Cash = 0
+            </div>
 
-<button type="button" class="btn btn-primary mt-3"
-onclick="closeInstructions()">Close</button>
-</div>
-</div>
+            <button type="button" class="btn btn-primary mt-3" onclick="closeInstructions()">Close</button>
+        </div>
+    </div>
 </div>
 
 <script>
 function showInstructions() {
-document.getElementById('instructionsModal').style.display =
-'block';
+    document.getElementById('instructionsModal').style.display = 'block';
 }
 function closeInstructions() {
-document.getElementById('instructionsModal').style.display =
-'none';
+    document.getElementById('instructionsModal').style.display = 'none';
 }
 window.onclick = function(event) {
-var modal = document.getElementById('instructionsModal');
-if (event.target == modal) {
-closeInstructions();
-}
+    var modal = document.getElementById('instructionsModal');
+    if (event.target == modal) {
+        closeInstructions();
+    }
 }
 </script>
 <!-- END: Instructions Button -->
 
 <div class="experiment-progress stagger-1">
-<div class="progress-label">Round {{ C.SHOCK_ROUND }} of {{
-C.NUM_ROUNDS }}</div>
-<div class="progress">
-<div class="progress-bar" role="progressbar" style="width: {{
-progress_pct }}%"
-aria-valuenow="{{ C.SHOCK_ROUND }}" aria-valuemin="0"
-aria-valuemax="{{ C.NUM_ROUNDS }}">
-</div>
-</div>
+    <div class="progress-label">Round {{ C.SHOCK_ROUND }} of {{ C.NUM_ROUNDS }}</div>
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: {{ progress_pct }}%"
+             aria-valuenow="{{ C.SHOCK_ROUND }}" aria-valuemin="0" aria-valuemax="{{ C.NUM_ROUNDS }}">
+        </div>
+    </div>
 </div>
 
 <div class="shock-banner stagger-2">
-<svg class="icon icon-xl icon-white" viewBox="0 0 24 24"
-fill="none" stroke="currentColor" stroke-width="2"
-stroke-linecap="round" stroke-linejoin="round"
-style="margin-bottom: 0.5rem;">
-<path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71
-3.86a2 2 0 00-3.42 0z"/>
-<line x1="12" y1="9" x2="12" y2="13"/>
-<line x1="12" y1="17" x2="12.01" y2="17"/>
-</svg>
-<h2>POLICY CHANGE</h2>
+    <svg class="icon icon-xl icon-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 0.5rem;">
+        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/>
+        <line x1="12" y1="17" x2="12.01" y2="17"/>
+    </svg>
+    <h2>POLICY CHANGE</h2>
 </div>
 
 <div class="card mb-4 stagger-3">
-<div class="card-body">
-<h3>
-<svg class="icon icon-md icon-danger" viewBox="0 0 24 24"
-fill="none" stroke="currentColor" stroke-width="2"
-stroke-linecap="round" stroke-linejoin="round" style="margin-right:
-0.4rem;">
-<circle cx="12" cy="12" r="10"/>
-<line x1="15" y1="9" x2="9" y2="15"/>
-<line x1="9" y1="9" x2="15" y2="15"/>
-</svg>
-Old Cash In Hand Is No Longer Valid
-</h3>
+    <div class="card-body">
+        <h3>
+            <svg class="icon icon-md icon-danger" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.4rem;">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="15" y1="9" x2="9" y2="15"/>
+                <line x1="9" y1="9" x2="15" y2="15"/>
+            </svg>
+            Old Cash In Hand Is No Longer Valid
+        </h3>
 
-{{ if is_sudden }}
-<p class="lead">Without prior warning, all old lab currency <strong>held as cash</strong>
-has been declared <strong>invalid</strong>. Your deposit balance is unaffected.</p>
-{{ else }}
-<p class="lead">As announced at the beginning, all old lab currency <strong>held as cash</strong>
-is now <strong>invalid</strong>. Your deposit balance is unaffected.</p>
-{{ endif }}
+        {{ if is_sudden }}
+        <p class="lead">Without prior warning, all old lab currency <strong>held as cash</strong> has been declared <strong>invalid</strong>. Your deposit balance is unaffected.</p>
+        {{ else }}
+        <p class="lead">As announced at the beginning, all old lab currency <strong>held as cash</strong> is now <strong>invalid</strong>. Your deposit balance is unaffected.</p>
+        {{ endif }}
 
-<div class="alert alert-warning mt-4">
-<div class="icon-header" style="margin-bottom: 0.5rem;">
-<svg class="icon icon-md" viewBox="0 0 24 24" fill="none"
-stroke="currentColor" stroke-width="2" stroke-linecap="round"
-stroke-linejoin="round" style="color: #92400E;">
-<rect x="2" y="6" width="20" height="12" rx="2"/>
-<circle cx="12" cy="12" r="3"/>
-</svg>
-<h4 class="mb-0">Your Old Cash Balance: {{ old_cash }}</h4>
-</div>
-<p class="mb-0">This cash is currently
-<strong>worthless</strong> unless you convert it.</p>
-</div>
+        <div class="alert alert-warning mt-4">
+            <div class="icon-header" style="margin-bottom: 0.5rem;">
+                <svg class="icon icon-md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #92400E;">
+                    <rect x="2" y="6" width="20" height="12" rx="2"/>
+                    <circle cx="12" cy="12" r="3"/>
+                </svg>
+                <h4 class="mb-0">Your Old Cash Balance: {{ old_cash }}</h4>
+            </div>
+            <p class="mb-0">This cash is currently <strong>worthless</strong> unless you convert it.</p>
+        </div>
 
-<h4 class="mt-4">
-<svg class="icon icon-sm icon-primary" viewBox="0 0 24 24"
-fill="none" stroke="currentColor" stroke-width="2"
-stroke-linecap="round" stroke-linejoin="round" style="margin-right:
-0.3rem;">
-<polyline points="23 4 11.5 15.5 6.5 10.5"/>
-<path d="M23 4l-9.5 9.5-5-5L1 16"/>
-</svg>
-How to Make Old Cash Valid:
-</h4>
-<p>You must <strong>deposit</strong> your old cash into your bank
-account. This is the ONLY way to preserve its value.</p>
+        <h4 class="mt-4">
+            <svg class="icon icon-sm icon-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.3rem;">
+                <polyline points="23 4 11.5 15.5 6.5 10.5"/>
+                <path d="M23 4l-9.5 9.5-5-5L1 16"/>
+            </svg>
+            How to Make Old Cash Valid:
+        </h4>
+        <p>You must <strong>deposit</strong> your old cash into your bank account. This is the ONLY way to preserve its value.</p>
 
-<p>
-<svg class="icon icon-sm icon-success" viewBox="0 0 24 24"
-fill="none" stroke="currentColor" stroke-width="2"
-stroke-linecap="round" stroke-linejoin="round" style="margin-right:
-0.3rem;">
-<path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
-<polyline points="22 4 12 14.01 9 11.01"/>
-</svg>
-<strong>Good News:</strong> Your existing deposit balance ({{
-current_deposit }}) is safe and unaffected.
-</p>
+        <p>
+            <svg class="icon icon-sm icon-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.3rem;">
+                <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            <strong>Good News:</strong> Your existing deposit balance ({{ current_deposit }}) is safe and unaffected.
+        </p>
 
-<div class="card bg-light mt-4 stagger-4">
-<div class="card-header">
-<div class="icon-header">
-<svg class="icon icon-sm" viewBox="0 0 24 24" fill="none"
-stroke="currentColor" stroke-width="2" stroke-linecap="round"
-stroke-linejoin="round" style="color: var(--color-text-secondary);
-margin-right: 0.3rem;">
-<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-</svg>
-<h5 class="mb-0">Audit Rules for Rounds 8–10</h5>
-</div>
-</div>
-<div class="card-body">
-<p>During rounds 8–10, the audit applies to <strong>both your cash in hand and the amount you convert today</strong>. If you are audited, tax and fines are calculated on the combined total of your current cash balance <strong>plus</strong> the amount you converted at the policy change.</p>
-<p>From round 11 onwards, converted money becomes safe — only your cash in hand is subject to audit, and the rate returns to 5% for everyone.</p>
-<p>Your personal audit rate for rounds 8–10 depends on how much old cash you convert:</p>
-<table class="table table-bordered mb-3">
-<thead>
-<tr>
-<th>Amount Converted</th>
-<th>Audit Rate (Rounds 8–10)</th>
-<th>What Is Audited</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1 – {{ C.TIER_1_THRESHOLD }} ECU</td>
-<td><strong>{{ C.TIER_1_AUDIT }}%</strong></td>
-<td rowspan="3" style="vertical-align:middle;">Cash in hand <strong>+</strong> converted amount</td>
-</tr>
-<tr class="table-warning">
-<td>51 – {{ C.TIER_2_THRESHOLD }} ECU</td>
-<td><strong>{{ C.TIER_2_AUDIT }}%</strong></td>
-</tr>
-<tr class="table-danger">
-<td>More than {{ C.TIER_2_THRESHOLD }} ECU</td>
-<td><strong>{{ C.TIER_3_AUDIT }}%</strong></td>
-</tr>
-</tbody>
-</table>
-<p class="mb-0"><small class="text-muted">After round 10, the audit rate returns to 5% and only cash in hand is audited — converted money is no longer at risk.</small></p>
+        <div class="card bg-light mt-4 stagger-4">
+            <div class="card-header">
+                <div class="icon-header">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-text-secondary); margin-right: 0.3rem;">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                    <h5 class="mb-0">Audit Rules for Rounds 8–10</h5>
+                </div>
+            </div>
+            <div class="card-body">
+                <p>During Rounds 8–10, an audit applies to <strong>both (i) your cash in hand and (ii) the amount you convert now </strong>. If you are audited, taxes and fines are calculated on the combined total of (i) your cash in hand and (ii) the amount you convert now.</p>
 
-</div>
-</div>
+                <p>If audited in Rounds 8–10:</p>
+                <ul>
+                    <li>Tax and fine are charged on <strong>(i) cash in hand + (ii) the untaxed converted amount</strong></li>
+                    <li>The penalty is deducted from your deposit account first</li>
+                    <li><strong>After the penalty is paid, all remaining cash in hand is automatically moved into your deposit account</strong> (tax-free, since the penalty has already been served)</li>
+                    <li>The converted amount is considered <strong>fully regularised after the first audit</strong> — it cannot be taxed or fined again in a later round</li>
+                </ul>
 
-{{ next_button }}
-</div>
+                <p>From Round 11 onwards, converted money becomes safe — only your cash in hand is subject to audit, and the audit rate returns to 5%.</p>
+
+                <p>Your audit rate for Rounds 8–10 depends on how much old cash you convert:</p>
+
+                <table class="table table-bordered mb-3">
+                    <thead>
+                        <tr>
+                            <th>Amount Converted</th>
+                            <th>Audit Rate (Rounds 8–10)</th>
+                            <th>What Is Audited</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1 – {{ C.TIER_1_THRESHOLD }} ECU</td>
+                            <td><strong>{{ C.TIER_1_AUDIT }}%</strong></td>
+                            <td rowspan="3" style="vertical-align: middle;">Cash in hand <strong>+</strong> untaxed converted amount</td>
+                        </tr>
+                        <tr class="table-warning">
+                            <td>51 – {{ C.TIER_2_THRESHOLD }} ECU</td>
+                            <td><strong>{{ C.TIER_2_AUDIT }}%</strong></td>
+                        </tr>
+                        <tr class="table-danger">
+                            <td>More than {{ C.TIER_2_THRESHOLD }} ECU</td>
+                            <td><strong>{{ C.TIER_3_AUDIT }}%</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p class="mb-0"><small class="text-muted">After Round 10, the audit rate returns to 5% and only cash in hand is audited — converted money is no longer at risk.</small></p>
+            </div>
+        </div>
+
+        {{ next_button }}
+    </div>
 </div>
 {{ endblock }}

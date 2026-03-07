@@ -114,9 +114,10 @@ ECU.</p>
 
 <p><strong>4. Random Audit:</strong> 5% chance each round.</p>
 <ul>
-<li>Pay 30% tax on all cash</li>
+<li>Pay 30% tax on all cash in hand</li>
 <li>Pay fine = 2× the unpaid tax</li>
 <li>Total penalty deducted from deposit first</li>
+<li>After penalty is paid, remaining cash automatically moved to deposit (tax-free)</li>
 </ul>
 
 <p><strong>5. Round Summary:</strong> See your updated
@@ -216,29 +217,59 @@ stroke-linecap="round" stroke-linejoin="round">
 <p><strong>{{ random_draw }}</strong> &le; <strong>{{
 audit_threshold }}</strong></p>
 
-<div class="section-divider"><span>Penalty
-Details</span></div>
+<div class="section-divider"><span>Penalty Details</span></div>
 
+{{ if in_elevated_window }}
+<!-- Rounds 8–10: show full cash + converted breakdown -->
+<table class="table table-bordered table-sm mb-3" style="font-size:0.92rem;">
+    <thead style="background:#1a3a5c; color:white;">
+        <tr>
+            <th>Component</th>
+            <th class="text-center">Amount at risk</th>
+            <th class="text-center">Tax (30%)</th>
+            <th class="text-center">Fine (2× tax)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Cash in hand</strong></td>
+            <td class="text-center">{{ cash_balance }}</td>
+            <td class="text-center">{{ cash_tax }}</td>
+            <td class="text-center">{{ cash_fine }}</td>
+        </tr>
+        <tr>
+            <td><strong>Converted old cash</strong></td>
+            <td class="text-center">{{ converted_at_risk }}</td>
+            <td class="text-center">{{ converted_tax }}</td>
+            <td class="text-center">{{ converted_fine }}</td>
+        </tr>
+        <tr style="background:#fff5f5; font-weight:700;">
+            <td><strong>Total</strong></td>
+            <td class="text-center">{{ cash_balance }}  +  {{ converted_at_risk }}</td>
+            <td class="text-center">{{ tax_evaded }}</td>
+            <td class="text-center">{{ fine }}</td>
+        </tr>
+    </tbody>
+</table>
+<p class="text-muted" style="font-size:0.85rem;">
+    Total penalty = tax ({{ tax_evaded }}) + fine ({{ fine }} − {{ tax_evaded }}) = <strong>{{ fine }}</strong>
+</p>
+{{ else }}
+<!-- Normal rounds: simple display -->
 <p><strong>Your cash balance:</strong> {{ cash_balance }}</p>
-<p><strong>Tax owed on cash:</strong> {{ tax_evaded }}</p>
+<p><strong>Tax owed on cash (30%):</strong> {{ tax_evaded }}</p>
+{{ endif }}
 
-<div class="card" style="border: 2px solid var(--color-danger);
-background: var(--color-danger-bg);">
-<div class="card-body text-center">
-<svg class="icon icon-lg icon-danger" viewBox="0 0 24 24"
-fill="none" stroke="currentColor" stroke-width="2"
-stroke-linecap="round" stroke-linejoin="round"
-style="margin-bottom: 0.3rem;">
-<path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71
-3.86a2 2 0 00-3.42 0z"/>
-<line x1="12" y1="9" x2="12" y2="13"/>
-<line x1="12" y1="17" x2="12.01" y2="17"/>
-</svg>
-<h4 style="color: var(--color-danger);"><strong>Total penalty
-paid: {{ fine }}</strong></h4>
-<p class="mb-0 text-muted">This amount has been deducted from your
-deposit account (and cash if needed).</p>
-</div>
+<div class="card" style="border: 2px solid var(--color-danger); background: var(--color-danger-bg);">
+    <div class="card-body text-center">
+        <svg class="icon icon-lg icon-danger" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 0.3rem;">
+            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        <h4 style="color: var(--color-danger);"><strong>Total penalty paid: {{ fine }}</strong></h4>
+        <p class="mb-0 text-muted">Deducted from your deposit account first (then cash if needed). Any remaining cash has been moved to your deposit account.</p>
+    </div>
 </div>
 </div>
 </div>

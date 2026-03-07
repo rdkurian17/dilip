@@ -108,9 +108,10 @@
 
             <p><strong>4. Random Audit:</strong> 5% chance each round.</p>
             <ul>
-                <li>Pay 30% tax on all cash</li>
+                <li>Pay 30% tax on all cash in hand</li>
                 <li>Pay fine = 2× the unpaid tax</li>
                 <li>Total penalty deducted from deposit first</li>
+                <li>After penalty is paid, remaining cash automatically moved to deposit (tax-free)</li>
             </ul>
 
             <p><strong>5. Round Summary:</strong> See your updated balances.</p>
@@ -152,6 +153,10 @@ window.onclick = function(event) {
 <input type="hidden" name="quiz_q1" id="hid_q1" value="">
 <input type="hidden" name="quiz_q2" id="hid_q2" value="">
 <input type="hidden" name="quiz_q3" id="hid_q3" value="">
+<!-- First-attempt correctness tracking -->
+<input type="hidden" name="quiz_q1_first_correct" id="hid_q1_first" value="False">
+<input type="hidden" name="quiz_q2_first_correct" id="hid_q2_first" value="False">
+<input type="hidden" name="quiz_q3_first_correct" id="hid_q3_first" value="False">
 
 <style>
 .quiz-wrap { max-width: 700px; margin: 0 auto; }
@@ -401,6 +406,10 @@ function checkAnswer(q, correct) {
 
     // Store value in hidden field regardless of correct/incorrect
     document.getElementById('hid_q' + q).value = userVal;
+    // Record whether first attempt was correct
+    if (userVal === correct) {
+        document.getElementById('hid_q' + q + '_first').value = 'True';
+    }
     answered[q] = true;
 
     // Update progress dot

@@ -34,6 +34,15 @@ SESSION_CONFIG_DEFAULTS = dict(
     doc="Demonetisation experiment on tax compliance and liquidity shock",
 )
 
+ROOMS = [
+    dict(
+        name='essexlab',
+        display_name='Essex Lab',
+        participant_label_file='participant_labels.txt',
+        use_secure_urls=False,
+    ),
+]
+
 PARTICIPANT_FIELDS = ['treatment']
 SESSION_FIELDS = []
 

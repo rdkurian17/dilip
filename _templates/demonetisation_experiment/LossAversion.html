@@ -1,6 +1,6 @@
 {{ extends 'global/Page.html' }}
 
-{{ block title }}Survey{{ endblock }}
+{{ block title }}Attitude to Losses{{ endblock }}
 
 {{ block content }}
 <style>
@@ -27,13 +27,14 @@
 label.radio-cell{cursor:pointer;display:flex;align-items:center;justify-content:center}
 #validation-msg{display:none;background:#fff0f0;border:1.5px solid #e74c3c;border-radius:8px;padding:0.9rem 1.2rem;margin-bottom:1rem;color:#c0392b;font-size:0.9rem;font-weight:600}
 </style>
+
 <div class="survey-wrap">
 <div class="survey-header">
 <h3>&#128200; Task 2</h3>
-<p>Page 3 of 4 — Post-experiment questionnaire</p>
+<p>Page 4 of 5 — Post-experiment questionnaire</p>
 </div>
 <div class="survey-body">
-<div class="section-label">Loss Aversion Scale</div>
+<div class="section-label">Attitude to Losses</div>
 <div class="task-instruction">Please read each statement and indicate how much you <strong>agree or disagree</strong> using the scale below. There are no right or wrong answers — please answer based on how you personally think and feel.</div>
 <table class="matrix-table">
 <thead><tr>
@@ -65,16 +66,25 @@ label.radio-cell{cursor:pointer;display:flex;align-items:center;justify-content:
 <script>
 (function(){
 var required=['loss_1','loss_2','loss_3','loss_4','loss_5','loss_6','loss_7','loss_8'];
+
+// FIX: Only highlight unanswered rows — never called on change, only on submit attempt
 function highlightUnanswered(){
   var allOk=true;
   required.forEach(function(name){
     var answered=document.querySelector('input[name="'+name+'"]:checked');
     var row=document.querySelector('input[name="'+name+'"]').closest('tr');
-    if(!answered){allOk=false;row.style.background='#fff5f5';row.style.outline='2px solid #e74c3c';}
-    else{row.style.background='';row.style.outline='';}
+    if(!answered){
+      allOk=false;
+      row.style.background='#fff5f5';
+      row.style.outline='2px solid #e74c3c';
+    } else {
+      row.style.background='';
+      row.style.outline='';
+    }
   });
   return allOk;
 }
+
 document.addEventListener('submit',function(e){
   var ok=highlightUnanswered();
   if(!ok){
@@ -85,11 +95,16 @@ document.addEventListener('submit',function(e){
     msg.scrollIntoView({behavior:'smooth',block:'center'});
   }
 },true);
+
+// FIX: On change, only CLEAR the highlight for the row just answered — do NOT call highlightUnanswered()
 document.querySelectorAll('input[type="radio"]').forEach(function(r){
   r.addEventListener('change',function(){
-    highlightUnanswered();
+    var row=r.closest('tr');
+    row.style.background='';
+    row.style.outline='';
+    // Hide validation banner only if all are now answered
     var anyLeft=required.some(function(n){return !document.querySelector('input[name="'+n+'"]:checked');});
-    if(!anyLeft)document.getElementById('validation-msg').style.display='none';
+    if(!anyLeft) document.getElementById('validation-msg').style.display='none';
   });
 });
 })();
