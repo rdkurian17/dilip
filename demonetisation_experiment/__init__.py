@@ -4,7 +4,6 @@ import string
 
 doc = """Demonetisation Experiment: Tax compliance and liquidity shock"""
 
-# Module-level constant --- safe to reference inside Player field definitions
 LIKERT_CHOICES = [
     [1, "Strongly Disagree"],
     [2, "Disagree"],
@@ -15,7 +14,6 @@ LIKERT_CHOICES = [
     [7, "Strongly Agree"],
 ]
 
-# HEXACO Honesty-Humility uses a 5-point scale
 HEXACO_CHOICES = [
     [1, "Strongly Disagree"],
     [2, "Disagree"],
@@ -29,21 +27,18 @@ class C(BaseConstants):
     NAME_IN_URL = 'demonetisation_experiment'
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 15
-    # Economic parameters
     ENDOWMENT = cu(100)
     TAX_RATE = 0.30
     MANDATORY_SPENDING = cu(40)
-    BASE_AUDIT_PROB = 5  # out of 100
-    FINE_MULTIPLIER = 2  # fine = 2x unpaid tax; total penalty = tax + fine = 3x tax
-    # Shock timing
+    BASE_AUDIT_PROB = 5
+    FINE_MULTIPLIER = 2
     SHOCK_ROUND = 8
     ELEVATED_AUDIT_END = 10
-    # Audit probability tiers based on conversion amount
-    TIER_1_THRESHOLD = 50   # 1-50 ECU
-    TIER_2_THRESHOLD = 100  # 51-100 ECU
-    TIER_1_AUDIT = 10       # 1-50: 10%
-    TIER_2_AUDIT = 15       # 51-100: 15%
-    TIER_3_AUDIT = 20       # >100: 20%
+    TIER_1_THRESHOLD = 50
+    TIER_2_THRESHOLD = 100
+    TIER_1_AUDIT = 10
+    TIER_2_AUDIT = 15
+    TIER_3_AUDIT = 20
 
 
 class Subsession(BaseSubsession):
@@ -65,62 +60,33 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
-    # Treatment (assigned automatically in creating_session)
     treatment = models.StringField(initial='')
 
-    # Main decision: allocation
-    deposit_decision = models.CurrencyField(
-        min=0,
-        max=C.ENDOWMENT,
-        label="Amount to deposit:"
-    )
+    deposit_decision = models.CurrencyField(min=0, max=C.ENDOWMENT, label="Amount to deposit:")
 
-    # Calculated amounts after allocation
     cash_kept = models.CurrencyField(initial=0)
     tax_paid_this_round = models.CurrencyField(initial=0)
     deposit_after_tax = models.CurrencyField(initial=0)
 
-    # Balances BEFORE spending (snapshots used for display/validation)
     deposit_before_spending = models.CurrencyField(initial=0)
     cash_before_spending = models.CurrencyField(initial=0)
 
-    # Spending decisions
-    spend_from_cash = models.CurrencyField(
-        min=0,
-        initial=0,
-        label="Amount to spend from cash:"
-    )
-    spend_from_deposit = models.CurrencyField(
-        min=0,
-        initial=0,
-        label="Amount to spend from deposit:"
-    )
+    spend_from_cash = models.CurrencyField(min=0, initial=0, label="Amount to spend from cash:")
+    spend_from_deposit = models.CurrencyField(min=0, initial=0, label="Amount to spend from deposit:")
 
-    # Cash payment friction
     cash_verification_code = models.StringField(initial='')
     cash_verification_entry = models.StringField(
-        blank=True,
-        initial='',
+        blank=True, initial='',
         label="Type the code exactly as shown to confirm cash payment:"
     )
 
-    # Cumulative balances (carried forward)
     total_deposit = models.CurrencyField(initial=0)
     total_cash = models.CurrencyField(initial=0)
 
-    # Round 8 conversion
     conversion_amount = models.CurrencyField(min=0, initial=0)
     cash_lost = models.CurrencyField(initial=0)
-
-    # -----------------------------------------------------------------------
-    # FIX (Issue 2): Track how much of the converted amount has NOT yet been
-    # taxed/fined during rounds 8-10.  When an audit hits in that window the
-    # full conversion_amount is charged, then this field is zeroed so it
-    # cannot be charged again in a later round of the same window.
-    # -----------------------------------------------------------------------
     conversion_untaxed = models.CurrencyField(initial=0)
 
-    # Audit (safe defaults to avoid None errors)
     audit_probability = models.IntegerField(initial=0)
     random_draw = models.IntegerField(initial=0)
     was_audited = models.BooleanField(initial=False)
@@ -128,19 +94,15 @@ class Player(BasePlayer):
     tax_evaded_found = models.CurrencyField(initial=0)
     personal_audit_rate = models.IntegerField(initial=C.BASE_AUDIT_PROB)
 
-    # Cumulative tracking
     total_tax_paid = models.CurrencyField(initial=0)
     total_fines_paid = models.CurrencyField(initial=0)
 
-    # -----------------------------------------------------------------------
-    # Consent page: participant identification
-    # -----------------------------------------------------------------------
+    # Consent
     participant_full_name = models.StringField(label="Full name:")
     participant_email = models.StringField(label="Email address:")
     seat_number = models.IntegerField(label="Seat / PC number:", min=1, max=32)
 
-    # Post-survey: Demographics & trust (PostSurvey page)
-    # -----------------------------------------------------------------------
+    # Post-survey demographics
     age = models.IntegerField(label="Your age:", min=18, max=100)
     country_of_origin = models.StringField(label="Country of origin:")
     gender = models.StringField(
@@ -154,81 +116,26 @@ class Player(BasePlayer):
         widget=widgets.RadioSelect,
     )
 
-    # -----------------------------------------------------------------------
-    # Tax Morale - WVS single item (1-10 scale)
-    # On PostSurvey page, displayed as horizontal slider
-    # -----------------------------------------------------------------------
-    tax_morale = models.IntegerField(
-        label="Cheating on taxes if you have a chance.",
-        min=1, max=10,
-    )
+    # Tax morale
+    tax_morale = models.IntegerField(label="Cheating on taxes if you have a chance.", min=1, max=10)
 
-    # -----------------------------------------------------------------------
-    # Risk preference (Eckel-Grossman task) - RiskTaskEG page
-    # -----------------------------------------------------------------------
-    eg_choice = models.IntegerField(
-        choices=[
-            [1, "Option 1"],
-            [2, "Option 2"],
-            [3, "Option 3"],
-            [4, "Option 4"],
-            [5, "Option 5"],
-            [6, "Option 6"],
-        ],
-        widget=widgets.RadioSelect,
-        label="Please choose ONE option.",
-    )
-    eg_risk_type = models.StringField(initial='')
-
-    # -----------------------------------------------------------------------
-    # Risk attitude questions (4-domain, 0-10 scale)
-    # Displayed as horizontal sliders on RiskTaskEG page
-    # -----------------------------------------------------------------------
-    risk_general = models.IntegerField(label='How willing are you to take risks in general?', min=0, max=10)
+    # Risk attitudes (4-domain, 0-10 sliders)
+    risk_general  = models.IntegerField(label='How willing are you to take risks in general?', min=0, max=10)
     risk_financial = models.IntegerField(label='How willing are you to take risks in financial matters?', min=0, max=10)
-    risk_career = models.IntegerField(label='How willing are you to take risks in your occupation or career?', min=0, max=10)
-    risk_health = models.IntegerField(label='How willing are you to take risks regarding your health?', min=0, max=10)
+    risk_career   = models.IntegerField(label='How willing are you to take risks in your occupation or career?', min=0, max=10)
+    risk_health   = models.IntegerField(label='How willing are you to take risks regarding your health?', min=0, max=10)
 
-    # -----------------------------------------------------------------------
-    # Loss Aversion Scale - Li et al. (2021)
-    # 8 items, 7-point scale; items 5 & 8 are reverse coded
-    # -----------------------------------------------------------------------
-    loss_1 = models.IntegerField(
-        label="When making a decision, I think much more about what might be lost than what might be gained.",
-        choices=LIKERT_CHOICES, widget=widgets.RadioSelect,
-    )
-    loss_2 = models.IntegerField(
-        label="The pain of losing money matters more than the pleasure of gaining the same amount of money.",
-        choices=LIKERT_CHOICES, widget=widgets.RadioSelect,
-    )
-    loss_3 = models.IntegerField(
-        label="I feel nervous when I have to make a decision that may lead to loss.",
-        choices=LIKERT_CHOICES, widget=widgets.RadioSelect,
-    )
-    loss_4 = models.IntegerField(
-        label="The pain from losing something matters much more to me than the pleasure from getting it.",
-        choices=LIKERT_CHOICES, widget=widgets.RadioSelect,
-    )
-    loss_5 = models.IntegerField(
-        label="Avoiding failure is less important to me than seeking success.",
-        choices=LIKERT_CHOICES, widget=widgets.RadioSelect,
-    )
-    loss_6 = models.IntegerField(
-        label="Experiencing a major loss stays in my mind longer than experiencing a major gain.",
-        choices=LIKERT_CHOICES, widget=widgets.RadioSelect,
-    )
-    loss_7 = models.IntegerField(
-        label="A potential failure scares me more than a potential success encourages me.",
-        choices=LIKERT_CHOICES, widget=widgets.RadioSelect,
-    )
-    loss_8 = models.IntegerField(
-        label="The suffering that comes with losses can be fully offset by the pleasure that comes from gains.",
-        choices=LIKERT_CHOICES, widget=widgets.RadioSelect,
-    )
+    # Loss Aversion Scale
+    loss_1 = models.IntegerField(label="When making a decision, I think much more about what might be lost than what might be gained.", choices=LIKERT_CHOICES, widget=widgets.RadioSelect)
+    loss_2 = models.IntegerField(label="The pain of losing money matters more than the pleasure of gaining the same amount of money.", choices=LIKERT_CHOICES, widget=widgets.RadioSelect)
+    loss_3 = models.IntegerField(label="I feel nervous when I have to make a decision that may lead to loss.", choices=LIKERT_CHOICES, widget=widgets.RadioSelect)
+    loss_4 = models.IntegerField(label="The pain from losing something matters much more to me than the pleasure from getting it.", choices=LIKERT_CHOICES, widget=widgets.RadioSelect)
+    loss_5 = models.IntegerField(label="Avoiding failure is less important to me than seeking success.", choices=LIKERT_CHOICES, widget=widgets.RadioSelect)
+    loss_6 = models.IntegerField(label="Experiencing a major loss stays in my mind longer than experiencing a major gain.", choices=LIKERT_CHOICES, widget=widgets.RadioSelect)
+    loss_7 = models.IntegerField(label="A potential failure scares me more than a potential success encourages me.", choices=LIKERT_CHOICES, widget=widgets.RadioSelect)
+    loss_8 = models.IntegerField(label="The suffering that comes with losses can be fully offset by the pleasure that comes from gains.", choices=LIKERT_CHOICES, widget=widgets.RadioSelect)
 
-    # -----------------------------------------------------------------------
-    # HEXACO-60 Honesty-Humility - 10 items, 5-point scale
-    # -----------------------------------------------------------------------
+    # HEXACO Honesty-Humility
     hh_1  = models.IntegerField(label="I wouldn't use flattery to get a raise or promotion at work.", choices=HEXACO_CHOICES, widget=widgets.RadioSelect)
     hh_2  = models.IntegerField(label="I'm interested in making money primarily to have a luxurious lifestyle.", choices=HEXACO_CHOICES, widget=widgets.RadioSelect)
     hh_3  = models.IntegerField(label="I wouldn't pretend to like someone just to get that person to do favors for me.", choices=HEXACO_CHOICES, widget=widgets.RadioSelect)
@@ -240,23 +147,19 @@ class Player(BasePlayer):
     hh_9  = models.IntegerField(label="I wouldn't want people to treat me as though I were superior to them.", choices=HEXACO_CHOICES, widget=widgets.RadioSelect)
     hh_10 = models.IntegerField(label="I would like to know how to make lots of money in a dishonest manner.", choices=HEXACO_CHOICES, widget=widgets.RadioSelect)
 
-    # Comprehension quiz — recorded answer
+    # Comprehension quiz
     quiz_q1 = models.StringField(blank=True, initial='', label="Your answer:")
     quiz_q2 = models.StringField(blank=True, initial='', label="Your answer:")
     quiz_q3 = models.StringField(blank=True, initial='', label="Your answer:")
-    # Whether each question was correct on the FIRST attempt
     quiz_q1_first_correct = models.BooleanField(initial=False)
     quiz_q2_first_correct = models.BooleanField(initial=False)
     quiz_q3_first_correct = models.BooleanField(initial=False)
 
-    # ---------- Helper properties ----------
     @property
     def progress_pct(self):
         return int(self.round_number / C.NUM_ROUNDS * 100)
 
-    # ---------- Helper methods ----------
     def generate_verification_code(self):
-        """Generate a random code mixing letters and numbers."""
         code_parts = [
             random.choice(string.ascii_uppercase),
             random.choice(string.ascii_lowercase),
@@ -269,7 +172,6 @@ class Player(BasePlayer):
         return ''.join(code_parts)
 
     def calculate_personal_audit_rate(self):
-        """Audit rate (rounds 8-10) based on how much old cash is converted in round 8."""
         amt = self.conversion_amount or 0
         if amt == 0:
             return C.BASE_AUDIT_PROB
@@ -281,7 +183,6 @@ class Player(BasePlayer):
             return C.TIER_3_AUDIT
 
     def get_audit_probability(self):
-        """Audit probability for this round."""
         if self.treatment == 'baseline':
             return C.BASE_AUDIT_PROB
         if self.round_number < C.SHOCK_ROUND:
@@ -292,7 +193,6 @@ class Player(BasePlayer):
             return C.BASE_AUDIT_PROB
 
     def carry_forward(self):
-        """Copy cumulative state from previous round into this round."""
         if self.round_number > 1:
             prev = self.in_round(self.round_number - 1)
             self.total_deposit = prev.total_deposit
@@ -300,13 +200,9 @@ class Player(BasePlayer):
             self.personal_audit_rate = prev.personal_audit_rate
             self.total_tax_paid = prev.total_tax_paid
             self.total_fines_paid = prev.total_fines_paid
-            # Carry conversion tracking forward through the elevated window.
-            # conversion_amount is the original amount (for reference/display).
-            # conversion_untaxed is the remaining taxable portion — it gets
-            # zeroed after the first audit hit so it is never charged twice.
             if self.round_number <= C.ELEVATED_AUDIT_END:
                 self.conversion_amount = prev.conversion_amount
-                self.conversion_untaxed = prev.conversion_untaxed  # may already be 0
+                self.conversion_untaxed = prev.conversion_untaxed
 
         self.treatment = self.participant.vars.get('treatment', self.treatment or '')
         self.was_audited = False
@@ -314,6 +210,8 @@ class Player(BasePlayer):
         self.tax_evaded_found = cu(0)
         self.random_draw = 0
         self.audit_probability = 0
+        # Reset verification code each round so a fresh one is generated
+        self.cash_verification_code = ''
 
         if self.round_number == 1:
             self.personal_audit_rate = C.BASE_AUDIT_PROB
@@ -360,8 +258,10 @@ class Instructions(Page):
 
 class ComprehensionQuiz(Page):
     form_model = 'player'
-    form_fields = ['quiz_q1', 'quiz_q2', 'quiz_q3',
-                   'quiz_q1_first_correct', 'quiz_q2_first_correct', 'quiz_q3_first_correct']
+    form_fields = [
+        'quiz_q1', 'quiz_q2', 'quiz_q3',
+        'quiz_q1_first_correct', 'quiz_q2_first_correct', 'quiz_q3_first_correct',
+    ]
 
     @staticmethod
     def is_displayed(player: Player):
@@ -369,11 +269,7 @@ class ComprehensionQuiz(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        return dict(
-            correct_q1='70',
-            correct_q2='45',
-            correct_q3='5',
-        )
+        return dict(correct_q1='70', correct_q2='45', correct_q3='5')
 
 
 class ShockAnnouncement(Page):
@@ -421,25 +317,21 @@ class ConversionDecision(Page):
     @staticmethod
     def vars_for_template(player: Player):
         prev = player.in_round(C.SHOCK_ROUND - 1)
-        return dict(
-            old_cash=prev.total_cash,
-            progress_pct=player.progress_pct,
-        )
+        return dict(old_cash=prev.total_cash, progress_pct=player.progress_pct)
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
-        entered_conversion = player.conversion_amount or 0  # save BEFORE carry_forward overwrites it
+        # Save entered value BEFORE carry_forward overwrites conversion_amount with prev round's 0
+        entered_conversion = player.conversion_amount or 0
         player.carry_forward()
         prev = player.in_round(C.SHOCK_ROUND - 1)
         old_cash = prev.total_cash
         converted = min(entered_conversion, old_cash)
-
-        player.conversion_amount = converted          # original converted total (kept for reference)
-        player.conversion_untaxed = converted         # starts equal; will be zeroed after first audit hit
+        player.conversion_amount = converted
+        player.conversion_untaxed = converted
         player.cash_lost = old_cash - converted
-
-        player.total_deposit += converted             # move old cash into deposit (no tax at conversion)
-        player.total_cash = 0
+        player.total_deposit += converted
+        player.total_cash = cu(0)
         player.personal_audit_rate = player.calculate_personal_audit_rate()
 
 
@@ -484,7 +376,6 @@ class AllocationDecision(Page):
                     audit_prob = player.get_audit_probability()
             else:
                 audit_prob = C.BASE_AUDIT_PROB
-
         return dict(
             round_num=player.round_number,
             current_deposit=current_deposit,
@@ -497,16 +388,13 @@ class AllocationDecision(Page):
     def before_next_page(player: Player, timeout_happened):
         if not (player.round_number == C.SHOCK_ROUND and player.treatment != 'baseline'):
             player.carry_forward()
-
         deposited = player.deposit_decision or 0
         player.cash_kept = C.ENDOWMENT - deposited
         player.tax_paid_this_round = deposited * C.TAX_RATE
         player.deposit_after_tax = deposited - player.tax_paid_this_round
-
         player.total_deposit += player.deposit_after_tax
         player.total_cash += player.cash_kept
         player.total_tax_paid += player.tax_paid_this_round
-
         player.deposit_before_spending = player.total_deposit
         player.cash_before_spending = player.total_cash
 
@@ -532,7 +420,11 @@ class SpendingDecision(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        player.cash_verification_code = player.generate_verification_code()
+        # FIX: Only generate a new code if one hasn't been set yet this round.
+        # vars_for_template is called again on validation errors — regenerating
+        # every call means the stored code never matches what the player typed.
+        if not player.cash_verification_code:
+            player.cash_verification_code = player.generate_verification_code()
         return dict(
             round_num=player.round_number,
             deposit_balance=player.deposit_before_spending,
@@ -583,42 +475,22 @@ class SpendingDecision(Page):
 class AuditOutcome(Page):
     @staticmethod
     def vars_for_template(player: Player):
-        # -----------------------------------------------------------------------
-        # Determine whether audited and compute the penalty for display.
-        # vars_for_template runs BEFORE before_next_page so we derive the result
-        # from random_draw here (before_next_page does the actual accounting).
-        # -----------------------------------------------------------------------
         audited = player.random_draw <= (player.audit_probability or 0)
-
         in_elevated_window = (
             player.treatment != 'baseline'
             and C.SHOCK_ROUND <= player.round_number <= C.ELEVATED_AUDIT_END
         )
-
-        # FIX (Issue 2): Only the *untaxed* portion of converted cash is at risk.
-        # After the first audit in rounds 8-10, conversion_untaxed will be 0.
         converted_at_risk = player.conversion_untaxed if in_elevated_window else cu(0)
-
-        # FIX (Issue 1): The auditable cash base is just total_cash — after
-        # the audit the remaining cash will be moved to deposit.
         auditable_base = player.total_cash + converted_at_risk
-
         if audited:
-            evaded_tax = auditable_base * C.TAX_RATE
-            total_penalty = evaded_tax + (evaded_tax * C.FINE_MULTIPLIER)
-            # Per-component breakdown for display
+            evaded_tax     = auditable_base * C.TAX_RATE
+            total_penalty  = evaded_tax + (evaded_tax * C.FINE_MULTIPLIER)
             cash_tax       = player.total_cash * C.TAX_RATE
             cash_fine      = cash_tax * C.FINE_MULTIPLIER
             converted_tax  = converted_at_risk * C.TAX_RATE
             converted_fine = converted_tax * C.FINE_MULTIPLIER
         else:
-            evaded_tax     = cu(0)
-            total_penalty  = cu(0)
-            cash_tax       = cu(0)
-            cash_fine      = cu(0)
-            converted_tax  = cu(0)
-            converted_fine = cu(0)
-
+            evaded_tax = total_penalty = cash_tax = cash_fine = converted_tax = converted_fine = cu(0)
         return dict(
             was_audited=audited,
             random_draw=player.random_draw,
@@ -628,7 +500,6 @@ class AuditOutcome(Page):
             cash_balance=player.total_cash,
             converted_at_risk=converted_at_risk,
             in_elevated_window=in_elevated_window,
-            # Breakdown components
             cash_tax=cash_tax,
             cash_fine=cash_fine,
             converted_tax=converted_tax,
@@ -643,43 +514,27 @@ class AuditOutcome(Page):
             player.treatment != 'baseline'
             and C.SHOCK_ROUND <= player.round_number <= C.ELEVATED_AUDIT_END
         )
-
-        # FIX (Issue 2): Use conversion_untaxed (not conversion_amount) so the
-        # converted portion can only be charged once.
         converted_at_risk = player.conversion_untaxed if in_elevated_window else cu(0)
         auditable_base = player.total_cash + converted_at_risk
 
         if player.random_draw <= (player.audit_probability or 0):
             player.was_audited = True
-
             evaded_tax    = auditable_base * C.TAX_RATE
             fine_only     = evaded_tax * C.FINE_MULTIPLIER
             total_penalty = evaded_tax + fine_only
-
             player.tax_evaded_found = evaded_tax
             player.fine_paid        = total_penalty
             player.total_fines_paid += total_penalty
-
-            # Deduct penalty from deposit first, then from cash if needed
             if player.total_deposit >= total_penalty:
                 player.total_deposit -= total_penalty
             else:
                 remaining = total_penalty - player.total_deposit
                 player.total_deposit = cu(0)
                 player.total_cash = max(cu(0), player.total_cash - remaining)
-
-            # FIX (Issue 2): Zero out the untaxed conversion so it cannot be
-            # charged again in subsequent rounds of the elevated window.
             if in_elevated_window:
                 player.conversion_untaxed = cu(0)
-
-            # FIX (Issue 1): After paying tax+fine, move ALL remaining cash
-            # into the deposit account (tax-free — penalty already served).
-            # Any cash spent from the spending step is already gone; only the
-            # remainder sitting as cash is formalised here.
             player.total_deposit += player.total_cash
             player.total_cash = cu(0)
-
         else:
             player.was_audited = False
             player.fine_paid = cu(0)
@@ -716,7 +571,6 @@ class PostSurvey(Page):
 
 
 class TaxMorale(Page):
-    """Attitudes & Beliefs — tax morale slider on its own page."""
     form_model = 'player'
     form_fields = ['tax_morale']
 
@@ -735,7 +589,6 @@ class RiskTaskEG(Page):
 
 
 class LossAversion(Page):
-    """Loss Aversion Scale - Li et al. (2021), 8 items, 7-point scale."""
     form_model = 'player'
     form_fields = ['loss_1', 'loss_2', 'loss_3', 'loss_4', 'loss_5', 'loss_6', 'loss_7', 'loss_8']
 
@@ -745,8 +598,6 @@ class LossAversion(Page):
 
 
 class RuleBreaking(Page):
-    """HEXACO-60 Honesty-Humility subscale - 10 items, 5-point scale.
-    HTML file: RuleBreaking.html  |  Fields: hh_1 to hh_10"""
     form_model = 'player'
     form_fields = ['hh_1', 'hh_2', 'hh_3', 'hh_4', 'hh_5', 'hh_6', 'hh_7', 'hh_8', 'hh_9', 'hh_10']
 
