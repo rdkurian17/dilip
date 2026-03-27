@@ -176,9 +176,9 @@ window.onclick = function(event) {
         </h3>
 
         {{ if is_sudden }}
-        <p class="lead">Without prior warning, all old lab currency <strong>held as cash</strong> has been declared <strong>invalid</strong>. Your deposit balance is unaffected.</p>
+        <p class="lead">Without prior warning, <strong>all cash held from earlier rounds</strong> has been declared <strong>invalid</strong>. Your deposit balance is unaffected.</p>
         {{ else }}
-        <p class="lead">As announced at the beginning, all old lab currency <strong>held as cash</strong> is now <strong>invalid</strong>. Your deposit balance is unaffected.</p>
+        <p class="lead">As announced at the beginning, <strong>all cash held from earlier rounds</strong> is now <strong>invalid</strong>. Your deposit balance is unaffected.</p>
         {{ endif }}
 
         <div class="alert alert-warning mt-4">
@@ -189,7 +189,7 @@ window.onclick = function(event) {
                 </svg>
                 <h4 class="mb-0">Your Old Cash Balance: {{ old_cash }}</h4>
             </div>
-            <p class="mb-0">This cash is currently <strong>worthless</strong> unless you convert it.</p>
+            <p class="mb-0">Your old cash is now <strong>worthless</strong> unless you convert it by transferring it into your deposit account.</p>
         </div>
 
         <h4 class="mt-4">
@@ -197,15 +197,16 @@ window.onclick = function(event) {
                 <polyline points="23 4 11.5 15.5 6.5 10.5"/>
                 <path d="M23 4l-9.5 9.5-5-5L1 16"/>
             </svg>
-            How to Make Old Cash Valid:
+            How to Preserve the Value of Your Old Cash:
         </h4>
-        <p>You must <strong>deposit</strong> your old cash into your bank account. This is the ONLY way to preserve its value.</p>
+        <p>You may choose to convert any amount of your old cash by transferring it into your deposit account now. This is the <strong>ONLY</strong> way to preserve its value.</p>
 
         <p>
             <svg class="icon icon-sm icon-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.3rem;">
                 <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
                 <polyline points="22 4 12 14.01 9 11.01"/>
             </svg>
+            <strong>Important:</strong> This conversion is not taxed immediately. However, during Rounds 8–10, converted money is temporarily exposed to audit.
             <strong>Good News:</strong> Your existing deposit balance ({{ current_deposit }}) is safe and unaffected.
         </p>
 
@@ -219,22 +220,34 @@ window.onclick = function(event) {
                 </div>
             </div>
             <div class="card-body">
-                <p>During Rounds 8–10, an audit applies to <strong>both (i) your cash in hand and (ii) the amount you convert now </strong>. If you are audited, taxes and fines are calculated on the combined total of (i) your cash in hand and (ii) the amount you convert now.</p>
+
+                <p>For the next three rounds, an audit applies to <strong>both:</strong></p>
+                <ol>
+                    <li>your cash in hand, and</li>
+                    <li>any converted amount that has not yet been taxed.</li>
+                </ol>
 
                 <p>If audited in Rounds 8–10:</p>
                 <ul>
-                    <li>Tax and fine are charged on <strong>(i) cash in hand + (ii) the untaxed converted amount</strong></li>
-                    <li>The penalty is deducted from your deposit account first</li>
-                    <li><strong>After the penalty is paid, all remaining cash in hand is automatically moved into your deposit account</strong> (tax-free, since the penalty has already been served)</li>
-                    <li>The converted amount is considered <strong>fully regularised after the first audit</strong> — it cannot be taxed or fined again in a later round</li>
+                    <li><strong>Tax</strong> = 30% of the sum (cash in hand + untaxed converted amount)</li>
+                    <li><strong>Fine</strong> = 2 times the tax</li>
+                    <li>So, the <strong>total penalty</strong> equals 90% of (cash in hand + untaxed converted amount)</li>
+                    <li>The penalty is deducted from your deposit account first. If needed, the remainder is deducted from your cash in hand.</li>
                 </ul>
 
-                <p>From Round 11 onwards, converted money becomes safe — only your cash in hand is subject to audit, and the audit rate returns to 5%.</p>
+                <p>After the penalty is paid:</p>
+                <ul>
+                    <li><strong>All remaining cash in hand is automatically transferred into your deposit account</strong> (tax-free, since the penalty has already been served).</li>
+                    <li>The converted amount, which is now taxed, becomes fully regularised and cannot be taxed again in later rounds.</li>
+                </ul>
 
-                <p>Your audit rate for Rounds 8–10 depends on how much old cash you convert:</p>
+                <hr>
+
+                <h5>Temporary Audit Rate</h5>
+                <p>Your audit rate for Rounds 8–10 depends on how much old cash you convert now:</p>
 
                 <table class="table table-bordered mb-3">
-                    <thead>
+                    <thead class="thead-dark">
                         <tr>
                             <th>Amount Converted</th>
                             <th>Audit Rate (Rounds 8–10)</th>
@@ -258,11 +271,20 @@ window.onclick = function(event) {
                     </tbody>
                 </table>
 
-                <p class="mb-0"><small class="text-muted">After Round 10, the audit rate returns to 5% and only cash in hand is audited — converted money is no longer at risk.</small></p>
+                <hr>
+
+                <h5>From Round 11 Onwards</h5>
+                <ul>
+                    <li>The audit rate returns to 5%</li>
+                    <li>Only cash in hand is audited</li>
+                    <li>All converted money is fully safe</li>
+                </ul>
+
             </div>
         </div>
 
         {{ next_button }}
     </div>
 </div>
+
 {{ endblock }}

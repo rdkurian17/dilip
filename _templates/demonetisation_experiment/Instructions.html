@@ -39,7 +39,7 @@
             <li>How much to pay from your <strong>deposit account</strong>.</li>
             <li>How much to pay from <strong>cash in hand</strong>.</li>
         </ul>
-        <p><strong>The two amounts must sum exactly to {{ C.MANDATORY_SPENDING }}.</strong></p>
+        <p><strong>The two amounts must add up to exactly to {{ C.MANDATORY_SPENDING }}.</strong></p>
 
         <div class="alert alert-warning">
             <p class="mb-0">
@@ -48,23 +48,31 @@
                     <line x1="12" y1="9" x2="12" y2="13"/>
                     <line x1="12" y1="17" x2="12.01" y2="17"/>
                 </svg>
-                <strong>Important:</strong> If you choose to pay any positive amount from cash, you will be required to type a randomly generated sequence of letters exactly as shown (case-sensitive). This additional typing requirement simulates the inconvenience of handling physical cash compared to digital payments.
+                <strong>Important:</strong> If you choose to pay any positive amount from cash, you will be required to type a randomly generated sequence of letters exactly as shown (case-sensitive). This typing represents the inconvenience of handling physical cash rather than digital payments.
             </p>
         </div>
 
         <h5 class="mt-4">4. Random Audit</h5>
-        <p>Each round, there is a <strong>{{ C.BASE_AUDIT_PROB }}% chance</strong> of an audit. Only your <strong>cash in hand</strong> is subject to audit — funds held in your deposit account are safe.</p>
-        <p>If audited:</p>
+        <p>After your spending decision, there is a <strong>{{ C.BASE_AUDIT_PROB }}% chance</strong> of an audit. Only your <strong>cash in hand</strong> is audited. This includes any cash carried over from earlier rounds and any undeclared cash from the current round.Funds held in your deposit account are safe.</p>
+        <p>If you are audited:</p>
         <ul>
-            <li>You must pay <strong>30% tax</strong> on all cash currently held.</li>
+            <li>You must pay <strong>30% tax</strong> on all cash in hand.</li>
             <li>You must also pay a <strong>fine equal to 2 times the unpaid tax</strong>.</li>
-            <li>The total penalty is deducted from your deposit account first. If the deposit balance is insufficient, the remaining penalty is deducted from your cash.</li>
-            <li><strong>After the penalty is paid, all remaining cash in hand is automatically moved into your deposit account</strong> — tax-free, since the penalty has already been served.</li>
-            <li>From the next round onwards, this formalised cash sits safely in your deposit account.</li>
+            <li>So the total penalty equals <strong>90% of your cash in hand.</strong>.</li>
+            <li>The total penalty is deducted from your deposit account first. If the deposit balance is insufficient, the remaining penalty is deducted from your cash in hand.</li>
+            <li><strong>After the penalty is paid, all remaining cash in hand is automatically transferred into your deposit account.</strong> This transferred amount is not taxed again, as the penalty has already been served.</li>
         </ul>
 
         <h5 class="mt-4">5. Round Summary</h5>
-        <p>Your updated deposit and cash balances are displayed before the next round begins.</p>
+        <p>At the end of the round, you will see your updated:</p>
+
+        <ul>
+            <li> <strong>Deposit balance</strong> </li>
+            <li> <strong>Cash in hand</strong> </li>
+
+        </ul>
+
+        <p>	These balances carry over to the next round.</p>
 
         <div class="section-divider"><span>Example</span></div>
 
@@ -108,7 +116,7 @@
                 <li>Fine = 2 × 15 = 30 ECU</li>
                 <li>Total penalty = 15 + 30 = 45 ECU</li>
                 <li>Penalty deducted from deposit first: Deposit after penalty = 92 − 45 = 47 ECU</li>
-                <li>Remaining cash (50 ECU) is then <strong>automatically moved into your deposit account</strong></li>
+                <li>Remaining cash (50 ECU) is then <strong>automatically transferred into your deposit account</strong></li>
                 <li><strong>Final balances: Deposit = 47 + 50 = 97 ECU, Cash = 0 ECU</strong></li>
             </ul>
         </div>
