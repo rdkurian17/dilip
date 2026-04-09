@@ -376,11 +376,25 @@ class AllocationDecision(Page):
                     audit_prob = player.get_audit_probability()
             else:
                 audit_prob = C.BASE_AUDIT_PROB
+        # For rounds 8-10 in shock treatments, split deposit into safe vs untaxed converted
+        in_elevated_window = (
+            player.treatment != 'baseline'
+            and C.SHOCK_ROUND <= player.round_number <= C.ELEVATED_AUDIT_END
+        )
+        if in_elevated_window:
+            conversion_untaxed = player.conversion_untaxed or 0
+            safe_deposit = current_deposit - conversion_untaxed
+        else:
+            conversion_untaxed = 0
+            safe_deposit = current_deposit
         return dict(
             round_num=player.round_number,
             current_deposit=current_deposit,
             current_cash=current_cash,
             audit_prob=audit_prob,
+            in_elevated_window=in_elevated_window,
+            conversion_untaxed=conversion_untaxed,
+            safe_deposit=safe_deposit,
             progress_pct=player.progress_pct,
         )
 
@@ -625,15 +639,30 @@ class FinalResults(Page):
         )
 
 
+class RegularisationNotice(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return (
+            player.round_number == C.ELEVATED_AUDIT_END + 1
+            and player.treatment != 'baseline'
+        )
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+            progress_pct=player.progress_pct,
+            next_round=C.ELEVATED_AUDIT_END + 1,
+        )
+
+
 page_sequence = [
     Welcome,
-    ParticipantInfo,
-    Consent,
     Instructions,
     ComprehensionQuiz,
     ShockAnnouncement,
     ConversionDecision,
     ConversionOutcome,
+    RegularisationNotice,
     AllocationDecision,
     AllocationResult,
     SpendingDecision,

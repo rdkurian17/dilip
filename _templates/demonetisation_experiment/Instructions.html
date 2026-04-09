@@ -137,7 +137,34 @@
                 <li><strong>Higher audit probability:</strong> The more old currency you deposit, the higher your personal audit probability during Rounds 8–10.</li>
                 <li><strong>Converted amount at risk:</strong> During Rounds 8–10, if you are audited, tax and fines are calculated on <em>both</em> your cash in hand <em>and</em> the amount of old currency you converted. The converted amount is only at risk once — if audited, it is considered fully regularised and cannot be charged again in a later round.</li>
             </ul>
-            <p class="mb-0">From Round 11 onward, the audit rate returns to 5% for everyone, and only your cash in hand is subject to audit — converted old currency is no longer at risk.</p>
+            <p>Your personal audit rate for Rounds 8–10 depends on how much old cash you convert:</p>
+            <table class="table table-bordered table-sm mb-2">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Amount Converted</th>
+                        <th>Audit Rate (Rounds 8–10)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0 ECU (nothing converted)</td>
+                        <td><strong>{{ C.BASE_AUDIT_PROB }}%</strong></td>
+                    </tr>
+                    <tr>
+                        <td>1 – {{ C.TIER_1_THRESHOLD }} ECU</td>
+                        <td><strong>{{ C.TIER_1_AUDIT }}%</strong></td>
+                    </tr>
+                    <tr class="table-warning">
+                        <td>{{ C.TIER_1_THRESHOLD }} – {{ C.TIER_2_THRESHOLD }} ECU</td>
+                        <td><strong>{{ C.TIER_2_AUDIT }}%</strong></td>
+                    </tr>
+                    <tr class="table-danger">
+                        <td>More than {{ C.TIER_2_THRESHOLD }} ECU</td>
+                        <td><strong>{{ C.TIER_3_AUDIT }}%</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="mb-0">From Round 11 onward, the audit rate returns to {{ C.BASE_AUDIT_PROB }}% for everyone, and only your cash in hand is subject to audit — converted old currency is no longer at risk.</p>
         </div>
         {{ endif }}
 

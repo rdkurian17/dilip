@@ -166,7 +166,12 @@ window.onclick = function(event) {
                 Bank Deposit
             </div>
             <div class="account-balance">{{ current_deposit }}</div>
+            {{ if in_elevated_window }}
+            <div class="account-subtitle" style="color: #d1fae5;">{{ safe_deposit }} ECU safe, taxed at 30%</div>
+            <div class="account-subtitle" style="color: #fde68a;">{{ conversion_untaxed }} ECU untaxed converted, {{ audit_prob }}% audit risk</div>
+            {{ else }}
             <div class="account-subtitle">Safe, taxed at 30%</div>
+            {{ endif }}
         </div>
     </div>
     <div class="col-md-6 stagger-2">
@@ -206,9 +211,14 @@ window.onclick = function(event) {
                 Remember:
             </h6>
             <ul class="mb-0">
-                <li><strong>Deposit:</strong> Taxed 30% immediately, but safe from audit</li>
+                <li><strong>Deposit (safe portion):</strong> Taxed 30% immediately, safe from audit</li>
                 <li><strong>Cash:</strong> Not taxed now, but {{ audit_prob }}% chance of audit this round</li>
+                {{ if in_elevated_window }}
+                <li><strong>Untaxed converted amount ({{ conversion_untaxed }} ECU):</strong> Also at risk if audited — audit covers both cash in hand and this amount</li>
+                <li><strong>If audited:</strong> Pay 30% tax + 2× fine on ALL cash <em>plus</em> the {{ conversion_untaxed }} ECU untaxed converted amount</li>
+                {{ else }}
                 <li><strong>If audited:</strong> Pay tax on ALL cash + 2x fine</li>
+                {{ endif }}
             </ul>
         </div>
 

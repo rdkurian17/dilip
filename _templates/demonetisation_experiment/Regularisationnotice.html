@@ -1,0 +1,68 @@
+{{ extends 'global/Page.html' }}
+
+{{ block title }}Round {{ next_round }}: Currency Regularisation Complete{{ endblock }}
+
+{{ block content }}
+
+<div class="experiment-progress stagger-1">
+    <div class="progress-label">Round {{ next_round }} of {{ C.NUM_ROUNDS }}</div>
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: {{ progress_pct }}%"
+             aria-valuenow="{{ next_round }}" aria-valuemin="0" aria-valuemax="{{ C.NUM_ROUNDS }}">
+        </div>
+    </div>
+</div>
+
+<div class="card mb-4 stagger-2">
+    <div class="card-header bg-success text-white">
+        <div class="icon-header">
+            <svg class="icon icon-md icon-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            <h3 class="mb-0" style="color: #fff;">Conversion Period Has Ended</h3>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <div class="alert alert-success">
+            <div class="icon-header" style="margin-bottom: 0.5rem;">
+                <svg class="icon icon-md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #065f46;">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+                <h5 class="mb-0">All Converted Cash Is Now Fully Regularised</h5>
+            </div>
+            <p>Rounds 8–10 have ended. Any old cash you converted into your deposit account is now <strong>fully regularised</strong> — it is no longer subject to audit and carries no further tax risk.</p>
+            <p class="mb-0">Your deposit account is entirely safe going forward.</p>
+        </div>
+
+        <div class="alert alert-info mt-3">
+            <div class="icon-header" style="margin-bottom: 0.5rem;">
+                <svg class="icon icon-md icon-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 16v-4m0-4h.01"/>
+                </svg>
+                <h5 class="mb-0">Audit Rules from Round {{ next_round }} Onwards</h5>
+            </div>
+            <ul class="mb-0">
+                <li>The audit rate returns to the standard <strong>{{ C.BASE_AUDIT_PROB }}%</strong> for everyone.</li>
+                <li>Only your <strong>cash in hand</strong> is subject to audit — your deposit is safe.</li>
+                <li>The converted old currency in your deposit is <strong>no longer at risk</strong> in any future round.</li>
+            </ul>
+        </div>
+
+        <div class="alert alert-secondary mt-3">
+            <p class="mb-0">
+                <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.3rem; color: var(--color-text-secondary);">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 16v-4m0-4h.01"/>
+                </svg>
+                The experiment now continues as normal for the remaining rounds. Your balances carry over unchanged.
+            </p>
+        </div>
+
+        {{ next_button }}
+    </div>
+</div>
+
+{{ endblock }}
