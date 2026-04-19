@@ -1,0 +1,57 @@
+{{ extends 'global/Page.html' }}
+
+{{ block title }}Important: Upcoming Policy Change{{ endblock }}
+
+{{ block content }}
+
+<div class="card mb-4 stagger-1">
+    <div class="card-body">
+        <div class="alert alert-warning">
+            <div class="icon-header" style="margin-bottom: 0.5rem;">
+                <svg class="icon icon-md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #92400E;">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                    <line x1="12" y1="9" x2="12" y2="13"/>
+                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+                <h5 class="mb-0">Important: Upcoming Policy Change</h5>
+            </div>
+            <p>After Round 7, the current lab currency (old ECU notes, which is held as cash in hand) will become <strong>invalid</strong>. Old currency (cash in hand) can no longer be used for spending.</p>
+            <p>The <strong>only</strong> way to preserve the value of old currency is to <strong>deposit it into your bank account</strong>. However, depositing old currency comes with two consequences for Rounds 8–10:</p>
+            <ul>
+                <li><strong>Higher audit probability:</strong> The more old currency you deposit, the higher your personal audit probability during Rounds 8–10.</li>
+                <li><strong>Converted amount at risk:</strong> During Rounds 8–10, if you are audited, tax and fines are calculated on <em>both</em> your cash in hand <em>and</em> the amount of old currency you converted. The converted amount is only at risk once — if audited, it is considered fully regularised and cannot be charged again in a later round.</li>
+            </ul>
+            <p>Your personal audit rate for Rounds 8–10 depends on how much old cash you convert:</p>
+            <table class="table table-bordered table-sm mb-2">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Amount Converted</th>
+                        <th>Audit Rate (Rounds 8–10)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0 ECU (nothing converted)</td>
+                        <td><strong>{{ C.BASE_AUDIT_PROB }}%</strong></td>
+                    </tr>
+                    <tr>
+                        <td>1 – {{ C.TIER_1_THRESHOLD }} ECU</td>
+                        <td><strong>{{ C.TIER_1_AUDIT }}%</strong></td>
+                    </tr>
+                    <tr class="table-warning">
+                        <td>{{ C.TIER_1_THRESHOLD }} – {{ C.TIER_2_THRESHOLD }} ECU</td>
+                        <td><strong>{{ C.TIER_2_AUDIT }}%</strong></td>
+                    </tr>
+                    <tr class="table-danger">
+                        <td>More than {{ C.TIER_2_THRESHOLD }} ECU</td>
+                        <td><strong>{{ C.TIER_3_AUDIT }}%</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="mb-0">From Round 11 onward, the audit rate returns to {{ C.BASE_AUDIT_PROB }}% for everyone, and only your cash in hand is subject to audit — converted old currency is no longer at risk.</p>
+        </div>
+
+        {{ next_button }}
+    </div>
+</div>
+{{ endblock }}

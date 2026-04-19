@@ -26,7 +26,7 @@ HEXACO_CHOICES = [
 class C(BaseConstants):
     NAME_IN_URL = 'demonetisation_experiment'
     PLAYERS_PER_GROUP = None
-    NUM_ROUNDS = 15
+    NUM_ROUNDS = 17
     ENDOWMENT = cu(100)
     TAX_RATE = 0.30
     MANDATORY_SPENDING = cu(40)
@@ -251,9 +251,14 @@ class Instructions(Page):
     def vars_for_template(player: Player):
         return dict(
             treatment=player.treatment,
-            show_shock_warning=(player.treatment == 'preannounced'),
             show_may_shock=(player.treatment in ['baseline', 'sudden']),
         )
+
+
+class ShockPreAnnouncement(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == 1 and player.treatment == 'preannounced'
 
 
 class ComprehensionQuiz(Page):
@@ -658,6 +663,7 @@ class RegularisationNotice(Page):
 page_sequence = [
     Welcome,
     Instructions,
+    ShockPreAnnouncement,
     ComprehensionQuiz,
     ShockAnnouncement,
     ConversionDecision,
