@@ -7,7 +7,7 @@ SESSION_CONFIGS = [
         app_sequence=['demonetisation_experiment'],
         num_demo_participants=1,
         treatment='sudden',
-        real_world_currency_per_point=0.01,
+        real_world_currency_per_point=0.0075,
     ),
     dict(
         name='demonetisation_preannounced',
@@ -15,7 +15,7 @@ SESSION_CONFIGS = [
         app_sequence=['demonetisation_experiment'],
         num_demo_participants=1,
         treatment='preannounced',
-        real_world_currency_per_point=0.01,
+        real_world_currency_per_point=0.0075,
     ),
     dict(
         name='demonetisation_baseline',
@@ -23,13 +23,13 @@ SESSION_CONFIGS = [
         app_sequence=['demonetisation_experiment'],
         num_demo_participants=1,
         treatment='baseline',
-        real_world_currency_per_point=0.01,
+        real_world_currency_per_point=0.0075,
     ),
 ]
 
 # Default session settings
 SESSION_CONFIG_DEFAULTS = dict(
-    real_world_currency_per_point=0.01,
+    real_world_currency_per_point=0.0075,
     participation_fee=0.00,
     doc="Demonetisation experiment on tax compliance and liquidity shock",
 )
