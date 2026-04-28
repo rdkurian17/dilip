@@ -34,11 +34,13 @@ class C(BaseConstants):
     FINE_MULTIPLIER = 2
     SHOCK_ROUND = 8
     ELEVATED_AUDIT_END = 10
-    TIER_1_THRESHOLD = 50
-    TIER_2_THRESHOLD = 100
+    TIER_1_THRESHOLD = 60
+    TIER_2_THRESHOLD = 120
+    TIER_3_THRESHOLD = 180
     TIER_1_AUDIT = 10
     TIER_2_AUDIT = 15
     TIER_3_AUDIT = 20
+    TIER_4_AUDIT = 30
 
 
 class Subsession(BaseSubsession):
@@ -179,8 +181,10 @@ class Player(BasePlayer):
             return C.TIER_1_AUDIT
         elif amt <= C.TIER_2_THRESHOLD:
             return C.TIER_2_AUDIT
-        else:
+        elif amt <= C.TIER_3_THRESHOLD:
             return C.TIER_3_AUDIT
+        else:
+            return C.TIER_4_AUDIT
 
     def get_audit_probability(self):
         if self.treatment == 'baseline':
@@ -260,6 +264,17 @@ class ShockPreAnnouncement(Page):
     def is_displayed(player: Player):
         return player.round_number == 1 and player.treatment == 'preannounced'
 
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+            tier1_low=1,
+            tier1_high=C.TIER_1_THRESHOLD,
+            tier2_low=C.TIER_1_THRESHOLD + 1,
+            tier2_high=C.TIER_2_THRESHOLD,
+            tier3_low=C.TIER_2_THRESHOLD + 1,
+            tier3_high=C.TIER_3_THRESHOLD,
+        )
+
 
 class ComprehensionQuiz(Page):
     form_model = 'player'
@@ -290,6 +305,12 @@ class ShockAnnouncement(Page):
             current_deposit=prev.total_deposit,
             is_sudden=(player.treatment == 'sudden'),
             progress_pct=player.progress_pct,
+            tier1_low=1,
+            tier1_high=C.TIER_1_THRESHOLD,
+            tier2_low=C.TIER_1_THRESHOLD + 1,
+            tier2_high=C.TIER_2_THRESHOLD,
+            tier3_low=C.TIER_2_THRESHOLD + 1,
+            tier3_high=C.TIER_3_THRESHOLD,
         )
 
 
@@ -322,7 +343,16 @@ class ConversionDecision(Page):
     @staticmethod
     def vars_for_template(player: Player):
         prev = player.in_round(C.SHOCK_ROUND - 1)
-        return dict(old_cash=prev.total_cash, progress_pct=player.progress_pct)
+        return dict(
+            old_cash=prev.total_cash,
+            progress_pct=player.progress_pct,
+            tier1_low=1,
+            tier1_high=C.TIER_1_THRESHOLD,
+            tier2_low=C.TIER_1_THRESHOLD + 1,
+            tier2_high=C.TIER_2_THRESHOLD,
+            tier3_low=C.TIER_2_THRESHOLD + 1,
+            tier3_high=C.TIER_3_THRESHOLD,
+        )
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
@@ -387,7 +417,14 @@ class AllocationDecision(Page):
             and C.SHOCK_ROUND <= player.round_number <= C.ELEVATED_AUDIT_END
         )
         if in_elevated_window:
-            conversion_untaxed = player.conversion_untaxed or 0
+            if player.round_number == C.SHOCK_ROUND:
+                # Round 8: data already set directly on this player record (no carry_forward)
+                conversion_untaxed = player.conversion_untaxed or 0
+            else:
+                # Rounds 9-10: carry_forward hasn't run yet at vars_for_template time,
+                # so read from the previous round's record to avoid getting the field default of 0
+                prev_round = player.in_round(player.round_number - 1)
+                conversion_untaxed = prev_round.conversion_untaxed or 0
             safe_deposit = current_deposit - conversion_untaxed
         else:
             conversion_untaxed = 0

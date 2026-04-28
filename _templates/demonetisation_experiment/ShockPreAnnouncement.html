@@ -35,16 +35,20 @@
                         <td><strong>{{ C.BASE_AUDIT_PROB }}%</strong></td>
                     </tr>
                     <tr>
-                        <td>1 – {{ C.TIER_1_THRESHOLD }} ECU</td>
+                        <td>{{ tier1_low }} – {{ tier1_high }} ECU</td>
                         <td><strong>{{ C.TIER_1_AUDIT }}%</strong></td>
                     </tr>
                     <tr class="table-warning">
-                        <td>{{ C.TIER_1_THRESHOLD }} – {{ C.TIER_2_THRESHOLD }} ECU</td>
+                        <td>{{ tier2_low }} – {{ tier2_high }} ECU</td>
                         <td><strong>{{ C.TIER_2_AUDIT }}%</strong></td>
                     </tr>
-                    <tr class="table-danger">
-                        <td>More than {{ C.TIER_2_THRESHOLD }} ECU</td>
+                    <tr class="table-warning">
+                        <td>{{ tier3_low }} – {{ tier3_high }} ECU</td>
                         <td><strong>{{ C.TIER_3_AUDIT }}%</strong></td>
+                    </tr>
+                    <tr class="table-danger">
+                        <td>More than {{ C.TIER_3_THRESHOLD }} ECU</td>
+                        <td><strong>{{ C.TIER_4_AUDIT }}%</strong></td>
                     </tr>
                 </tbody>
             </table>
